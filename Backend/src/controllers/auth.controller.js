@@ -2,6 +2,7 @@ const userModel = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+
 async function registerUser (req,res){
 
     const {email,password,role = "employee"} = req.body;
@@ -88,6 +89,51 @@ async function LoginUser (req,res){
 }
 
 async function ChangePassword (req,res){
+
+    try{
+        const {oldPassword,newPassword} = req.body;
+
+        const token = req.cookies.token;
+
+        if(!token){
+            return res.status(401).json({
+                message : "Unauthorized User"
+            })
+        }
+
+        const decoded = jwt.verify(token,process.env.JWT_SECRET_KEY);
+
+        const user = await userModel.findById(decoded.id);
+
+        if(!user){
+            return res.status(404).json({
+                message : "User not found"
+            })
+        }
+
+        const isPasswordMatched = await bcrypt.compare(oldPassword,user.password)
+
+        if(!isPasswordMatched){
+            return res.status(404).json({
+                message : "Invalid Old Password"
+            })
+        }
+
+        const newPasswordHash = await bcrypt.hash(newPassword,10);
+
+        user.password = newPasswordHash;
+
+        await user.save();
+
+        res.status(200).json({
+            message : "Password changed successfully"
+        })
+
+    }catch(error){
+        return res.status(500).json({
+            message : "Internal Server Error"
+        })
+    }
 
 }
 
