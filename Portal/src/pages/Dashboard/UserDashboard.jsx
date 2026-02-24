@@ -742,9 +742,9 @@ const attendanceDistribution = {
     {
       data: [19, 1, 2],
       backgroundColor: [
-        'rgb(54, 95, 141)',
-        'rgb(239, 68, 68)',
-        'rgb(251, 191, 36)',
+       'rgb(54, 95, 141)',  
+        'rgb(148, 163, 184)',   
+        'rgb(203, 213, 225)',  
       ],
       borderWidth: 0,
       hoverOffset: 4,
@@ -798,17 +798,17 @@ function UserDashboard({ setTitle }) {
   return (
     <div className="min-h-screen">
       {/* Current Time Display */}
-      <div className="bg-white rounded-xl shadow-sm p-6 mb-6 text-center">
+      {/* <div className="bg-white rounded-xl shadow-sm p-6 mb-6 text-center">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#365F8D]">
           {format(currentTime, 'hh:mm:ss a')}
         </h1>
         <p className="text-gray-600 mt-2 text-base sm:text-lg">
           {format(currentTime, 'EEEE, MMMM d, yyyy')}
         </p>
-      </div>
+      </div> */}
 
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 mt-3.5">
         <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
@@ -817,46 +817,46 @@ function UserDashboard({ setTitle }) {
               <p className="text-xs text-gray-500">Present Days</p>
             </div>
             <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-              <FaRegCheckCircle size={20} className="text-white" />
+              <FaRegCheckCircle size={24} className="text-white" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-red-500 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm text-gray-600 mb-1">This Month</p>
-              <p className="text-2xl sm:text-3xl font-bold text-red-600">1</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">1</p>
               <p className="text-xs text-gray-500">Absent Days</p>
             </div>
-            <div className="bg-red-500 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-              <RxCrossCircled size={20} className="text-white" />
+            <div className="bg-[#2C5284] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+              <RxCrossCircled size={24} className="text-white" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-yellow-500 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm text-gray-600 mb-1">Leave Days</p>
-              <p className="text-2xl sm:text-3xl font-bold text-yellow-600">2</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">2</p>
               <p className="text-xs text-gray-500">This Month</p>
             </div>
-            <div className="bg-yellow-500 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-              <FaCalendarAlt size={20} className="text-white" />
+            <div className="bg-[#2C5284] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+              <FaCalendarAlt size={24} className="text-white" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-amber-500 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm text-gray-600 mb-1">Pending</p>
-              <p className="text-2xl sm:text-3xl font-bold text-amber-600">1</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">1</p>
               <p className="text-xs text-gray-500">Leave Request</p>
             </div>
-            <div className="bg-amber-500 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-              <FaClock size={20} className="text-white" />
+            <div className="bg-[#2C5284] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+              <FaClock size={24} className="text-white" />
             </div>
           </div>
         </div>
@@ -930,7 +930,7 @@ function UserDashboard({ setTitle }) {
         </div>
 
         {/* Attendance Distribution */}
-        <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+         <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
           <h3 className="text-lg font-bold text-[#2C5284] mb-4 flex items-center gap-2">
             <FaChartLine />
             This Month
@@ -958,7 +958,7 @@ function UserDashboard({ setTitle }) {
             </div>
           </div>
         </div>
-      </div>
+      </div> 
 
       {/* Weekly Work Hours Chart */}
       <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow mb-6">
@@ -991,13 +991,13 @@ function UserDashboard({ setTitle }) {
       </div>
 
       {/* Recent Attendance Table */}
-      <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+      {/* <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
         <h2 className="text-lg font-bold text-[#2C5284] mb-5">
           Recent Attendance
         </h2>
 
         {/* Desktop Table */}
-        <div className="hidden md:block overflow-x-auto">
+        {/* <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b text-gray-600">
@@ -1014,8 +1014,8 @@ function UserDashboard({ setTitle }) {
                   <td className="py-4">
                     {format(new Date(record.date), 'MMM dd, yyyy')}
                   </td>
-                  <td className="py-4">{record.clockIn}</td>
-                  <td className="py-4">{record.clockOut}</td>
+                  <td className="py-4">{record.clockIn}</td> */}
+                  {/* <td className="py-4">{record.clockOut}</td>
                   <td className="py-4">{record.duration}</td>
                   <td className="py-4">
                     <span
@@ -1038,10 +1038,10 @@ function UserDashboard({ setTitle }) {
               ))}
             </tbody>
           </table>
-        </div>
+        </div> */} 
 
         {/* Mobile Cards */}
-        <div className="md:hidden space-y-3">
+        {/* <div className="md:hidden space-y-3">
           {mockRecentAttendance.map((record, index) => (
             <div key={index} className="border rounded-lg p-4">
               <div className="flex justify-between items-start mb-3">
@@ -1061,8 +1061,8 @@ function UserDashboard({ setTitle }) {
                     ? 'Present'
                     : record.status === 'leave'
                     ? 'Leave'
-                    : 'Absent'}
-                </span>
+                    : 'Absent'} */}
+                {/* </span>
               </div>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
@@ -1078,8 +1078,8 @@ function UserDashboard({ setTitle }) {
             </div>
           ))}
         </div>
-      </div>
-    </div>
+      </div> */}
+     </div> 
   );
 }
 
