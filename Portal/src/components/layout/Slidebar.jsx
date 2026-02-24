@@ -112,6 +112,7 @@ import {
   AiOutlineLogout,
 } from 'react-icons/ai';
 import { CgProfile } from 'react-icons/cg';
+import { FiUser } from "react-icons/fi";
 import { MdManageAccounts } from 'react-icons/md';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
@@ -130,10 +131,9 @@ export default function Slidebar({
     { name: 'Attendance', icon: AiOutlineClockCircle,  path: '/attendance' },
     { name: 'Leave',      icon: AiOutlineCalendar,     path: '/leave'      },
   ];
-
   const adminMenuItems = [
     ...baseMenuItems,
-    { name: 'Manage Employees', icon: MdManageAccounts, path: '/employees' },
+    { name: 'Manage Employees', icon: FiUser, path: '/employees' },
   ];
 
   const menuItems = userRole === 'admin' ? adminMenuItems : baseMenuItems;
