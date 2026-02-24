@@ -1,5 +1,4 @@
-import AdminDashboard from "./Admindashboard ";
-import UserDashboard from "./Userdashboard";
+import AdminDashboard from './AdminDashboard '
+import UserDashboard from './UserDashboard'
 
-
-export {AdminDashboard,UserDashboard}
+export { AdminDashboard, UserDashboard }
