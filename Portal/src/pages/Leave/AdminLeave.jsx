@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 // import { useEffect, useState } from 'react';
 // import Select from 'react-select';
 // import { FaEye, FaCheck, FaTimes, FaFilter } from 'react-icons/fa';
@@ -1016,17 +1016,8 @@
 
 
 
-import { useEffect, useState } from 'react';
-import Select from 'react-select';
-import mockLeaveData from '../../data/mockLeaveData';
-import { FaEye, FaCheck, FaTimes, FaChevronLeft, FaChevronRight, FaSearch, FaFilter } from 'react-icons/fa';
-import { CgProfile } from 'react-icons/cg';
-import { RxCrossCircled } from 'react-icons/rx';
-import { SlCalender } from 'react-icons/sl';
-import {FaRegCheckCircle}  from 'react-icons/fa'
 
 
-=======
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import mockLeaveData from '../../data/mockLeaveData';
@@ -1034,7 +1025,7 @@ import { FaEye, FaCheck, FaTimes, FaRegCheckCircle } from 'react-icons/fa';
 import { CgProfile } from 'react-icons/cg';
 import { RxCrossCircled } from 'react-icons/rx';
 import { SlCalender } from 'react-icons/sl';
->>>>>>> ad0fba4eadae735b99d42feb888d4d6a6b0837a2
+import {FaSearch} from 'react-icons/fa'
 import LeaveDetailModal from './LeaveDetailModal';
 
 function AdminLeave({ setTitle }) {
@@ -1132,11 +1123,9 @@ function AdminLeave({ setTitle }) {
     setShowModal(true);
   };
 
-<<<<<<< HEAD
   // Stats
-=======
+
   // Get statistics
->>>>>>> ad0fba4eadae735b99d42feb888d4d6a6b0837a2
   const stats = {
     total: leaves.length,
     pending: leaves.filter(l => l.status === 'Pending').length,
@@ -1145,16 +1134,12 @@ function AdminLeave({ setTitle }) {
   };
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
-=======
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8">
->>>>>>> ad0fba4eadae735b99d42feb888d4d6a6b0837a2
+
       <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] mb-6">
         Leave Management
       </h1>
 
-<<<<<<< HEAD
       {/* Stats Cards */}
       {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div className="bg-white p-4 rounded-xl border-l-4 border-[#2C5284] shadow-sm">
@@ -1175,11 +1160,8 @@ function AdminLeave({ setTitle }) {
         </div>
       </div> */}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-=======
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
->>>>>>> ad0fba4eadae735b99d42feb888d4d6a6b0837a2
         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
           <div>
             <p className="text-sm sm:text-base text-[#2C5284]">Total Requests</p>
@@ -1189,14 +1171,10 @@ function AdminLeave({ setTitle }) {
             <CgProfile size={24} className="text-white" />
           </div>
         </div>
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
-          <div>
-            <p className="text-sm sm:text-base text-[#2C5284]">Pending</p>
-<<<<<<< HEAD
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.pending}</p>
-=======
-            <p className="text-2xl sm:text-3xl font-bold text-yellow-600">{stats.pending}</p>
->>>>>>> ad0fba4eadae735b99d42feb888d4d6a6b0837a2
+<div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+  <div>
+    <p className="text-sm sm:text-base text-[#2C5284]">Pending</p>
+    <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.pending}</p>
           </div>
           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
             <SlCalender size={24} className="text-white" />
@@ -1205,27 +1183,16 @@ function AdminLeave({ setTitle }) {
         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
           <div>
             <p className="text-sm sm:text-base text-[#2C5284]">Approved</p>
-<<<<<<< HEAD
             <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.approved}</p>
           </div>
           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-             <FaRegCheckCircle size={24} className="text-white" />
-=======
-            <p className="text-2xl sm:text-3xl font-bold text-green-600">{stats.approved}</p>
-          </div>
-          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
             <FaRegCheckCircle size={24} className="text-white" />
->>>>>>> ad0fba4eadae735b99d42feb888d4d6a6b0837a2
           </div>
         </div>
         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
           <div>
             <p className="text-sm sm:text-base text-[#2C5284]">Rejected</p>
-<<<<<<< HEAD
             <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.rejected}</p>
-=======
-            <p className="text-2xl sm:text-3xl font-bold text-red-600">{stats.rejected}</p>
->>>>>>> ad0fba4eadae735b99d42feb888d4d6a6b0837a2
           </div>
           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
             <RxCrossCircled size={24} className="text-white" />
@@ -1233,10 +1200,8 @@ function AdminLeave({ setTitle }) {
         </div>
       </div>
 
-<<<<<<< HEAD
 
-=======
->>>>>>> ad0fba4eadae735b99d42feb888d4d6a6b0837a2
+
       {/* Filters Section */}
       <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 border border-gray-100">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1246,6 +1211,7 @@ function AdminLeave({ setTitle }) {
               Search Employee
             </label>
             <div className="relative">
+            
               <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
@@ -1487,7 +1453,7 @@ function AdminLeave({ setTitle }) {
         />
       )}
     </div>
-  );
+  )
 }
 
 export default AdminLeave;

@@ -808,8 +808,8 @@ function UserDashboard({ setTitle }) {
       </div> */}
 
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 mt-3.5">
-        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-3 mr-3">
+        <div className="bg-white p-5 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm text-gray-600 mb-1">This Month</p>
@@ -822,7 +822,7 @@ function UserDashboard({ setTitle }) {
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white p-5 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm text-gray-600 mb-1">This Month</p>
@@ -835,7 +835,7 @@ function UserDashboard({ setTitle }) {
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white p-5 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm text-gray-600 mb-1">Leave Days</p>
@@ -848,7 +848,7 @@ function UserDashboard({ setTitle }) {
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white p-5 sm:p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm text-gray-600 mb-1">Pending</p>
@@ -863,7 +863,7 @@ function UserDashboard({ setTitle }) {
       </div>
 
       {/* Clock In/Out Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 mr-3">
         {/* Main Clock Card */}
         <div className="lg:col-span-2 bg-white p-6 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
           <div className="flex flex-col items-center">
@@ -962,7 +962,8 @@ function UserDashboard({ setTitle }) {
 
       {/* Weekly Work Hours Chart */}
       <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow mb-6">
-        <h2 className="text-lg font-bold text-[#2C5284] mb-6">
+        <h2 className="text-lg font-bold text-[#2C5284] flex items-center gap-2 mb-6 ">
+           <FaChartLine />
           Weekly Work Hours
         </h2>
         <div className="h-64 sm:h-80">

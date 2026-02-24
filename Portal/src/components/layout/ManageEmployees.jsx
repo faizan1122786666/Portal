@@ -1,363 +1,762 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
 
-const ManageEmployees = () => {
-    const [employees, setEmployees] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
-    const [showAddModal, setShowAddModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
+// const ManageEmployees = () => {
+//     const [employees, setEmployees] = useState([]);
+//     const [loading, setLoading] = useState(false);
+//     const [error, setError] = useState('');
+//     const [success, setSuccess] = useState('');
+//     const [showAddModal, setShowAddModal] = useState(false);
+//     const [showEditModal, setShowEditModal] = useState(false);
+//     const [selectedEmployee, setSelectedEmployee] = useState(null);
+//     const [formData, setFormData] = useState({
+//         email: '',
+//         password: ''
+//     });
 
-    // Fetch all employees
-    const fetchEmployees = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get('http://localhost:3000/api/admin/employees', {
-                withCredentials: true
-            });
-            setEmployees(response.data.employees);
-        } catch (err) {
-            setError(err.response?.data?.message || 'Failed to fetch employees');
-        } finally {
-            setLoading(false);
-        }
-    };
+//     // Fetch all employees
+//     const fetchEmployees = async () => {
+//         setLoading(true);
+//         try {
+//             const response = await axios.get('http://localhost:3000/api/admin/employees', {
+//                 withCredentials: true
+//             });
+//             setEmployees(response.data.employees);
+//         } catch (err) {
+//             setError(err.response?.data?.message || 'Failed to fetch employees');
+//         } finally {
+//             setLoading(false);
+//         }
+//     };
 
-    useEffect(() => {
-        fetchEmployees();
-    }, []);
+//     useEffect(() => {
+//         fetchEmployees();
+//     }, []);
 
-    // Handle form input change
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
+//     // Handle form input change
+//     const handleChange = (e) => {
+//         setFormData({
+//             ...formData,
+//             [e.target.name]: e.target.value
+//         });
+//     };
 
-    // Add new employee
-    const handleAddEmployee = async (e) => {
-        e.preventDefault();
-        setError('');
-        setSuccess('');
+//     // Add new employee
+//     const handleAddEmployee = async (e) => {
+//         e.preventDefault();
+//         setError('');
+//         setSuccess('');
 
-        if (!formData.email || !formData.password) {
-            setError('All fields are required');
-            return;
-        }
+//         if (!formData.email || !formData.password) {
+//             setError('All fields are required');
+//             return;
+//         }
 
-        try {
-            const response = await axios.post(
-                'http://localhost:3000/api/admin/employees',
-                formData,
-                { withCredentials: true }
-            );
+//         try {
+//             const response = await axios.post(
+//                 'http://localhost:3000/api/admin/employees',
+//                 formData,
+//                 { withCredentials: true }
+//             );
 
-            setSuccess(response.data.message);
-            setFormData({ email: '', password: '' });
-            setShowAddModal(false);
-            fetchEmployees(); // Refresh the list
-        } catch (err) {
-            setError(err.response?.data?.message || 'Failed to add employee');
-        }
-    };
+//             setSuccess(response.data.message);
+//             setFormData({ email: '', password: '' });
+//             setShowAddModal(false);
+//             fetchEmployees(); // Refresh the list
+//         } catch (err) {
+//             setError(err.response?.data?.message || 'Failed to add employee');
+//         }
+//     };
 
-    // Update employee
-    const handleUpdateEmployee = async (e) => {
-        e.preventDefault();
-        setError('');
-        setSuccess('');
+//     // Update employee
+//     const handleUpdateEmployee = async (e) => {
+//         e.preventDefault();
+//         setError('');
+//         setSuccess('');
 
-        try {
-            const response = await axios.put(
-                `http://localhost:3000/api/admin/employees/${selectedEmployee._id}`,
-                formData,
-                { withCredentials: true }
-            );
+//         try {
+//             const response = await axios.put(
+//                 `http://localhost:3000/api/admin/employees/${selectedEmployee._id}`,
+//                 formData,
+//                 { withCredentials: true }
+//             );
 
-            setSuccess(response.data.message);
-            setFormData({ email: '', password: '' });
-            setShowEditModal(false);
-            setSelectedEmployee(null);
-            fetchEmployees(); // Refresh the list
-        } catch (err) {
-            setError(err.response?.data?.message || 'Failed to update employee');
-        }
-    };
+//             setSuccess(response.data.message);
+//             setFormData({ email: '', password: '' });
+//             setShowEditModal(false);
+//             setSelectedEmployee(null);
+//             fetchEmployees(); // Refresh the list
+//         } catch (err) {
+//             setError(err.response?.data?.message || 'Failed to update employee');
+//         }
+//     };
 
-    // Delete employee
-    const handleDeleteEmployee = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this employee?')) {
-            return;
-        }
+//     // Delete employee
+//     const handleDeleteEmployee = async (id) => {
+//         if (!window.confirm('Are you sure you want to delete this employee?')) {
+//             return;
+//         }
 
-        try {
-            const response = await axios.delete(
-                `http://localhost:3000/api/admin/employees/${id}`,
-                { withCredentials: true }
-            );
+//         try {
+//             const response = await axios.delete(
+//                 `http://localhost:3000/api/admin/employees/${id}`,
+//                 { withCredentials: true }
+//             );
 
-            setSuccess(response.data.message);
-            fetchEmployees(); // Refresh the list
-        } catch (err) {
-            setError(err.response?.data?.message || 'Failed to delete employee');
-        }
-    };
+//             setSuccess(response.data.message);
+//             fetchEmployees(); // Refresh the list
+//         } catch (err) {
+//             setError(err.response?.data?.message || 'Failed to delete employee');
+//         }
+//     };
 
-    // Open edit modal with employee data
-    const openEditModal = (employee) => {
-        setSelectedEmployee(employee);
-        setFormData({
-            email: employee.email,
-            password: '' // Don't prefill password
-        });
-        setShowEditModal(true);
-    };
+//     // Open edit modal with employee data
+//     const openEditModal = (employee) => {
+//         setSelectedEmployee(employee);
+//         setFormData({
+//             email: employee.email,
+//             password: '' // Don't prefill password
+//         });
+//         setShowEditModal(true);
+//     };
 
-    return (
-        <div className="p-6">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-gray-800">Manage Employees</h1>
-                <button
-                    onClick={() => {
-                        setFormData({ email: '', password: '' });
-                        setShowAddModal(true);
-                        setError('');
-                        setSuccess('');
-                    }}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
-                >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Add Employee
-                </button>
-            </div>
+//     return (
+//         <div className="p-6">
+//             {/* Header */}
+//             <div className="flex justify-between items-center mb-6">
+//                 <h1 className="text-3xl font-bold text-gray-800">Manage Employees</h1>
+//                 <button
+//                     onClick={() => {
+//                         setFormData({ email: '', password: '' });
+//                         setShowAddModal(true);
+//                         setError('');
+//                         setSuccess('');
+//                     }}
+//                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
+//                 >
+//                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+//                     </svg>
+//                     Add Employee
+//                 </button>
+//             </div>
 
-            {/* Messages */}
-            {error && (
-                <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                    <p className="text-sm">{error}</p>
-                </div>
-            )}
+//             {/* Messages */}
+//             {error && (
+//                 <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+//                     <p className="text-sm">{error}</p>
+//                 </div>
+//             )}
 
-            {success && (
-                <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-                    <p className="text-sm">{success}</p>
-                </div>
-            )}
+//             {success && (
+//                 <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+//                     <p className="text-sm">{success}</p>
+//                 </div>
+//             )}
 
-            {/* Employee Table */}
-            {loading ? (
-                <div className="flex justify-center items-center h-64">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                </div>
-            ) : employees.length === 0 ? (
-                <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">No employees</h3>
-                    <p className="mt-1 text-sm text-gray-500">Get started by adding a new employee.</p>
-                </div>
-            ) : (
-                <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Email
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Role
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Employee ID
-                                </th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {employees.map((employee) => (
-                                <tr key={employee._id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm font-medium text-gray-900">{employee.email}</div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            {employee.role}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {employee._id}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button
-                                            onClick={() => openEditModal(employee)}
-                                            className="text-blue-600 hover:text-blue-900 mr-4"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteEmployee(employee._id)}
-                                            className="text-red-600 hover:text-red-900"
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+//             {/* Employee Table */}
+//             {loading ? (
+//                 <div className="flex justify-center items-center h-64">
+//                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+//                 </div>
+//             ) : employees.length === 0 ? (
+//                 <div className="text-center py-12 bg-gray-50 rounded-lg">
+//                     <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+//                     </svg>
+//                     <h3 className="mt-2 text-sm font-medium text-gray-900">No employees</h3>
+//                     <p className="mt-1 text-sm text-gray-500">Get started by adding a new employee.</p>
+//                 </div>
+//             ) : (
+//                 <div className="bg-white shadow-md rounded-lg overflow-hidden">
+//                     <table className="min-w-full divide-y divide-gray-200">
+//                         <thead className="bg-gray-50">
+//                             <tr>
+//                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+//                                     Email
+//                                 </th>
+//                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+//                                     Role
+//                                 </th>
+//                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+//                                     Employee ID
+//                                 </th>
+//                                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+//                                     Actions
+//                                 </th>
+//                             </tr>
+//                         </thead>
+//                         <tbody className="bg-white divide-y divide-gray-200">
+//                             {employees.map((employee) => (
+//                                 <tr key={employee._id} className="hover:bg-gray-50 transition-colors">
+//                                     <td className="px-6 py-4 whitespace-nowrap">
+//                                         <div className="text-sm font-medium text-gray-900">{employee.email}</div>
+//                                     </td>
+//                                     <td className="px-6 py-4 whitespace-nowrap">
+//                                         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+//                                             {employee.role}
+//                                         </span>
+//                                     </td>
+//                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+//                                         {employee._id}
+//                                     </td>
+//                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+//                                         <button
+//                                             onClick={() => openEditModal(employee)}
+//                                             className="text-blue-600 hover:text-blue-900 mr-4"
+//                                         >
+//                                             Edit
+//                                         </button>
+//                                         <button
+//                                             onClick={() => handleDeleteEmployee(employee._id)}
+//                                             className="text-red-600 hover:text-red-900"
+//                                         >
+//                                             Delete
+//                                         </button>
+//                                     </td>
+//                                 </tr>
+//                             ))}
+//                         </tbody>
+//                     </table>
+//                 </div>
+//             )}
 
-            {/* Add Employee Modal */}
-            {showAddModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 m-4">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-gray-800">Add New Employee</h2>
-                            <button
-                                onClick={() => setShowAddModal(false)}
-                                className="text-gray-400 hover:text-gray-600 transition-colors"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
+//             {/* Add Employee Modal */}
+//             {showAddModal && (
+//                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+//                     <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 m-4">
+//                         <div className="flex justify-between items-center mb-6">
+//                             <h2 className="text-2xl font-bold text-gray-800">Add New Employee</h2>
+//                             <button
+//                                 onClick={() => setShowAddModal(false)}
+//                                 className="text-gray-400 hover:text-gray-600 transition-colors"
+//                             >
+//                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+//                                 </svg>
+//                             </button>
+//                         </div>
 
-                        <form onSubmit={handleAddEmployee} className="space-y-4">
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                    placeholder="employee@example.com"
-                                    required
-                                />
-                            </div>
+//                         <form onSubmit={handleAddEmployee} className="space-y-4">
+//                             <div>
+//                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+//                                     Email
+//                                 </label>
+//                                 <input
+//                                     type="email"
+//                                     id="email"
+//                                     name="email"
+//                                     value={formData.email}
+//                                     onChange={handleChange}
+//                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+//                                     placeholder="employee@example.com"
+//                                     required
+//                                 />
+//                             </div>
 
-                            <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                                    Password
-                                </label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                    placeholder="Enter password"
-                                    required
-                                />
-                            </div>
+//                             <div>
+//                                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+//                                     Password
+//                                 </label>
+//                                 <input
+//                                     type="password"
+//                                     id="password"
+//                                     name="password"
+//                                     value={formData.password}
+//                                     onChange={handleChange}
+//                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+//                                     placeholder="Enter password"
+//                                     required
+//                                 />
+//                             </div>
 
-                            <div className="flex gap-3 pt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowAddModal(false)}
-                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                                >
-                                    Add Employee
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+//                             <div className="flex gap-3 pt-4">
+//                                 <button
+//                                     type="button"
+//                                     onClick={() => setShowAddModal(false)}
+//                                     className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+//                                 >
+//                                     Cancel
+//                                 </button>
+//                                 <button
+//                                     type="submit"
+//                                     className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+//                                 >
+//                                     Add Employee
+//                                 </button>
+//                             </div>
+//                         </form>
+//                     </div>
+//                 </div>
+//             )}
 
-            {/* Edit Employee Modal */}
-            {showEditModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 m-4">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-gray-800">Edit Employee</h2>
-                            <button
-                                onClick={() => setShowEditModal(false)}
-                                className="text-gray-400 hover:text-gray-600 transition-colors"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
+//             {/* Edit Employee Modal */}
+//             {showEditModal && (
+//                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+//                     <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 m-4">
+//                         <div className="flex justify-between items-center mb-6">
+//                             <h2 className="text-2xl font-bold text-gray-800">Edit Employee</h2>
+//                             <button
+//                                 onClick={() => setShowEditModal(false)}
+//                                 className="text-gray-400 hover:text-gray-600 transition-colors"
+//                             >
+//                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+//                                 </svg>
+//                             </button>
+//                         </div>
 
-                        <form onSubmit={handleUpdateEmployee} className="space-y-4">
-                            <div>
-                                <label htmlFor="edit-email" className="block text-sm font-medium text-gray-700 mb-2">
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    id="edit-email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                    placeholder="employee@example.com"
-                                />
-                            </div>
+//                         <form onSubmit={handleUpdateEmployee} className="space-y-4">
+//                             <div>
+//                                 <label htmlFor="edit-email" className="block text-sm font-medium text-gray-700 mb-2">
+//                                     Email
+//                                 </label>
+//                                 <input
+//                                     type="email"
+//                                     id="edit-email"
+//                                     name="email"
+//                                     value={formData.email}
+//                                     onChange={handleChange}
+//                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+//                                     placeholder="employee@example.com"
+//                                 />
+//                             </div>
 
-                            <div>
-                                <label htmlFor="edit-password" className="block text-sm font-medium text-gray-700 mb-2">
-                                    New Password (leave empty to keep current)
-                                </label>
-                                <input
-                                    type="password"
-                                    id="edit-password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                    placeholder="Enter new password (optional)"
-                                />
-                            </div>
+//                             <div>
+//                                 <label htmlFor="edit-password" className="block text-sm font-medium text-gray-700 mb-2">
+//                                     New Password (leave empty to keep current)
+//                                 </label>
+//                                 <input
+//                                     type="password"
+//                                     id="edit-password"
+//                                     name="password"
+//                                     value={formData.password}
+//                                     onChange={handleChange}
+//                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+//                                     placeholder="Enter new password (optional)"
+//                                 />
+//                             </div>
 
-                            <div className="flex gap-3 pt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowEditModal(false)}
-                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                                >
-                                    Update Employee
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+//                             <div className="flex gap-3 pt-4">
+//                                 <button
+//                                     type="button"
+//                                     onClick={() => setShowEditModal(false)}
+//                                     className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+//                                 >
+//                                     Cancel
+//                                 </button>
+//                                 <button
+//                                     type="submit"
+//                                     className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+//                                 >
+//                                     Update Employee
+//                                 </button>
+//                             </div>
+//                         </form>
+//                     </div>
+//                 </div>
+//             )}
+//         </div>
+//     );
+// };
+
+// export default ManageEmployees;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { useState, useEffect } from 'react'
+import mockUsersData from '../../data/mockUsersData'
+import { FaPlus, FaEdit, FaTrash, FaTimes } from 'react-icons/fa'
+import { CgProfile } from 'react-icons/cg'
+import { FaUserTie } from 'react-icons/fa'
+import { FaRegCheckCircle } from 'react-icons/fa'
+
+// ── Add / Edit Modal ──────────────────────────────────────────────────────────
+function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
+  const [form, setForm] = useState({
+    name:       editingEmployee?.name       || '',
+    email:      editingEmployee?.email      || '',
+    password:   '',
+    designation: editingEmployee?.designation || '',
+    role:       editingEmployee?.role       || 'employee',
+  })
+  const [error, setError] = useState('')
+
+  const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value })
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setError('')
+    if (!form.name.trim() || !form.email.trim()) {
+      setError('Name and email are required.')
+      return
+    }
+    if (!editingEmployee && !form.password.trim()) {
+      setError('Password is required for new employees.')
+      return
+    }
+    onSubmit(form)
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 bg-opacity-60 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+
+        {/* Header */}
+        <div className="flex items-center justify-between p-5 bg-[#2C5284] rounded-t-2xl">
+          <h2 className="text-lg font-bold text-white">
+            {editingEmployee ? 'Edit Employee' : 'Add New Employee'}
+          </h2>
+          <button type="button" onClick={onClose}
+            className="text-white hover:bg-white/10 rounded-full p-2 transition-colors">
+            <FaTimes size={16} />
+          </button>
         </div>
-    );
-};
 
-export default ManageEmployees;
+        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Full Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text" name="name" value={form.name} onChange={handle} required
+              placeholder="e.g. Ali Hassan"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+            />
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Email <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email" name="email" value={form.email} onChange={handle} required
+              placeholder="employee@example.com"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Password {editingEmployee ? <span className="text-gray-400 font-normal">(leave blank to keep current)</span> : <span className="text-red-500">*</span>}
+            </label>
+            <input
+              type="password" name="password" value={form.password} onChange={handle}
+              placeholder={editingEmployee ? 'Enter new password (optional)' : 'Enter password'}
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+            />
+          </div>
+
+          {/* Designation */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Designation</label>
+            <input
+              type="text" name="designation" value={form.designation} onChange={handle}
+              placeholder="e.g. Software Engineer"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+            />
+          </div>
+
+          {/* Role */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Role</label>
+            <select
+              name="role" value={form.role} onChange={handle}
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm bg-white"
+            >
+              <option value="employee">Employee</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-3 pt-2">
+            <button type="button" onClick={onClose}
+              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors text-sm">
+              Cancel
+            </button>
+            <button type="submit"
+              className="flex-1 px-4 py-3 bg-[#2C5284] text-white rounded-lg font-medium hover:bg-[#365F8D] transition-colors text-sm">
+              {editingEmployee ? 'Update Employee' : 'Add Employee'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+// ── Main Component ────────────────────────────────────────────────────────────
+function ManageEmployees({ setTitle }) {
+  const [employees, setEmployees] = useState([])
+  const [showModal, setShowModal]   = useState(false)
+  const [editingEmp, setEditingEmp] = useState(null)
+  const [search, setSearch]         = useState('')
+  const [successMsg, setSuccessMsg] = useState('')
+
+  useEffect(() => {
+    setTitle('Manage Employees')
+    // Load from mock data; include all users
+    setEmployees(mockUsersData.map(u => ({ ...u })))
+  }, [setTitle])
+
+  const showSuccess = (msg) => {
+    setSuccessMsg(msg)
+    setTimeout(() => setSuccessMsg(''), 3000)
+  }
+
+  const handleSubmit = (form) => {
+    if (editingEmp) {
+      setEmployees(prev => prev.map(e =>
+        e.id === editingEmp.id
+          ? { ...e, name: form.name, email: form.email, designation: form.designation, role: form.role,
+              ...(form.password ? { password: form.password } : {}) }
+          : e
+      ))
+      showSuccess('Employee updated successfully!')
+    } else {
+      const newEmp = {
+        id: Date.now(),
+        employeeId: employees.length + 10,
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        designation: form.designation,
+        role: form.role,
+      }
+      setEmployees(prev => [...prev, newEmp])
+      showSuccess('Employee added successfully!')
+    }
+    setShowModal(false)
+    setEditingEmp(null)
+  }
+
+  const handleDelete = (id) => {
+    if (!window.confirm('Are you sure you want to delete this employee?')) return
+    setEmployees(prev => prev.filter(e => e.id !== id))
+    showSuccess('Employee deleted.')
+  }
+
+  const openEdit = (emp) => {
+    setEditingEmp(emp)
+    setShowModal(true)
+  }
+
+  const filtered = employees.filter(e =>
+    e.name?.toLowerCase().includes(search.toLowerCase()) ||
+    e.email?.toLowerCase().includes(search.toLowerCase())
+  )
+
+  const stats = {
+    total:   employees.length,
+    admins:  employees.filter(e => e.role === 'admin').length,
+    staff:   employees.filter(e => e.role !== 'admin').length,
+  }
+
+  return (
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
+
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284]">Manage Employees</h1>
+        <button
+          onClick={() => { setEditingEmp(null); setShowModal(true) }}
+          className="flex items-center gap-2 px-6 py-4 bg-[#2C5284] text-white rounded-lg font-medium hover:bg-[#365F8D] transition-colors text-sm shadow"
+        >
+          <FaPlus size={16} />
+          <span className="hidden sm:inline">Add Employee</span>
+          <span className="sm:hidden">Add</span>
+        </button>
+      </div>
+
+      {/* Success Toast */}
+      {successMsg && (
+        <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2">
+          <FaRegCheckCircle /> {successMsg}
+        </div>
+      )}
+
+      {/* Stat Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow hover:shadow-xl transition-shadow min-h-24">
+          <div>
+            <p className="text-xs sm:text-sm text-[#2C5284]">Total</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.total}</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Users</p>
+          </div>
+          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md">
+            <CgProfile size={24} className="text-white" />
+          </div>
+        </div>
+        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow hover:shadow-xl transition-shadow min-h-24">
+          <div>
+            <p className="text-xs sm:text-sm text-[#2C5284]">Admins</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.admins}</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Accounts</p>
+          </div>
+          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md">
+            <FaUserTie size={20} className="text-white" />
+          </div>
+        </div>
+        <div className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow hover:shadow-xl transition-shadow min-h-24">
+          <div>
+            <p className="text-xs sm:text-sm text-[#2C5284]">Staff</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.staff}</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Employees</p>
+          </div>
+          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md">
+            <FaRegCheckCircle size={20} className="text-white" />
+          </div>
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className="bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-100">
+        <input
+          type="text"
+          placeholder="Search by name or email..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+        />
+      </div>
+
+      {/* Desktop Table */}
+      <div className="hidden lg:block bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-[#2C5284]">
+            <tr>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-white">Employee</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-white">Designation</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-white">Role</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-white">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {filtered.length > 0 ? filtered.map(emp => (
+              <tr key={emp.id} className="hover:bg-blue-50/30 transition-colors">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#365F8D] flex items-center justify-center flex-shrink-0">
+                      <CgProfile size={20} className="text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">{emp.name}</p>
+                      <p className="text-xs text-gray-500">{emp.email}</p>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  {emp.designation || <span className="text-gray-400 italic">—</span>}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-semibold
+                    ${emp.role === 'admin' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'}`}>
+                    {emp.role === 'admin' ? 'Admin' : 'Employee'}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => openEdit(emp)}
+                      className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Edit">
+                      <FaEdit size={16} />
+                    </button>
+                    <button onClick={() => handleDelete(emp.id)}
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
+                      <FaTrash size={16} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            )) : (
+              <tr>
+                <td colSpan={4} className="px-6 py-10 text-center text-gray-400 italic">
+                  No employees found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="lg:hidden space-y-3">
+        {filtered.length > 0 ? filtered.map(emp => (
+          <div key={emp.id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+            <div className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#365F8D] flex items-center justify-center flex-shrink-0">
+                  <CgProfile size={20} className="text-white" />
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm">{emp.name}</p>
+                  <p className="text-xs text-gray-500">{emp.email}</p>
+                  {emp.designation && <p className="text-xs text-gray-400">{emp.designation}</p>}
+                </div>
+              </div>
+              <span className={`px-2.5 py-1 rounded-full text-xs font-semibold
+                ${emp.role === 'admin' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'}`}>
+                {emp.role === 'admin' ? 'Admin' : 'Employee'}
+              </span>
+            </div>
+            <div className="px-4 pb-4 flex justify-end gap-2 border-t border-gray-100 pt-3">
+              <button onClick={() => openEdit(emp)}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 rounded-lg">
+                <FaEdit size={12} /> Edit
+              </button>
+              <button onClick={() => handleDelete(emp.id)}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 rounded-lg">
+                <FaTrash size={12} /> Delete
+              </button>
+            </div>
+          </div>
+        )) : (
+          <div className="bg-white rounded-xl p-10 text-center text-gray-400 italic border border-gray-100">
+            No employees found.
+          </div>
+        )}
+      </div>
+
+      {/* Modal */}
+      {showModal && (
+        <EmployeeModal
+          editingEmployee={editingEmp}
+          onClose={() => { setShowModal(false); setEditingEmp(null) }}
+          onSubmit={handleSubmit}
+        />
+      )}
+    </div>
+  )
+}
+
+export default ManageEmployees
