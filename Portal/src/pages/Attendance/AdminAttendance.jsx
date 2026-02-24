@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // // import { useEffect, useState } from 'react'
 // // import mockAttendanceData from '../../data/mockAttendanceData'
 // // import { CgProfile } from 'react-icons/cg'
@@ -1208,7 +1209,11 @@ function AdminAttendance({ setTitle }) {
       <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] mb-6">Attendance Management</h1>
 
       {/* Stats Cards */}
+<<<<<<< HEAD
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+=======
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+>>>>>>> ad0fba4eadae735b99d42feb888d4d6a6b0837a2
         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
           <div>
             <p className="text-sm sm:text-base text-[#2C5284]">Total Employees</p>
@@ -1219,7 +1224,11 @@ function AdminAttendance({ setTitle }) {
           </div>
         </div>
 
+<<<<<<< HEAD
          <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+=======
+        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+>>>>>>> ad0fba4eadae735b99d42feb888d4d6a6b0837a2
           <div>
             <p className="text-sm sm:text-base text-[#2C5284]">Today Present</p>
             <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{todayStats.present}</h1>
@@ -1245,9 +1254,13 @@ function AdminAttendance({ setTitle }) {
             <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{todayStats.onLeave}</h1>
           </div>
           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+<<<<<<< HEAD
             {/* <SlCalendar size={24} className="text-white" /> */}
             <CalendarDays size={24} className='text-white' /> 
             
+=======
+            <SlCalender size={24} className="text-white" />
+>>>>>>> ad0fba4eadae735b99d42feb888d4d6a6b0837a2
           </div>
         </div>
       </div>
