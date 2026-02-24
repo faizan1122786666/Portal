@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import mockLeaveData from '../../data/mockLeaveData';
-import { FaEye, FaCheck, FaTimes } from 'react-icons/fa';
+import { FaEye, FaCheck, FaTimes, FaRegCheckCircle } from 'react-icons/fa';
+import { CgProfile } from 'react-icons/cg';
+import { RxCrossCircled } from 'react-icons/rx';
+import { SlCalender } from 'react-icons/sl';
 import LeaveDetailModal from './LeaveDetailModal';
 
 function AdminLeave({ setTitle }) {
@@ -113,21 +116,41 @@ function AdminLeave({ setTitle }) {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-xl transform transition duration-300 ease-in-out">
-          <p className="text-sm sm:text-base text-[#2C5284]">Total Requests</p>
-          <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.total}</p>
+        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+          <div>
+            <p className="text-sm sm:text-base text-[#2C5284]">Total Requests</p>
+            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.total}</p>
+          </div>
+          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+            <CgProfile size={24} className="text-white" />
+          </div>
         </div>
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-xl transform transition duration-300 ease-in-out">
-          <p className="text-sm sm:text-base text-[#2C5284]">Pending</p>
-          <p className="text-2xl sm:text-3xl font-bold text-yellow-600">{stats.pending}</p>
+        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+          <div>
+            <p className="text-sm sm:text-base text-[#2C5284]">Pending</p>
+            <p className="text-2xl sm:text-3xl font-bold text-yellow-600">{stats.pending}</p>
+          </div>
+          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+            <SlCalender size={24} className="text-white" />
+          </div>
         </div>
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-xl transform transition duration-300 ease-in-out">
-          <p className="text-sm sm:text-base text-[#2C5284]">Approved</p>
-          <p className="text-2xl sm:text-3xl font-bold text-green-600">{stats.approved}</p>
+        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+          <div>
+            <p className="text-sm sm:text-base text-[#2C5284]">Approved</p>
+            <p className="text-2xl sm:text-3xl font-bold text-green-600">{stats.approved}</p>
+          </div>
+          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+            <FaRegCheckCircle size={24} className="text-white" />
+          </div>
         </div>
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-xl transform transition duration-300 ease-in-out">
-          <p className="text-sm sm:text-base text-[#2C5284]">Rejected</p>
-          <p className="text-2xl sm:text-3xl font-bold text-red-600">{stats.rejected}</p>
+        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+          <div>
+            <p className="text-sm sm:text-base text-[#2C5284]">Rejected</p>
+            <p className="text-2xl sm:text-3xl font-bold text-red-600">{stats.rejected}</p>
+          </div>
+          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+            <RxCrossCircled size={24} className="text-white" />
+          </div>
         </div>
       </div>
 
