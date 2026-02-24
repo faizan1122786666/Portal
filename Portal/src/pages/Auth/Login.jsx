@@ -192,21 +192,33 @@ function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               id="email"
-              className="bg-neutral-secondary-medium border border-neutral-400 text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
-              placeholder="employee@company.com"
+              className="bg-neutral-secondary-medium border border-gray-400 outline-none text-heading text-sm rounded-base  block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
+              placeholder="employee@gmail.com"
+              
               required />
           </div>
 
           <div className="mb-4 sm:mb-5">
             <label htmlFor="password" className="block mb-2 sm:mb-2.5 text-xs sm:text-sm font-bold text-heading">Password</label>
-            <input
+            {/* <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               id="password"
-              className="bg-neutral-secondary-medium border border-neutral-400 text-heading text-xs sm:text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 sm:py-2.5 shadow-xs placeholder:text-body"
+              className="bg-neutral-secondary-medium border border-gray-50 outline text-heading text-xs sm:text-sm rounded-base block w-full px-3 py-2.5 sm:py-2.5 shadow-xs placeholder:text-body"
               placeholder="••••••••"
-              required />
+              required /> */}
+              <input
+  type="password"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  id="password"
+  className="bg-neutral-secondary-medium border border-gray-400 outline-none text-heading text-xs sm:text-sm rounded-base block w-full px-3 py-2.5 sm:py-2.5 shadow-xs placeholder:text-body"
+  placeholder="••••••••"
+  pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+  title="Password must contain at least 1 letter and 1 number (minimum 6 characters)"
+  required
+/>
           </div>
 
           <button

@@ -80,7 +80,7 @@ const ChangePassword = ({ onClose }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-[#2C5284] bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-lg sm:rounded-xl shadow-xl w-full max-w-xs sm:max-w-sm p-6 sm:p-8 m-4">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-6">
@@ -88,7 +88,7 @@ const ChangePassword = ({ onClose }) => {
                     {onClose && (
                         <button
                             onClick={onClose}
-                            className="text-body hover:text-heading transition-colors"
+                            className="text-body hover:text-heading transition-colors cursor-pointer"
                         >
                             <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -124,7 +124,7 @@ const ChangePassword = ({ onClose }) => {
                             name="oldPassword"
                             value={formData.oldPassword}
                             onChange={handleChange}
-                            className="bg-neutral-secondary-medium border border-neutral-400 text-heading text-xs sm:text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body outline-none"
+                          className="bg-neutral-secondary-medium border border-gray-400 outline-none text-heading text-xs sm:text-sm rounded-base block w-full px-3 py-2.5 sm:py-2.5 shadow-xs placeholder:text-body"
                             placeholder="Enter your old password"
                         />
                     </div>
@@ -140,7 +140,7 @@ const ChangePassword = ({ onClose }) => {
                             name="newPassword"
                             value={formData.newPassword}
                             onChange={handleChange}
-                            className="bg-neutral-secondary-medium border border-neutral-400 text-heading text-xs sm:text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body outline-none"
+                            className="bg-neutral-secondary-medium border border-gray-400 outline-none text-heading text-xs sm:text-sm rounded-base block w-full px-3 py-2.5 sm:py-2.5 shadow-xs placeholder:text-body"
                             placeholder="Enter your new password"
                         />
                     </div>
@@ -156,7 +156,7 @@ const ChangePassword = ({ onClose }) => {
                             name="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={handleChange}
-                            className="bg-neutral-secondary-medium border border-neutral-400 text-heading text-xs sm:text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body outline-none"
+                            className="bg-neutral-secondary-medium border border-gray-400 outline-none text-heading text-xs sm:text-sm rounded-base block w-full px-3 py-2.5 shadow-xs placeholder:text-body "
                             placeholder="Confirm your new password"
                         />
                     </div>
@@ -167,7 +167,7 @@ const ChangePassword = ({ onClose }) => {
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="flex-1 px-4 py-2.5 border border-neutral-400 text-heading rounded-base hover:bg-neutral-secondary-medium transition-colors font-medium text-xs sm:text-sm"
+                                className="flex-1 px-4 py-2.5 border border-gray-400 outline-none text-heading rounded-base hover:bg-gray-200 transition-colors font-medium text-xs sm:text-sm cursor-pointer"
                             >
                                 Cancel
                             </button>
@@ -175,7 +175,8 @@ const ChangePassword = ({ onClose }) => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className={`flex-1 px-4 py-2.5 bg-[#2C5282] text-white rounded-base hover:bg-brand-strong transition-colors font-medium text-xs sm:text-sm ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`flex-1 px-4 py-2.5 bg-[#2C5282] text-white rounded-base 
+                                cursor-pointer hover:bg-brand-strong transition-colors font-medium text-xs sm:text-sm ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {loading ? 'Changing...' : 'Change Password'}
                         </button>

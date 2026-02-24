@@ -429,7 +429,7 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
             {editingEmployee ? 'Edit Employee' : 'Add New Employee'}
           </h2>
           <button type="button" onClick={onClose}
-            className="text-white hover:bg-white/10 rounded-full p-2 transition-colors">
+            className="text-white hover:bg-white/10 rounded-full p-2 transition-colors cursor-pointer">
             <FaTimes size={16} />
           </button>
         </div>
@@ -502,11 +502,11 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
           {/* Buttons */}
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose}
-              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors text-sm">
+              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors text-sm cursor-pointer">
               Cancel
             </button>
             <button type="submit"
-              className="flex-1 px-4 py-3 bg-[#2C5284] text-white rounded-lg font-medium hover:bg-[#365F8D] transition-colors text-sm">
+              className="flex-1 px-4 py-3 bg-[#2C5284] cursor-pointer text-white rounded-lg font-medium hover:bg-[#365F8D] transition-colors text-sm">
               {editingEmployee ? 'Update Employee' : 'Add Employee'}
             </button>
           </div>

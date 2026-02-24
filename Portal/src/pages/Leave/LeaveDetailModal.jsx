@@ -575,7 +575,7 @@ function LeaveDetailModal({ leave, onClose, onStatusChange }) {
               <button
                 type="submit"
                 className="flex-1 px-6 py-3 bg-[#2C5284] text-white rounded-lg 
-                  font-medium hover:bg-[#2C5284] transition-colors"
+                  font-medium hover:bg-[#2C5284] transition-colors cursor-pointer"
               >
                 Save Changes
               </button>
