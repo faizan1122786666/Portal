@@ -752,11 +752,12 @@ const attendanceDistribution = {
   ],
 };
 
-function UserDashboard({ setTitle }) {
+function UserDashboard({ setTitle,darkMode }) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isClockedIn, setIsClockedIn] = useState(false);
   const [clockInTime, setClockInTime] = useState(null);
   const [todayStatus, setTodayStatus] = useState('Not yet clocked in');
+  const dark = darkMode;
 
   useEffect(() => {
     setTitle('Dashboard Page');
@@ -796,7 +797,7 @@ function UserDashboard({ setTitle }) {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className='min-h-screen'>
       {/* Current Time Display */}
       {/* <div className="bg-white rounded-xl shadow-sm p-6 mb-6 text-center">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#365F8D]">

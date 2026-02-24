@@ -493,7 +493,7 @@ function App() {
 
   return (
     <AuthContextProvider value={{ user, handleLogin, handleLogout }}>
-      <div className="flex h-screen overflow-hidden">
+      <div className="flex h-screen overflow-hidden ">
         {user ? (
           <>
             {/* Sidebar — shows Manage Employees link only for admin */}

@@ -46,7 +46,6 @@ export default function Header({ title, handleSlidebar, isAdmin, darkMode, toggl
       </div>
 
       {/* Dark Mode Toggle — only for admin */}
-      {isAdmin && (
         <button
           onClick={toggleDarkMode}
           title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
@@ -54,7 +53,6 @@ export default function Header({ title, handleSlidebar, isAdmin, darkMode, toggl
         >
           {darkMode ? <Sun size={22} /> : <Moon size={22} />}
         </button>
-      )}
     </header>
   )
 }
