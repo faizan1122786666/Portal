@@ -130,7 +130,7 @@
 import React, { useState } from 'react'
 import { CgProfile } from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom';
-import  mockUsersData  from '../../data/mockUsersData';
+import axios from 'axios'
 import { useAuthContext } from '../../context';
 import ChangePassword from './ChangePassword';
 
@@ -144,22 +144,26 @@ function Login() {
   const { handleLogin } = useAuthContext();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('');
     setloading(true);
 
-    const foundUser = mockUsersData.find((e) => e.email === email && e.password === password);
-    setTimeout(() => {
-      if (foundUser) {
-        handleLogin(foundUser);
-        navigate('/dashboard');
-      }
-      else {
-        setError("Invalid email or password");
-      }
-      setloading(false);
-    }, 500)
+    try{
+      const response = await axios.post('http://localhost:3000/api/auth/login',{email,password},{withCredentials : true})
+
+      // response.data.user = { id, email, role }
+      handleLogin(response.data.user);
+      navigate('/dashboard')
+
+    }catch(error)
+    {
+      setError(error.response?.data?.message || 'Invalid email or password')
+    }
+    finally{
+      setloading(false)
+    }
+
   }
 
   return (
@@ -215,7 +219,7 @@ function Login() {
   id="password"
   className="bg-neutral-secondary-medium border border-gray-400 outline-none text-heading text-xs sm:text-sm rounded-base block w-full px-3 py-2.5 sm:py-2.5 shadow-xs placeholder:text-body"
   placeholder="••••••••"
-  pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+  // pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
   title="Password must contain at least 1 letter and 1 number (minimum 6 characters)"
   required
 />
