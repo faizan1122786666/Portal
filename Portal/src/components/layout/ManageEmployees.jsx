@@ -1678,8 +1678,532 @@
 
 
 
+// import { useState, useEffect } from 'react'
+// import axios from 'axios'
+// import { FaPlus, FaEdit, FaTrash, FaTimes } from 'react-icons/fa'
+// import { CgProfile } from 'react-icons/cg'
+// import { FaUserTie, FaRegCheckCircle, FaBuilding } from 'react-icons/fa'
+
+// // ── Axios instance ────────────────────────────────────────────────────────────
+// const api = axios.create({
+//   baseURL: 'http://localhost:3000/api/admin',
+//   withCredentials: true,
+// })
+
+// // ── Department options ────────────────────────────────────────────────────────
+// const DEPARTMENTS = [
+//   'Engineering',
+//   'Design',
+//   'Marketing',
+//   'Sales',
+//   'Human Resources',
+//   'Finance',
+//   'Operations',
+//   'Customer Support',
+//   'Legal',
+//   'Product',
+// ]
+
+// // ── Add / Edit Modal ──────────────────────────────────────────────────────────
+// function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
+//   const [form, setForm] = useState({
+//     email:      editingEmployee?.email      || '',
+//     password:   '',
+//     role:       editingEmployee?.role       || 'employee',
+//     department: editingEmployee?.department || '',
+//   })
+//   const [error, setError] = useState('')
+
+//   const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value })
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault()
+//     setError('')
+//     if (!form.email.trim()) {
+//       setError('Email is required.')
+//       return
+//     }
+//     if (!editingEmployee && !form.password.trim()) {
+//       setError('Password is required for new employees.')
+//       return
+//     }
+//     onSubmit(form)
+//   }
+
+//   return (
+//     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+//       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+
+//         {/* Header */}
+//         <div className="flex items-center justify-between p-5 bg-[#2C5284] rounded-t-2xl">
+//           <h2 className="text-lg font-bold text-white">
+//             {editingEmployee ? 'Edit Employee' : 'Add New Employee'}
+//           </h2>
+//           <button type="button" onClick={onClose}
+//             className="text-white hover:bg-white/10 rounded-full p-2 transition-colors cursor-pointer">
+//             <FaTimes size={16} />
+//           </button>
+//         </div>
+
+//         <form onSubmit={handleSubmit} className="p-5 space-y-4">
+
+//           {error && (
+//             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm">
+//               {error}
+//             </div>
+//           )}
+
+//           {/* Email */}
+//           <div>
+//             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+//               Email <span className="text-red-500">*</span>
+//             </label>
+//             <input
+//               type="email" name="email" value={form.email} onChange={handle} required
+//               placeholder="employee@example.com"
+//               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+//             />
+//           </div>
+
+//           {/* Password */}
+//           <div>
+//             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+//               Password{' '}
+//               {editingEmployee
+//                 ? <span className="text-gray-400 font-normal text-xs">(leave blank to keep current)</span>
+//                 : <span className="text-red-500">*</span>
+//               }
+//             </label>
+//             <input
+//               type="password" name="password" value={form.password} onChange={handle}
+//               placeholder={editingEmployee ? 'Enter new password (optional)' : 'Enter password'}
+//               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+//             />
+//           </div>
+
+//           {/* Role — radio pill buttons */}
+//           <div>
+//             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+//               Role <span className="text-red-500">*</span>
+//             </label>
+//             <div className="flex gap-3">
+//               {['employee', 'admin'].map((r) => (
+//                 <label key={r}
+//                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border-2 cursor-pointer text-sm font-medium transition-all select-none
+//                     ${form.role === r
+//                       ? 'border-[#2C5284] bg-[#2C5284] text-white'
+//                       : 'border-gray-200 text-gray-600 hover:border-[#2C5284]/40 bg-white'
+//                     }`}
+//                 >
+//                   <input
+//                     type="radio" name="role" value={r}
+//                     checked={form.role === r}
+//                     onChange={handle}
+//                     className="sr-only"
+//                   />
+//                   {r === 'admin' ? <FaUserTie size={13} /> : <CgProfile size={13} />}
+//                   <span className="capitalize">{r}</span>
+//                 </label>
+//               ))}
+//             </div>
+//           </div>
+
+//           {/* Department — dropdown */}
+//           <div>
+//             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+//               Department
+//             </label>
+//             <select
+//               name="department"
+//               value={form.department}
+//               onChange={handle}
+//               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm bg-white text-gray-700"
+//             >
+//               <option value="">— Select Department —</option>
+//               {DEPARTMENTS.map((dept) => (
+//                 <option key={dept} value={dept}>{dept}</option>
+//               ))}
+//             </select>
+//           </div>
+
+//           {/* Live preview badge */}
+//           {(form.email || form.department) && (
+//             <div className="bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 flex items-center gap-3">
+//               <div className="w-8 h-8 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
+//                 <CgProfile size={16} className="text-white" />
+//               </div>
+//               <div className="overflow-hidden">
+//                 <p className="text-sm font-semibold text-gray-800 truncate">{form.email || '—'}</p>
+//                 <p className="text-xs text-gray-500 capitalize">
+//                   {form.role}{form.department ? ` · ${form.department}` : ''}
+//                 </p>
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Action buttons */}
+//           <div className="flex gap-3 pt-1">
+//             <button type="button" onClick={onClose}
+//               className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors text-sm cursor-pointer">
+//               Cancel
+//             </button>
+//             <button type="submit"
+//               className="flex-1 px-4 py-3 bg-[#2C5284] cursor-pointer text-white rounded-lg font-medium hover:bg-[#365F8D] transition-colors text-sm">
+//               {editingEmployee ? 'Update Employee' : 'Add Employee'}
+//             </button>
+//           </div>
+//         </form>
+//       </div>
+//     </div>
+//   )
+// }
+
+// // ── Main Component ────────────────────────────────────────────────────────────
+// function ManageEmployees({ setTitle }) {
+//   const [employees, setEmployees]   = useState([])
+//   const [loading, setLoading]       = useState(true)
+//   const [showModal, setShowModal]   = useState(false)
+//   const [editingEmp, setEditingEmp] = useState(null)
+//   const [search, setSearch]         = useState('')
+//   const [filterDept, setFilterDept] = useState('')
+//   const [filterRole, setFilterRole] = useState('')
+//   const [successMsg, setSuccessMsg] = useState('')
+//   const [errorMsg, setErrorMsg]     = useState('')
+
+//   // ── Fetch ────────────────────────────────────────────────────────────────
+//   const fetchEmployees = async () => {
+//     setLoading(true)
+//     try {
+//       const res = await api.get('/employees')
+//       setEmployees(res.data.employees)
+//     } catch (err) {
+//       showError(err.response?.data?.message || 'Failed to fetch employees')
+//     } finally {
+//       setLoading(false)
+//     }
+//   }
+
+//   useEffect(() => {
+//     setTitle('Manage Employees')
+//     fetchEmployees()
+//   }, [setTitle])
+
+//   const showSuccess = (msg) => { setSuccessMsg(msg); setTimeout(() => setSuccessMsg(''), 3000) }
+//   const showError   = (msg) => { setErrorMsg(msg);   setTimeout(() => setErrorMsg(''),   4000) }
+
+//   // ── Add / Edit submit ────────────────────────────────────────────────────
+//   const handleSubmit = async (form) => {
+//     try {
+//       if (editingEmp) {
+//         const payload = {
+//           email:      form.email,
+//           role:       form.role,
+//           department: form.department,
+//         }
+//         if (form.password) payload.password = form.password
+//         await api.put(`/employees/${editingEmp._id}`, payload)
+//         showSuccess('Employee updated successfully!')
+//       } else {
+//         await api.post('/employees', {
+//           email:      form.email,
+//           password:   form.password,
+//           role:       form.role,
+//           department: form.department,
+//         })
+//         showSuccess('Employee added successfully!')
+//       }
+//       fetchEmployees()
+//     } catch (err) {
+//       showError(err.response?.data?.message || 'Operation failed')
+//     } finally {
+//       setShowModal(false)
+//       setEditingEmp(null)
+//     }
+//   }
+
+//   // ── Delete ───────────────────────────────────────────────────────────────
+//   const handleDelete = async (id) => {
+//     if (!window.confirm('Are you sure you want to delete this employee?')) return
+//     try {
+//       await api.delete(`/employees/${id}`)
+//       setEmployees(prev => prev.filter(e => e._id !== id))
+//       showSuccess('Employee deleted.')
+//     } catch (err) {
+//       showError(err.response?.data?.message || 'Failed to delete employee')
+//     }
+//   }
+
+//   const openEdit = (emp) => { setEditingEmp(emp); setShowModal(true) }
+
+//   // ── Filter logic ─────────────────────────────────────────────────────────
+//   const filtered = employees.filter(e => {
+//     const matchSearch = e.email?.toLowerCase().includes(search.toLowerCase())
+//     const matchDept   = filterDept ? e.department === filterDept : true
+//     const matchRole   = filterRole ? e.role === filterRole       : true
+//     return matchSearch && matchDept && matchRole
+//   })
+
+//   const stats = {
+//     total:  employees.length,
+//     admins: employees.filter(e => e.role === 'admin').length,
+//     staff:  employees.filter(e => e.role === 'employee').length,
+//   }
+
+//   // departments that actually exist in the data (for filter dropdown)
+//   const activeDepts = [...new Set(employees.map(e => e.department).filter(Boolean))]
+
+//   return (
+//     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
+
+//       {/* Header */}
+//       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+//         <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284]">Manage Employees</h1>
+//         <button
+//           onClick={() => { setEditingEmp(null); setShowModal(true) }}
+//           className="flex items-center gap-2 px-6 py-4 bg-[#2C5284] text-white rounded-lg font-medium hover:bg-[#365F8D] transition-colors text-sm shadow"
+//         >
+//           <FaPlus size={16} />
+//           Add Employee
+//         </button>
+//       </div>
+
+//       {/* Toasts */}
+//       {successMsg && (
+//         <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2">
+//           <FaRegCheckCircle /> {successMsg}
+//         </div>
+//       )}
+//       {errorMsg && (
+//         <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
+//           {errorMsg}
+//         </div>
+//       )}
+
+//       {/* Stat Cards */}
+//       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+//         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+//           <div>
+//             <p className="text-sm sm:text-base text-[#2C5284]">Total Users</p>
+//             <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.total}</p>
+//           </div>
+//           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//             <CgProfile size={24} className="text-white" />
+//           </div>
+//         </div>
+//         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+//           <div>
+//             <p className="text-sm sm:text-base text-[#2C5284]">Admins</p>
+//             <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.admins}</p>
+//           </div>
+//           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//             <FaUserTie size={24} className="text-white" />
+//           </div>
+//         </div>
+//         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+//           <div>
+//             <p className="text-sm sm:text-base text-[#2C5284]">Employees</p>
+//             <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.staff}</p>
+//           </div>
+//           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//             <FaRegCheckCircle size={24} className="text-white" />
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Search + Filter bar */}
+//       <div className="bg-white rounded-xl shadow-sm p-4 mb-4 border border-gray-100 flex flex-col sm:flex-row gap-3">
+//         <input
+//           type="text"
+//           placeholder="Search by email..."
+//           value={search}
+//           onChange={e => setSearch(e.target.value)}
+//           className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+//         />
+//         <select
+//           value={filterDept}
+//           onChange={e => setFilterDept(e.target.value)}
+//           className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-sm bg-white text-gray-700 min-w-[160px]"
+//         >
+//           <option value="">All Departments</option>
+//           {activeDepts.map(d => <option key={d} value={d}>{d}</option>)}
+//         </select>
+//         <select
+//           value={filterRole}
+//           onChange={e => setFilterRole(e.target.value)}
+//           className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-sm bg-white text-gray-700 min-w-[130px]"
+//         >
+//           <option value="">All Roles</option>
+//           <option value="employee">Employee</option>
+//           <option value="admin">Admin</option>
+//         </select>
+//       </div>
+
+//       <p className="text-xs text-gray-400 mb-3 px-1">
+//         Showing <span className="font-semibold text-gray-600">{filtered.length}</span> of {employees.length} users
+//       </p>
+
+//       {/* Loading spinner */}
+//       {loading ? (
+//         <div className="flex justify-center items-center h-64">
+//           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2C5284]" />
+//         </div>
+//       ) : (
+//         <>
+//           {/* Desktop Table */}
+//           <div className="hidden lg:block bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+//             <table className="min-w-full divide-y divide-gray-200">
+//               <thead className="bg-[#2C5284]">
+//                 <tr>
+//                   {['Employee', 'Department', 'Role', 'Actions'].map(h => (
+//                     <th key={h} className="px-6 py-4 text-left text-sm font-semibold text-white">{h}</th>
+//                   ))}
+//                 </tr>
+//               </thead>
+//               <tbody className="divide-y divide-gray-100">
+//                 {filtered.length > 0 ? filtered.map(emp => (
+//                   <tr key={emp._id} className="hover:bg-blue-50/20 transition-colors">
+
+//                     {/* Employee cell */}
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <div className="flex items-center gap-3">
+//                         <div className="w-9 h-9 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
+//                           <CgProfile size={18} className="text-white" />
+//                         </div>
+//                         <div>
+//                           <p className="text-sm font-semibold text-gray-900">{emp.email}</p>
+//                           <p className="text-xs text-gray-400 font-mono">{emp._id}</p>
+//                         </div>
+//                       </div>
+//                     </td>
+
+//                     {/* Department cell */}
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       {emp.department ? (
+//                         <span className="flex items-center gap-1.5 text-sm text-gray-700">
+//                           <FaBuilding size={11} className="text-gray-400" />
+//                           {emp.department}
+//                         </span>
+//                       ) : (
+//                         <span className="text-gray-300 italic text-sm">—</span>
+//                       )}
+//                     </td>
+
+//                     {/* Role cell */}
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold
+//                         ${emp.role === 'admin'
+//                           ? 'bg-yellow-100 text-yellow-800'
+//                           : 'bg-blue-100 text-blue-800'}`}>
+//                         {emp.role === 'admin' ? <FaUserTie size={10} /> : <CgProfile size={10} />}
+//                         <span className="capitalize">{emp.role}</span>
+//                       </span>
+//                     </td>
+
+//                     {/* Actions cell */}
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <div className="flex items-center gap-1">
+//                         <button onClick={() => openEdit(emp)}
+//                           className="p-2 text-[#2C5284] hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+//                           <FaEdit size={15} />
+//                         </button>
+//                         <button onClick={() => handleDelete(emp._id)}
+//                           className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
+//                           <FaTrash size={15} />
+//                         </button>
+//                       </div>
+//                     </td>
+//                   </tr>
+//                 )) : (
+//                   <tr>
+//                     <td colSpan={4} className="px-6 py-14 text-center text-gray-400 italic">
+//                       No employees found.
+//                     </td>
+//                   </tr>
+//                 )}
+//               </tbody>
+//             </table>
+//           </div>
+
+//           {/* Mobile Cards */}
+//           <div className="lg:hidden space-y-3">
+//             {filtered.length > 0 ? filtered.map(emp => (
+//               <div key={emp._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+//                 <div className="p-4 flex items-start justify-between gap-3">
+//                   <div className="flex items-center gap-3 min-w-0">
+//                     <div className="w-10 h-10 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
+//                       <CgProfile size={20} className="text-white" />
+//                     </div>
+//                     <div className="min-w-0">
+//                       <p className="font-semibold text-gray-900 text-sm truncate">{emp.email}</p>
+//                       {emp.department && (
+//                         <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+//                           <FaBuilding size={10} /> {emp.department}
+//                         </p>
+//                       )}
+//                     </div>
+//                   </div>
+//                   <span className={`flex-shrink-0 px-2.5 py-1 rounded-full text-xs font-semibold capitalize
+//                     ${emp.role === 'admin' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'}`}>
+//                     {emp.role}
+//                   </span>
+//                 </div>
+//                 <div className="px-4 pb-3 flex justify-end gap-2 border-t border-gray-100 pt-3">
+//                   <button onClick={() => openEdit(emp)}
+//                     className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#2C5284] bg-blue-50 rounded-lg">
+//                     <FaEdit size={11} /> Edit
+//                   </button>
+//                   <button onClick={() => handleDelete(emp._id)}
+//                     className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 rounded-lg">
+//                     <FaTrash size={11} /> Delete
+//                   </button>
+//                 </div>
+//               </div>
+//             )) : (
+//               <div className="bg-white rounded-xl p-12 text-center text-gray-700  border border-gray-100">
+//                 No employees found.
+//               </div>
+//             )}
+//           </div>
+//         </>
+//       )}
+
+//       {/* Modal */}
+//       {showModal && (
+//         <EmployeeModal
+//           editingEmployee={editingEmp}
+//           onClose={() => { setShowModal(false); setEditingEmp(null) }}
+//           onSubmit={handleSubmit}
+//         />
+//       )}
+//     </div>
+//   )
+// }
+
+// export default ManageEmployees
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 import { FaPlus, FaEdit, FaTrash, FaTimes } from 'react-icons/fa'
 import { CgProfile } from 'react-icons/cg'
 import { FaUserTie, FaRegCheckCircle, FaBuilding } from 'react-icons/fa'
@@ -1867,8 +2391,6 @@ function ManageEmployees({ setTitle }) {
   const [search, setSearch]         = useState('')
   const [filterDept, setFilterDept] = useState('')
   const [filterRole, setFilterRole] = useState('')
-  const [successMsg, setSuccessMsg] = useState('')
-  const [errorMsg, setErrorMsg]     = useState('')
 
   // ── Fetch ────────────────────────────────────────────────────────────────
   const fetchEmployees = async () => {
@@ -1877,7 +2399,7 @@ function ManageEmployees({ setTitle }) {
       const res = await api.get('/employees')
       setEmployees(res.data.employees)
     } catch (err) {
-      showError(err.response?.data?.message || 'Failed to fetch employees')
+      toast.error(err.response?.data?.message || 'Failed to fetch employees')
     } finally {
       setLoading(false)
     }
@@ -1887,9 +2409,6 @@ function ManageEmployees({ setTitle }) {
     setTitle('Manage Employees')
     fetchEmployees()
   }, [setTitle])
-
-  const showSuccess = (msg) => { setSuccessMsg(msg); setTimeout(() => setSuccessMsg(''), 3000) }
-  const showError   = (msg) => { setErrorMsg(msg);   setTimeout(() => setErrorMsg(''),   4000) }
 
   // ── Add / Edit submit ────────────────────────────────────────────────────
   const handleSubmit = async (form) => {
@@ -1902,7 +2421,7 @@ function ManageEmployees({ setTitle }) {
         }
         if (form.password) payload.password = form.password
         await api.put(`/employees/${editingEmp._id}`, payload)
-        showSuccess('Employee updated successfully!')
+        toast.success('Employee updated successfully!')
       } else {
         await api.post('/employees', {
           email:      form.email,
@@ -1910,11 +2429,11 @@ function ManageEmployees({ setTitle }) {
           role:       form.role,
           department: form.department,
         })
-        showSuccess('Employee added successfully!')
+        toast.success('Employee added successfully!')
       }
       fetchEmployees()
     } catch (err) {
-      showError(err.response?.data?.message || 'Operation failed')
+      toast.error(err.response?.data?.message || 'Operation failed')
     } finally {
       setShowModal(false)
       setEditingEmp(null)
@@ -1927,9 +2446,9 @@ function ManageEmployees({ setTitle }) {
     try {
       await api.delete(`/employees/${id}`)
       setEmployees(prev => prev.filter(e => e._id !== id))
-      showSuccess('Employee deleted.')
+      toast.success('Employee deleted.')
     } catch (err) {
-      showError(err.response?.data?.message || 'Failed to delete employee')
+      toast.error(err.response?.data?.message || 'Failed to delete employee')
     }
   }
 
@@ -1949,7 +2468,6 @@ function ManageEmployees({ setTitle }) {
     staff:  employees.filter(e => e.role === 'employee').length,
   }
 
-  // departments that actually exist in the data (for filter dropdown)
   const activeDepts = [...new Set(employees.map(e => e.department).filter(Boolean))]
 
   return (
@@ -1966,18 +2484,6 @@ function ManageEmployees({ setTitle }) {
           Add Employee
         </button>
       </div>
-
-      {/* Toasts */}
-      {successMsg && (
-        <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2">
-          <FaRegCheckCircle /> {successMsg}
-        </div>
-      )}
-      {errorMsg && (
-        <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
-          {errorMsg}
-        </div>
-      )}
 
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
@@ -2062,8 +2568,6 @@ function ManageEmployees({ setTitle }) {
               <tbody className="divide-y divide-gray-100">
                 {filtered.length > 0 ? filtered.map(emp => (
                   <tr key={emp._id} className="hover:bg-blue-50/20 transition-colors">
-
-                    {/* Employee cell */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
@@ -2075,8 +2579,6 @@ function ManageEmployees({ setTitle }) {
                         </div>
                       </div>
                     </td>
-
-                    {/* Department cell */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       {emp.department ? (
                         <span className="flex items-center gap-1.5 text-sm text-gray-700">
@@ -2087,8 +2589,6 @@ function ManageEmployees({ setTitle }) {
                         <span className="text-gray-300 italic text-sm">—</span>
                       )}
                     </td>
-
-                    {/* Role cell */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold
                         ${emp.role === 'admin'
@@ -2098,8 +2598,6 @@ function ManageEmployees({ setTitle }) {
                         <span className="capitalize">{emp.role}</span>
                       </span>
                     </td>
-
-                    {/* Actions cell */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-1">
                         <button onClick={() => openEdit(emp)}
@@ -2159,7 +2657,7 @@ function ManageEmployees({ setTitle }) {
                 </div>
               </div>
             )) : (
-              <div className="bg-white rounded-xl p-12 text-center text-gray-700  border border-gray-100">
+              <div className="bg-white rounded-xl p-12 text-center text-gray-700 border border-gray-100">
                 No employees found.
               </div>
             )}

@@ -93,17 +93,17 @@ async function ChangePassword (req,res){
     try{
         const {oldPassword,newPassword} = req.body;
 
-        const token = req.cookies.token;
+        // const token = req.cookies.token;
 
-        if(!token){
-            return res.status(401).json({
-                message : "Unauthorized User"
-            })
-        }
+        // if(!token){
+        //     return res.status(401).json({
+        //         message : "Unauthorized User"
+        //     })
+        // }
 
-        const decoded = jwt.verify(token,process.env.JWT_SECRET_KEY);
+        // const decoded = jwt.verify(token,process.env.JWT_SECRET_KEY);
 
-        const user = await userModel.findById(decoded.id);
+        const user = await userModel.findById(req.user.id);
 
         if(!user){
             return res.status(404).json({
@@ -119,10 +119,7 @@ async function ChangePassword (req,res){
             })
         }
 
-        const newPasswordHash = await bcrypt.hash(newPassword,10);
-
-        user.password = newPasswordHash;
-
+        user.password = await bcrypt.hash(newPassword,10);
         await user.save();
 
         res.status(200).json({

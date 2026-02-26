@@ -102,6 +102,163 @@
 
 
 
+// import React from 'react';
+// import {
+//   AiOutlineClose,
+//   AiOutlineDashboard,
+//   AiOutlineClockCircle,
+//   AiOutlineCalendar,
+//   AiOutlineTeam,
+//   AiOutlineLogout,
+// } from 'react-icons/ai';
+// import { CgProfile } from 'react-icons/cg';
+// import { FiUser } from "react-icons/fi";
+// import { MdManageAccounts } from 'react-icons/md';
+// import { RiLockPasswordLine } from 'react-icons/ri';
+// import { NavLink } from 'react-router-dom';
+
+// export default function Slidebar({
+//   isOpen,
+//   handleSlidebar,
+//   userEmail,
+//   userName,
+//   userRole,
+//   onLogout,
+//   onChangePassword,
+// }) {
+//   const baseMenuItems = [
+//     { name: 'Dashboard',  icon: AiOutlineDashboard,    path: '/'           },
+//     { name: 'Attendance', icon: AiOutlineClockCircle,  path: '/attendance' },
+//     { name: 'Leave',      icon: AiOutlineCalendar,     path: '/leave'      },
+//   ];
+//   const adminMenuItems = [
+//     ...baseMenuItems,
+//     { name: 'Manage Employees', icon: FiUser, path: '/employees' },
+//   ];
+
+//   const menuItems = userRole === 'admin' ? adminMenuItems : baseMenuItems;
+
+//   const handleMenuItemClick = () => {
+//     if (window.innerWidth < 1024) handleSlidebar();
+//   };
+
+//   const handleLogoutClick = () => {
+//     onLogout();
+//     if (window.innerWidth < 1024) handleSlidebar();
+//   };
+
+//   return (
+//     <>
+//       {isOpen && (
+//         <div
+//           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+//           onClick={handleSlidebar}
+//         />
+//       )}
+
+//       <div
+//         className={`h-screen w-64 bg-[#2C5282] text-white fixed top-0 left-0 transform
+//           transition-transform duration-300 ease-in-out z-50 flex flex-col
+//           ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static`}
+//       >
+//         {/* Header */}
+//         <div className="flex items-center justify-between p-5 border-b border-[#1e3a5f]">
+//           <AiOutlineTeam size={28} className="text-white flex-shrink-0" />
+//           <h1 className="font-bold text-xl mx-3 flex-1">Employee Portal</h1>
+//           <button onClick={handleSlidebar} className="lg:hidden flex-shrink-0">
+//             <AiOutlineClose size={22} />
+//           </button>
+//         </div>
+
+//         {/* Role Badge */}
+//         {/* {userRole && (
+//           <div className="px-5 pt-3 pb-1">
+//             <span
+//               className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider
+//                 ${userRole === 'admin'
+//                   ? 'bg-yellow-400 text-yellow-900'
+//                   : 'bg-sky-300 text-sky-900'
+//                 }`}
+//             >
+//               {userRole === 'admin' ? '⚙ Admin' : '👤 Employee'}
+//             </span>
+//           </div>
+//         )} */}
+
+//         {/* Navigation */}
+//         <nav className="mt-3 flex-1 overflow-y-auto">
+//           {menuItems.map((item) => {
+//             const Icon = item.icon;
+//             return (
+//               <NavLink
+//                 key={item.path}
+//                 to={item.path}
+//                 end={item.path === '/'}
+//                 onClick={handleMenuItemClick}
+//                 className={({ isActive }) =>
+//                   isActive
+//                     ? 'w-full flex items-center px-6 py-3.5 transition-colors bg-[#1e3a5f] text-white border-l-4 border-white'
+//                     : 'w-full flex items-center px-6 py-3.5 transition-colors text-white hover:bg-[#1e3a5f] border-l-4 border-transparent'
+//                 }
+//               >
+//                 <Icon size={20} className="mr-3 flex-shrink-0" />
+//                 <span className="font-medium text-sm">{item.name}</span>
+//               </NavLink>
+//             );
+//           })}
+//         </nav>
+
+//         {/* User Profile Section */}
+//         <div className="border-t border-[#1e3a5f] p-4 space-y-1">
+//           <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#1e3a5f] transition-colors">
+//             <div className="w-9 h-9 rounded-full bg-[#1e3a5f] flex items-center justify-center flex-shrink-0">
+//               <CgProfile size={22} className="text-white" />
+//             </div>
+//             <div className="flex-1 overflow-hidden">
+//               {userName && (
+//                 <p className="text-sm font-semibold text-white truncate">{userName}</p>
+//               )}
+//               <p className="text-xs text-gray-300 truncate">{userEmail}</p>
+//             </div>
+//           </div>
+
+//           {/* {onChangePassword && (
+//             <button
+//               onClick={onChangePassword}
+//               className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#1e3a5f] transition-colors text-sm text-gray-200"
+//             >
+//               <RiLockPasswordLine size={17} />
+//               <span className="font-medium">Change Password</span>
+//             </button>
+//           )} */}
+
+//           <button
+//             onClick={handleLogoutClick}
+//             className="mt-2 w-full flex items-center justify-center gap-2 p-2 rounded-lg hover:bg-slate-800 bg-[#365F8D] transition-colors text-sm cursor-pointer"
+//           >
+//             <AiOutlineLogout size={18} />
+//             <span className="font-medium">Logout</span>
+//           </button>
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React from 'react';
 import {
   AiOutlineClose,
@@ -113,9 +270,8 @@ import {
 } from 'react-icons/ai';
 import { CgProfile } from 'react-icons/cg';
 import { FiUser } from "react-icons/fi";
-import { MdManageAccounts } from 'react-icons/md';
-import { RiLockPasswordLine } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function Slidebar({
   isOpen,
@@ -124,12 +280,11 @@ export default function Slidebar({
   userName,
   userRole,
   onLogout,
-  onChangePassword,
 }) {
   const baseMenuItems = [
-    { name: 'Dashboard',  icon: AiOutlineDashboard,    path: '/'           },
-    { name: 'Attendance', icon: AiOutlineClockCircle,  path: '/attendance' },
-    { name: 'Leave',      icon: AiOutlineCalendar,     path: '/leave'      },
+    { name: 'Dashboard',  icon: AiOutlineDashboard,   path: '/'           },
+    { name: 'Attendance', icon: AiOutlineClockCircle, path: '/attendance' },
+    { name: 'Leave',      icon: AiOutlineCalendar,    path: '/leave'      },
   ];
   const adminMenuItems = [
     ...baseMenuItems,
@@ -143,8 +298,12 @@ export default function Slidebar({
   };
 
   const handleLogoutClick = () => {
-    onLogout();
-    if (window.innerWidth < 1024) handleSlidebar();
+    toast.success('Logged out successfully!')
+    // Small delay so toast is visible before unmount
+    setTimeout(() => {
+      onLogout();
+      if (window.innerWidth < 1024) handleSlidebar();
+    }, 800)
   };
 
   return (
@@ -169,21 +328,6 @@ export default function Slidebar({
             <AiOutlineClose size={22} />
           </button>
         </div>
-
-        {/* Role Badge */}
-        {/* {userRole && (
-          <div className="px-5 pt-3 pb-1">
-            <span
-              className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider
-                ${userRole === 'admin'
-                  ? 'bg-yellow-400 text-yellow-900'
-                  : 'bg-sky-300 text-sky-900'
-                }`}
-            >
-              {userRole === 'admin' ? '⚙ Admin' : '👤 Employee'}
-            </span>
-          </div>
-        )} */}
 
         {/* Navigation */}
         <nav className="mt-3 flex-1 overflow-y-auto">
@@ -222,16 +366,6 @@ export default function Slidebar({
             </div>
           </div>
 
-          {/* {onChangePassword && (
-            <button
-              onClick={onChangePassword}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#1e3a5f] transition-colors text-sm text-gray-200"
-            >
-              <RiLockPasswordLine size={17} />
-              <span className="font-medium">Change Password</span>
-            </button>
-          )} */}
-
           <button
             onClick={handleLogoutClick}
             className="mt-2 w-full flex items-center justify-center gap-2 p-2 rounded-lg hover:bg-slate-800 bg-[#365F8D] transition-colors text-sm cursor-pointer"
@@ -263,133 +397,3 @@ export default function Slidebar({
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React from 'react';
-// import { AiOutlineClose, AiOutlineDashboard, AiOutlineClockCircle, AiOutlineCalendar, AiOutlineTeam, AiOutlineLogout } from 'react-icons/ai';
-// import { CgProfile } from 'react-icons/cg';
-// import { MdManageAccounts } from 'react-icons/md';
-// import { RiLockPasswordLine } from 'react-icons/ri';
-// import { NavLink } from 'react-router-dom';
-
-// export default function Slidebar({ isOpen, handleSlidebar, userEmail, onLogout, userRole, onChangePassword }) {
-//   const menuItems = [
-//     { name: 'Dashboard', icon: AiOutlineDashboard, path: '/' },
-//     { name: 'Attendance', icon: AiOutlineClockCircle, path: '/attendance' },
-//     { name: 'Leave', icon: AiOutlineCalendar, path: '/leave' },
-//     // Show Employees only for admin
-//     ...(userRole === 'admin' ? [{ name: 'Employees', icon: MdManageAccounts, path: '/employees' }] : []),
-//   ];
-
-//   const handleMenuItemClick = () => {
-//     if (window.innerWidth < 1024) {
-//       handleSlidebar();
-//     }
-//   };
-
-//   const handleLogoutClick = () => {
-//     onLogout();
-//     if (window.innerWidth < 1024) {
-//       handleSlidebar();
-//     }
-//   };
-
-//   return (
-//     <>
-//       {isOpen && (
-//         <div
-//           className="fixed inset-0 bg-gray-100 bg-opacity-50 z-40 lg:hidden"
-//           onClick={handleSlidebar}
-//         />
-//       )}
-
-//       <div className={`h-screen w-64 bg-[#2C5282] text-white fixed top-0 left-0 transform transition-transform duration-300 ease-in-out z-50 flex flex-col
-//       ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static`}>
-
-//         {/* Header */}
-//         <div className="flex items-center justify-between p-6 border-b border-[#1e3a5f]">
-//           <AiOutlineTeam size={30} className="text-white mr-4" />
-//           <h1 className="font-bold text-2xl">
-//             Employee Portal
-//           </h1>
-//           <button onClick={handleSlidebar} className="lg:hidden">
-//             <AiOutlineClose size={24} />
-//           </button>
-//         </div>
-
-//         {/* Navigation - grows to fill space */}
-//         <nav className="mt-6 flex-1">
-//           {menuItems.map((item) => {
-//             const Icon = item.icon;
-//             return (
-//               <NavLink
-//                 key={item.name}
-//                 to={item.path}
-//                 onClick={handleMenuItemClick}
-//                 end={item.path === '/'}
-//                 className={({ isActive }) =>
-//                   isActive
-//                     ? 'w-full flex items-center px-6 py-3 transition-colors bg-[#1e3a5f] text-white border-l-4 border-white'
-//                     : 'w-full flex items-center px-6 py-3 transition-colors text-white hover:bg-[#1e3a5f]'
-//                 }
-//               >
-//                 <Icon size={20} className="mr-3" />
-//                 <span className="font-medium">{item.name}</span>
-//               </NavLink>
-//             );
-//           })}
-//         </nav>
-
-//         {/* User Profile Section */}
-//         <div className="border-t border-[#1e3a5f] p-4">
-//           <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#1e3a5f] transition-colors">
-//             <div className="w-10 h-10 rounded-full bg-[#1e3a5f] flex items-center justify-center">
-//               <CgProfile size={24} className="text-white" />
-//             </div>
-//             <div className="flex-1 overflow-hidden">
-//               <p className="text-xs text-gray-300 truncate">{userEmail}</p>
-//               {userRole && (
-//                 <p className="text-xs text-gray-400 capitalize">{userRole}</p>
-//               )}
-//             </div>
-//           </div>
-
-//           {/* Change Password Button */}
-//           {onChangePassword && (
-//             <button
-//               onClick={onChangePassword}
-//               className="mt-2 w-full flex items-center justify-center gap-2 p-2 rounded-lg hover:bg-[#1e3a5f] transition-colors text-sm cursor-pointer text-gray-200"
-//             >
-//               <RiLockPasswordLine size={18} />
-//               <span className="font-medium">Change Password</span>
-//             </button>
-//           )}
-
-//           {/* Logout Button */}
-//           <button
-//             onClick={handleLogoutClick}
-//             className="mt-2 w-full flex items-center justify-center gap-2 p-2 rounded-lg hover:bg-red-700 bg-red-600 transition-colors text-sm cursor-pointer">
-//             <AiOutlineLogout size={18} />
-//             <span className='font-medium'>Logout</span>
-//           </button>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
