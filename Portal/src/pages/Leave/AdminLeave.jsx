@@ -1018,15 +1018,471 @@
 
 
 
+// import { useEffect, useState } from 'react';
+// import Select from 'react-select';
+// import mockLeaveData from '../../data/mockLeaveData';
+// import { FaEye, FaCheck, FaTimes, FaRegCheckCircle } from 'react-icons/fa';
+// import { CgProfile } from 'react-icons/cg';
+// import { RxCrossCircled } from 'react-icons/rx';
+// import { SlCalender } from 'react-icons/sl';
+// import {FaSearch} from 'react-icons/fa'
+// import LeaveDetailModal from './LeaveDetailModal';
+
+// function AdminLeave({ setTitle }) {
+//   const [leaves, setLeaves] = useState([]);
+//   const [filteredLeaves, setFilteredLeaves] = useState([]);
+//   const [searchTerm, setSearchTerm] = useState('');
+//   const [statusFilter, setStatusFilter] = useState(null);
+//   const [selectedLeave, setSelectedLeave] = useState(null);
+//   const [showModal, setShowModal] = useState(false);
+
+//   // Pagination
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const itemsPerPage = 8;
+
+//   useEffect(() => {
+//     setTitle('Leave Management');
+//     // eslint-disable-next-line react-hooks/set-state-in-effect
+//     setLeaves(mockLeaveData);
+//     setFilteredLeaves(mockLeaveData);
+//   }, [setTitle]);
+
+//   // Filter leaves based on search and status
+//   useEffect(() => {
+//     let filtered = [...leaves];
+
+//     // Search filter
+//     if (searchTerm) {
+//       filtered = filtered.filter(
+//         (leave) =>
+//           leave.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//           leave.email.toLowerCase().includes(searchTerm.toLowerCase())
+//       );
+//     }
+
+//     // Status filter
+//     if (statusFilter) {
+//       filtered = filtered.filter((leave) => leave.status === statusFilter.value);
+//     }
+
+//     // eslint-disable-next-line react-hooks/set-state-in-effect
+//     setFilteredLeaves(filtered);
+//     setCurrentPage(1); // Reset to first page when filtering
+//   }, [searchTerm, statusFilter, leaves]);
+
+//   // Status options for dropdown
+//   const statusOptions = [
+//     { value: 'Pending', label: 'Pending' },
+//     { value: 'Approved', label: 'Approved' },
+//     { value: 'Rejected', label: 'Rejected' },
+//   ];
+
+//   // Handle status change
+//   const handleStatusChange = (leaveId, newStatus, adminComment = '') => {
+//     const updatedLeaves = leaves.map((leave) =>
+//       leave.id === leaveId
+//         ? { ...leave, status: newStatus, adminComment }
+//         : leave
+//     );
+//     setLeaves(updatedLeaves);
+//     setShowModal(false);
+//   };
+
+//   // Quick approve/reject
+//   const quickAction = (leaveId, action) => {
+//     const comment = action === 'Approved' 
+//       ? 'Leave approved by admin' 
+//       : 'Leave rejected by admin';
+//     handleStatusChange(leaveId, action, comment);
+//   };
+
+//   // Get status badge color
+//   const getStatusColor = (status) => {
+//     switch (status) {
+//       case 'Approved':
+//         return 'bg-green-100 text-green-700';
+//       case 'Rejected':
+//         return 'bg-red-100 text-red-700';
+//       case 'Pending':
+//         return 'bg-yellow-100 text-yellow-700';
+//       default:
+//         return 'bg-gray-100 text-gray-600';
+//     }
+//   };
+
+//   // Pagination
+//   const totalPages = Math.ceil(filteredLeaves.length / itemsPerPage);
+//   const paginatedLeaves = filteredLeaves.slice(
+//     (currentPage - 1) * itemsPerPage,
+//     currentPage * itemsPerPage
+//   );
+
+//   // View details
+//   const viewDetails = (leave) => {
+//     setSelectedLeave(leave);
+//     setShowModal(true);
+//   };
+
+//   // Stats
+
+//   // Get statistics
+//   const stats = {
+//     total: leaves.length,
+//     pending: leaves.filter(l => l.status === 'Pending').length,
+//     approved: leaves.filter(l => l.status === 'Approved').length,
+//     rejected: leaves.filter(l => l.status === 'Rejected').length,
+//   };
+
+//   return (
+//     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
+
+//       <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] mb-6">
+//         Leave Management
+//       </h1>
+
+//       {/* Stats Cards */}
+//       {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+//         <div className="bg-white p-4 rounded-xl border-l-4 border-[#2C5284] shadow-sm">
+//           <p className="text-sm text-gray-600">Total Requests</p>
+//           <p className="text-2xl font-bold text-[#2C5284]">{stats.total}</p>
+//         </div>
+//         <div className="bg-white p-4 rounded-xl border-l-4 border-yellow-500 shadow-sm">
+//           <p className="text-sm text-gray-600">Pending</p>
+//           <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
+//         </div>
+//         <div className="bg-white p-4 rounded-xl border-l-4 border-green-500 shadow-sm">
+//           <p className="text-sm text-gray-600">Approved</p>
+//           <p className="text-2xl font-bold text-green-600">{stats.approved}</p>
+//         </div>
+//         <div className="bg-white p-4 rounded-xl border-l-4 border-red-500 shadow-sm">
+//           <p className="text-sm text-gray-600">Rejected</p>
+//           <p className="text-2xl font-bold text-red-600">{stats.rejected}</p>
+//         </div>
+//       </div> */}
+
+//       {/* Statistics Cards */}
+//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+//         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+//           <div>
+//             <p className="text-sm sm:text-base text-[#2C5284]">Total Requests</p>
+//             <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.total}</p>
+//           </div>
+//           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//             <CgProfile size={24} className="text-white" />
+//           </div>
+//         </div>
+// <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+//   <div>
+//     <p className="text-sm sm:text-base text-[#2C5284]">Pending</p>
+//     <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.pending}</p>
+//           </div>
+//           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//             <SlCalender size={24} className="text-white" />
+//           </div>
+//         </div>
+//         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+//           <div>
+//             <p className="text-sm sm:text-base text-[#2C5284]">Approved</p>
+//             <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.approved}</p>
+//           </div>
+//           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//             <FaRegCheckCircle size={24} className="text-white" />
+//           </div>
+//         </div>
+//         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+//           <div>
+//             <p className="text-sm sm:text-base text-[#2C5284]">Rejected</p>
+//             <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.rejected}</p>
+//           </div>
+//           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//             <RxCrossCircled size={24} className="text-white" />
+//           </div>
+//         </div>
+//       </div>
+
+
+
+//       {/* Filters Section */}
+//       <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 border border-gray-100">
+//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//           {/* Search */}
+//           <div>
+//             <label className="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
+//               Search Employee
+//             </label>
+//             <div className="relative">
+            
+//               <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+//               <input
+//                 type="text"
+//                 placeholder="Search by name or email..."
+//                 value={searchTerm}
+//                 onChange={(e) => setSearchTerm(e.target.value)}
+//                 className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg 
+//                   focus:ring-2 focus:ring-[#2C5284] focus:border-transparent 
+//                   outline-none transition-all text-sm"
+//               />
+//             </div>
+//           </div>
+
+//           {/* Status Filter */}
+//           <div>
+//             <label className="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
+//               Filter by Status
+//             </label>
+//             <Select
+//               value={statusFilter}
+//               onChange={setStatusFilter}
+//               options={statusOptions}
+//               isClearable
+//               placeholder="All Statuses"
+//               className="react-select-container text-sm"
+//               classNamePrefix="react-select"
+//               styles={{
+//                 control: (base) => ({
+//                   ...base,
+//                   borderColor: '#d1d5db',
+//                   borderRadius: '0.5rem',
+//                   padding: '2px',
+//                   '&:hover': { borderColor: '#2C5284' },
+//                 }),
+//                 option: (base, state) => ({
+//                   ...base,
+//                   backgroundColor: state.isSelected
+//                     ? '#2C5284'
+//                     : state.isFocused
+//                     ? '#f3f4f6'
+//                     : 'white',
+//                   color: state.isSelected ? 'white' : '#1f2937',
+//                 }),
+//               }}
+//             />
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Desktop Table View */}
+//       <div className="hidden lg:block bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+//         <div className="overflow-x-auto">
+//           <table className="min-w-full divide-y divide-gray-200">
+//             <thead className="bg-[#2C5284]">
+//               <tr>
+//                 <th className="px-6 py-4 text-left text-sm font-semibold text-white">Employee</th>
+//                 <th className="px-6 py-4 text-left text-sm font-semibold text-white">Leave Type</th>
+//                 <th className="px-6 py-4 text-left text-sm font-semibold text-white">Duration</th>
+//                 <th className="px-6 py-4 text-left text-sm font-semibold text-white">Applied Date</th>
+//                 <th className="px-6 py-4 text-left text-sm font-semibold text-white">Status</th>
+//                 <th className="px-6 py-4 text-left text-sm font-semibold text-white">Actions</th>
+//               </tr>
+//             </thead>
+//             <tbody className="bg-white divide-y divide-gray-200">
+//               {paginatedLeaves.length > 0 ? (
+//                 paginatedLeaves.map((leave) => (
+//                   <tr key={leave.id} className="hover:bg-blue-50/30 transition-colors">
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <div className="text-sm font-medium text-gray-900">{leave.employeeName}</div>
+//                       <div className="text-xs text-gray-500">{leave.email}</div>
+//                     </td>
+//                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+//                       {leave.leaveType}
+//                     </td>
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <div className="text-sm text-gray-900">{leave.startDate} to {leave.endDate}</div>
+//                       <div className="text-xs text-gray-500">{leave.days} day(s)</div>
+//                     </td>
+//                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+//                       {leave.appliedDate}
+//                     </td>
+//                     <td className="px-6 py-4 whitespace-nowrap">
+//                       <span className={`px-3 py-1 inline-flex text-[10px] leading-5 font-bold uppercase tracking-wider rounded-full ${getStatusColor(leave.status)}`}>
+//                         {leave.status}
+//                       </span>
+//                     </td>
+//                     <td className="px-6 py-4 whitespace-nowrap text-sm">
+//                       <div className="flex items-center gap-2">
+//                         <button
+//                           onClick={() => viewDetails(leave)}
+//                           className="p-2 text-[#2C5284] hover:bg-blue-50 rounded-lg transition-colors"
+//                           title="View Details"
+//                         >
+//                           <FaEye size={18} />
+//                         </button>
+//                         {leave.status === 'Pending' && (
+//                           <>
+//                             <button
+//                               onClick={() => quickAction(leave.id, 'Approved')}
+//                               className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+//                               title="Approve"
+//                             >
+//                               <FaCheck size={16} />
+//                             </button>
+//                             <button
+//                               onClick={() => quickAction(leave.id, 'Rejected')}
+//                               className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+//                               title="Reject"
+//                             >
+//                               <FaTimes size={16} />
+//                             </button>
+//                           </>
+//                         )}
+//                       </div>
+//                     </td>
+//                   </tr>
+//                 ))
+//               ) : (
+//                 <tr>
+//                   <td colSpan="6" className="px-6 py-10 text-center text-gray-500 italic">
+//                     No leave requests found matching your criteria.
+//                   </td>
+//                 </tr>
+//               )}
+//             </tbody>
+//           </table>
+//         </div>
+//       </div>
+
+//       {/* Mobile Cards View */}
+//       <div className="lg:hidden space-y-4">
+//         {paginatedLeaves.length > 0 ? (
+//           paginatedLeaves.map((leave) => (
+//             <div key={leave.id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+//               <div className="p-4 flex items-center justify-between border-b border-gray-100 bg-gray-50/50">
+//                 <div>
+//                   <p className="font-semibold text-gray-900 text-sm">{leave.employeeName}</p>
+//                   <p className="text-xs text-gray-500">{leave.email}</p>
+//                 </div>
+//                 <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${getStatusColor(leave.status)}`}>
+//                   {leave.status}
+//                 </span>
+//               </div>
+//               <div className="p-4 space-y-3">
+//                 <div className="grid grid-cols-2 gap-4">
+//                   <div>
+//                     <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Leave Type</p>
+//                     <p className="text-sm text-gray-700 font-medium">{leave.leaveType}</p>
+//                   </div>
+//                   <div>
+//                     <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Duration</p>
+//                     <p className="text-sm text-gray-700 font-medium">{leave.days} day(s)</p>
+//                   </div>
+//                 </div>
+//                 <div>
+//                   <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Dates</p>
+//                   <p className="text-sm text-gray-700 font-medium">{leave.startDate} to {leave.endDate}</p>
+//                 </div>
+//                 <div className="pt-3 flex items-center justify-between border-t border-gray-50">
+//                   <button
+//                     onClick={() => viewDetails(leave)}
+//                     className="flex items-center gap-2 text-xs font-bold text-[#2C5284] uppercase tracking-wider"
+//                   >
+//                     <FaEye size={14} /> View Details
+//                   </button>
+//                   {leave.status === 'Pending' && (
+//                     <div className="flex items-center gap-2">
+//                       <button
+//                         onClick={() => quickAction(leave.id, 'Approved')}
+//                         className="p-2 text-green-600 bg-green-50 rounded-lg"
+//                       >
+//                         <FaCheck size={14} />
+//                       </button>
+//                       <button
+//                         onClick={() => quickAction(leave.id, 'Rejected')}
+//                         className="p-2 text-red-600 bg-red-50 rounded-lg"
+//                       >
+//                         <FaTimes size={14} />
+//                       </button>
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
+//           ))
+//         ) : (
+//           <div className="bg-white p-10 rounded-xl text-center text-gray-500 italic border border-gray-100">
+//             No leave requests found.
+//           </div>
+//         )}
+//       </div>
+
+//       {/* Pagination */}
+//       {totalPages > 1 && (
+//         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+//           <p className="text-sm text-gray-600">
+//             Showing <span className="font-semibold text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-semibold text-gray-900">{Math.min(currentPage * itemsPerPage, filteredLeaves.length)}</span> of <span className="font-semibold text-gray-900">{filteredLeaves.length}</span> entries
+//           </p>
+//           <div className="flex items-center gap-2">
+//             <button
+//               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+//               disabled={currentPage === 1}
+//               className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+//             >
+//               <FaChevronLeft size={14} className="text-gray-600" />
+//             </button>
+//             <div className="flex items-center gap-1">
+//               {[...Array(totalPages)].map((_, i) => (
+//                 <button
+//                   key={i + 1}
+//                   onClick={() => setCurrentPage(i + 1)}
+//                   className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
+//                     currentPage === i + 1
+//                       ? 'bg-[#2C5284] text-white'
+//                       : 'text-gray-600 hover:bg-gray-50'
+//                   }`}
+//                 >
+//                   {i + 1}
+//                 </button>
+//               ))}
+//             </div>
+//             <button
+//               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+//               disabled={currentPage === totalPages}
+//               className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+//             >
+//               <FaChevronRight size={14} className="text-gray-600" />
+//             </button>
+//           </div>
+//         </div>
+//       )}
+
+//       {/* Leave Detail Modal */}
+//       {showModal && selectedLeave && (
+//         <LeaveDetailModal
+//           leave={selectedLeave}
+//           onClose={() => setShowModal(false)}
+//           onStatusChange={handleStatusChange}
+//         />
+//       )}
+//     </div>
+//   )
+// }
+
+// export default AdminLeave;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
-import mockLeaveData from '../../data/mockLeaveData';
-import { FaEye, FaCheck, FaTimes, FaRegCheckCircle } from 'react-icons/fa';
+import { FaEye, FaCheck, FaTimes, FaRegCheckCircle, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { CgProfile } from 'react-icons/cg';
 import { RxCrossCircled } from 'react-icons/rx';
 import { SlCalender } from 'react-icons/sl';
-import {FaSearch} from 'react-icons/fa'
 import LeaveDetailModal from './LeaveDetailModal';
+import { apiGetAllLeaves, apiGetLeaveSummary, apiReviewLeave } from '../../api/leaveAPI';
 
 function AdminLeave({ setTitle }) {
   const [leaves, setLeaves] = useState([]);
@@ -1035,78 +1491,113 @@ function AdminLeave({ setTitle }) {
   const [statusFilter, setStatusFilter] = useState(null);
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
+  // Fetch leaves from backend
+  const fetchLeaves = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const filters = {};
+      if (statusFilter) filters.status = statusFilter.value;
+
+      const [leavesRes, summaryRes] = await Promise.all([
+        apiGetAllLeaves(filters),
+        apiGetLeaveSummary(),
+      ]);
+
+      setLeaves(leavesRes.leaves || []);
+      setFilteredLeaves(leavesRes.leaves || []);
+      setStats(summaryRes);
+    } catch (err) {
+      setError(err.message || 'Failed to fetch leave requests');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setTitle('Leave Management');
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLeaves(mockLeaveData);
-    setFilteredLeaves(mockLeaveData);
+    fetchLeaves();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setTitle]);
 
   // Filter leaves based on search and status
   useEffect(() => {
     let filtered = [...leaves];
 
-    // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(
-        (leave) =>
-          leave.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          leave.email.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter((leave) => {
+        const emp = leave.employeeId;
+        const name = emp?.name || '';
+        const email = emp?.email || '';
+        return (
+          name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          email.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      });
     }
 
-    // Status filter
     if (statusFilter) {
       filtered = filtered.filter((leave) => leave.status === statusFilter.value);
     }
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFilteredLeaves(filtered);
-    setCurrentPage(1); // Reset to first page when filtering
+    setCurrentPage(1);
   }, [searchTerm, statusFilter, leaves]);
 
-  // Status options for dropdown
   const statusOptions = [
     { value: 'Pending', label: 'Pending' },
     { value: 'Approved', label: 'Approved' },
     { value: 'Rejected', label: 'Rejected' },
   ];
 
-  // Handle status change
-  const handleStatusChange = (leaveId, newStatus, adminComment = '') => {
-    const updatedLeaves = leaves.map((leave) =>
-      leave.id === leaveId
-        ? { ...leave, status: newStatus, adminComment }
-        : leave
-    );
-    setLeaves(updatedLeaves);
-    setShowModal(false);
+  // Quick approve/reject via API
+  const quickAction = async (leaveId, action) => {
+    try {
+      const comment = action === 'Approved'
+        ? 'Leave approved by admin'
+        : 'Leave rejected by admin';
+      await apiReviewLeave(leaveId, { status: action, adminComment: comment });
+      // Update local state
+      setLeaves(prev =>
+        prev.map(l => l._id === leaveId ? { ...l, status: action, adminComment: comment } : l)
+      );
+      // Refresh summary
+      const summaryRes = await apiGetLeaveSummary();
+      setStats(summaryRes);
+    } catch (err) {
+      alert(err.message || 'Action failed');
+    }
   };
 
-  // Quick approve/reject
-  const quickAction = (leaveId, action) => {
-    const comment = action === 'Approved' 
-      ? 'Leave approved by admin' 
-      : 'Leave rejected by admin';
-    handleStatusChange(leaveId, action, comment);
+  // Handle status change from modal
+  const handleStatusChange = async (leaveId, newStatus, adminComment = '') => {
+    try {
+      await apiReviewLeave(leaveId, { status: newStatus, adminComment });
+      setLeaves(prev =>
+        prev.map(l => l._id === leaveId ? { ...l, status: newStatus, adminComment } : l)
+      );
+      const summaryRes = await apiGetLeaveSummary();
+      setStats(summaryRes);
+      setShowModal(false);
+    } catch (err) {
+      alert(err.message || 'Update failed');
+    }
   };
 
-  // Get status badge color
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Approved':
-        return 'bg-green-100 text-green-700';
-      case 'Rejected':
-        return 'bg-red-100 text-red-700';
-      case 'Pending':
-        return 'bg-yellow-100 text-yellow-700';
-      default:
-        return 'bg-gray-100 text-gray-600';
+      case 'Approved': return 'bg-green-100 text-green-700';
+      case 'Rejected': return 'bg-red-100 text-red-700';
+      case 'Pending':  return 'bg-yellow-100 text-yellow-700';
+      default:         return 'bg-gray-100 text-gray-600';
     }
   };
 
@@ -1117,21 +1608,14 @@ function AdminLeave({ setTitle }) {
     currentPage * itemsPerPage
   );
 
-  // View details
   const viewDetails = (leave) => {
     setSelectedLeave(leave);
     setShowModal(true);
   };
 
-  // Stats
-
-  // Get statistics
-  const stats = {
-    total: leaves.length,
-    pending: leaves.filter(l => l.status === 'Pending').length,
-    approved: leaves.filter(l => l.status === 'Approved').length,
-    rejected: leaves.filter(l => l.status === 'Rejected').length,
-  };
+  // Helper to get employee name/email from populated employeeId
+  const getEmpName  = (leave) => leave.employeeId?.name  || leave.employeeId?.email || 'N/A';
+  const getEmpEmail = (leave) => leave.employeeId?.email || '';
 
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
@@ -1140,25 +1624,13 @@ function AdminLeave({ setTitle }) {
         Leave Management
       </h1>
 
-      {/* Stats Cards */}
-      {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-xl border-l-4 border-[#2C5284] shadow-sm">
-          <p className="text-sm text-gray-600">Total Requests</p>
-          <p className="text-2xl font-bold text-[#2C5284]">{stats.total}</p>
+      {/* Error Banner */}
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+          {error}
+          <button onClick={fetchLeaves} className="ml-3 underline font-medium">Retry</button>
         </div>
-        <div className="bg-white p-4 rounded-xl border-l-4 border-yellow-500 shadow-sm">
-          <p className="text-sm text-gray-600">Pending</p>
-          <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
-        </div>
-        <div className="bg-white p-4 rounded-xl border-l-4 border-green-500 shadow-sm">
-          <p className="text-sm text-gray-600">Approved</p>
-          <p className="text-2xl font-bold text-green-600">{stats.approved}</p>
-        </div>
-        <div className="bg-white p-4 rounded-xl border-l-4 border-red-500 shadow-sm">
-          <p className="text-sm text-gray-600">Rejected</p>
-          <p className="text-2xl font-bold text-red-600">{stats.rejected}</p>
-        </div>
-      </div> */}
+      )}
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -1171,10 +1643,10 @@ function AdminLeave({ setTitle }) {
             <CgProfile size={24} className="text-white" />
           </div>
         </div>
-<div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
-  <div>
-    <p className="text-sm sm:text-base text-[#2C5284]">Pending</p>
-    <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.pending}</p>
+        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+          <div>
+            <p className="text-sm sm:text-base text-[#2C5284]">Pending</p>
+            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.pending}</p>
           </div>
           <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
             <SlCalender size={24} className="text-white" />
@@ -1200,18 +1672,14 @@ function AdminLeave({ setTitle }) {
         </div>
       </div>
 
-
-
       {/* Filters Section */}
       <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 border border-gray-100">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Search */}
           <div>
             <label className="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
               Search Employee
             </label>
             <div className="relative">
-            
               <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
@@ -1224,8 +1692,6 @@ function AdminLeave({ setTitle }) {
               />
             </div>
           </div>
-
-          {/* Status Filter */}
           <div>
             <label className="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
               Filter by Status
@@ -1248,11 +1714,7 @@ function AdminLeave({ setTitle }) {
                 }),
                 option: (base, state) => ({
                   ...base,
-                  backgroundColor: state.isSelected
-                    ? '#2C5284'
-                    : state.isFocused
-                    ? '#f3f4f6'
-                    : 'white',
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? '#f3f4f6' : 'white',
                   color: state.isSelected ? 'white' : '#1f2937',
                 }),
               }}
@@ -1261,183 +1723,166 @@ function AdminLeave({ setTitle }) {
         </div>
       </div>
 
-      {/* Desktop Table View */}
-      <div className="hidden lg:block bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-[#2C5284]">
-              <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Employee</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Leave Type</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Duration</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Applied Date</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {paginatedLeaves.length > 0 ? (
-                paginatedLeaves.map((leave) => (
-                  <tr key={leave.id} className="hover:bg-blue-50/30 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{leave.employeeName}</div>
-                      <div className="text-xs text-gray-500">{leave.email}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                      {leave.leaveType}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{leave.startDate} to {leave.endDate}</div>
-                      <div className="text-xs text-gray-500">{leave.days} day(s)</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                      {leave.appliedDate}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-3 py-1 inline-flex text-[10px] leading-5 font-bold uppercase tracking-wider rounded-full ${getStatusColor(leave.status)}`}>
-                        {leave.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => viewDetails(leave)}
-                          className="p-2 text-[#2C5284] hover:bg-blue-50 rounded-lg transition-colors"
-                          title="View Details"
-                        >
-                          <FaEye size={18} />
-                        </button>
-                        {leave.status === 'Pending' && (
-                          <>
-                            <button
-                              onClick={() => quickAction(leave.id, 'Approved')}
-                              className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                              title="Approve"
-                            >
-                              <FaCheck size={16} />
-                            </button>
-                            <button
-                              onClick={() => quickAction(leave.id, 'Rejected')}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                              title="Reject"
-                            >
-                              <FaTimes size={16} />
-                            </button>
-                          </>
-                        )}
-                      </div>
+      {/* Loading */}
+      {loading && (
+        <div className="bg-white rounded-xl shadow-sm p-12 text-center text-gray-500">
+          Loading leave requests...
+        </div>
+      )}
+
+      {/* Desktop Table */}
+      {!loading && (
+        <div className="hidden lg:block bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-[#2C5284]">
+                <tr>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Employee</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Leave Type</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Duration</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Applied Date</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {paginatedLeaves.length > 0 ? (
+                  paginatedLeaves.map((leave) => (
+                    <tr key={leave._id} className="hover:bg-blue-50/30 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{getEmpName(leave)}</div>
+                        <div className="text-xs text-gray-500">{getEmpEmail(leave)}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{leave.leaveType}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{leave.startDate} to {leave.endDate}</div>
+                        <div className="text-xs text-gray-500">{leave.days} day(s)</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{leave.appliedDate}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-3 py-1 inline-flex text-[10px] leading-5 font-bold uppercase tracking-wider rounded-full ${getStatusColor(leave.status)}`}>
+                          {leave.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <div className="flex items-center gap-2">
+                          <button onClick={() => viewDetails(leave)}
+                            className="p-2 text-[#2C5284] hover:bg-blue-50 rounded-lg transition-colors" title="View Details">
+                            <FaEye size={18} />
+                          </button>
+                          {leave.status === 'Pending' && (
+                            <>
+                              <button onClick={() => quickAction(leave._id, 'Approved')}
+                                className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Approve">
+                                <FaCheck size={16} />
+                              </button>
+                              <button onClick={() => quickAction(leave._id, 'Rejected')}
+                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Reject">
+                                <FaTimes size={16} />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="px-6 py-10 text-center text-gray-500 italic">
+                      No leave requests found matching your criteria.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" className="px-6 py-10 text-center text-gray-500 italic">
-                    No leave requests found matching your criteria.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Mobile Cards View */}
-      <div className="lg:hidden space-y-4">
-        {paginatedLeaves.length > 0 ? (
-          paginatedLeaves.map((leave) => (
-            <div key={leave.id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-              <div className="p-4 flex items-center justify-between border-b border-gray-100 bg-gray-50/50">
-                <div>
-                  <p className="font-semibold text-gray-900 text-sm">{leave.employeeName}</p>
-                  <p className="text-xs text-gray-500">{leave.email}</p>
-                </div>
-                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${getStatusColor(leave.status)}`}>
-                  {leave.status}
-                </span>
-              </div>
-              <div className="p-4 space-y-3">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Leave Type</p>
-                    <p className="text-sm text-gray-700 font-medium">{leave.leaveType}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Duration</p>
-                    <p className="text-sm text-gray-700 font-medium">{leave.days} day(s)</p>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Dates</p>
-                  <p className="text-sm text-gray-700 font-medium">{leave.startDate} to {leave.endDate}</p>
-                </div>
-                <div className="pt-3 flex items-center justify-between border-t border-gray-50">
-                  <button
-                    onClick={() => viewDetails(leave)}
-                    className="flex items-center gap-2 text-xs font-bold text-[#2C5284] uppercase tracking-wider"
-                  >
-                    <FaEye size={14} /> View Details
-                  </button>
-                  {leave.status === 'Pending' && (
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => quickAction(leave.id, 'Approved')}
-                        className="p-2 text-green-600 bg-green-50 rounded-lg"
-                      >
-                        <FaCheck size={14} />
-                      </button>
-                      <button
-                        onClick={() => quickAction(leave.id, 'Rejected')}
-                        className="p-2 text-red-600 bg-red-50 rounded-lg"
-                      >
-                        <FaTimes size={14} />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="bg-white p-10 rounded-xl text-center text-gray-500 italic border border-gray-100">
-            No leave requests found.
+                )}
+              </tbody>
+            </table>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* Mobile Cards */}
+      {!loading && (
+        <div className="lg:hidden space-y-4">
+          {paginatedLeaves.length > 0 ? (
+            paginatedLeaves.map((leave) => (
+              <div key={leave._id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+                <div className="p-4 flex items-center justify-between border-b border-gray-100 bg-gray-50/50">
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{getEmpName(leave)}</p>
+                    <p className="text-xs text-gray-500">{getEmpEmail(leave)}</p>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${getStatusColor(leave.status)}`}>
+                    {leave.status}
+                  </span>
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Leave Type</p>
+                      <p className="text-sm text-gray-700 font-medium">{leave.leaveType}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Duration</p>
+                      <p className="text-sm text-gray-700 font-medium">{leave.days} day(s)</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Dates</p>
+                    <p className="text-sm text-gray-700 font-medium">{leave.startDate} to {leave.endDate}</p>
+                  </div>
+                  <div className="pt-3 flex items-center justify-between border-t border-gray-50">
+                    <button onClick={() => viewDetails(leave)}
+                      className="flex items-center gap-2 text-xs font-bold text-[#2C5284] uppercase tracking-wider">
+                      <FaEye size={14} /> View Details
+                    </button>
+                    {leave.status === 'Pending' && (
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => quickAction(leave._id, 'Approved')}
+                          className="p-2 text-green-600 bg-green-50 rounded-lg">
+                          <FaCheck size={14} />
+                        </button>
+                        <button onClick={() => quickAction(leave._id, 'Rejected')}
+                          className="p-2 text-red-600 bg-red-50 rounded-lg">
+                          <FaTimes size={14} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="bg-white p-10 rounded-xl text-center text-gray-500 italic border border-gray-100">
+              No leave requests found.
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
           <p className="text-sm text-gray-600">
-            Showing <span className="font-semibold text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-semibold text-gray-900">{Math.min(currentPage * itemsPerPage, filteredLeaves.length)}</span> of <span className="font-semibold text-gray-900">{filteredLeaves.length}</span> entries
+            Showing <span className="font-semibold text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+            <span className="font-semibold text-gray-900">{Math.min(currentPage * itemsPerPage, filteredLeaves.length)}</span> of{' '}
+            <span className="font-semibold text-gray-900">{filteredLeaves.length}</span> entries
           </p>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-            >
+            <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}
+              className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors">
               <FaChevronLeft size={14} className="text-gray-600" />
             </button>
             <div className="flex items-center gap-1">
               {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i + 1}
-                  onClick={() => setCurrentPage(i + 1)}
+                <button key={i + 1} onClick={() => setCurrentPage(i + 1)}
                   className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
-                    currentPage === i + 1
-                      ? 'bg-[#2C5284] text-white'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
+                    currentPage === i + 1 ? 'bg-[#2C5284] text-white' : 'text-gray-600 hover:bg-gray-50'
+                  }`}>
                   {i + 1}
                 </button>
               ))}
             </div>
-            <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-            >
+            <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}
+              className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors">
               <FaChevronRight size={14} className="text-gray-600" />
             </button>
           </div>
@@ -1447,13 +1892,19 @@ function AdminLeave({ setTitle }) {
       {/* Leave Detail Modal */}
       {showModal && selectedLeave && (
         <LeaveDetailModal
-          leave={selectedLeave}
+          leave={{
+            ...selectedLeave,
+            // Normalize fields for the modal (it expects id, employeeName, email)
+            id: selectedLeave._id,
+            employeeName: getEmpName(selectedLeave),
+            email: getEmpEmail(selectedLeave),
+          }}
           onClose={() => setShowModal(false)}
           onStatusChange={handleStatusChange}
         />
       )}
     </div>
-  )
+  );
 }
 
 export default AdminLeave;

@@ -2957,7 +2957,9 @@ function EmployeeHistoryModal({ employee, onClose }) {
     setSelectedRecord(null)
     try {
       const data = await apiGetEmployeeAttendance(employee._id, { month: monthStr })
-      setRecords(data.records || [])
+      // setRecords(data.records || [])
+      setRecords((data.records || []).filter(r => r.employeeId !== null))
+
     } catch {
       setRecords([])
     } finally {

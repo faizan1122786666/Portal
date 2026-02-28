@@ -516,7 +516,8 @@ function AdminDashboard({ setTitle }) {
     const currentMonth = startDate.slice(0, 7)
     apiGetAllAttendance({ month: currentMonth })
       .then(data => {
-        const records = data.records || []
+        // const records = data.records || []
+         const records = (data.records || []).filter(r => r.employeeId !== null)
         const counts = last7Days.map(({ date }) => {
           return records.filter(r => r.date === date && r.status === 'Present').length
         })
