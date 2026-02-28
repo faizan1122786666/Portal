@@ -287,11 +287,14 @@ async function getAllLeaves(req, res) {
 // Admin dashboard summary stats
 async function getLeaveSummary(req, res) {
   try {
+    // Only count leaves for users that still exist (exclude orphaned leaves from deleted users)
+    const validEmployeeIds = await userModel.distinct('_id');
+
     const [total, pending, approved, rejected] = await Promise.all([
-      leaveModel.countDocuments(),
-      leaveModel.countDocuments({ status: 'Pending' }),
-      leaveModel.countDocuments({ status: 'Approved' }),
-      leaveModel.countDocuments({ status: 'Rejected' }),
+      leaveModel.countDocuments({ employeeId: { $in: validEmployeeIds } }),
+      leaveModel.countDocuments({ employeeId: { $in: validEmployeeIds }, status: 'Pending' }),
+      leaveModel.countDocuments({ employeeId: { $in: validEmployeeIds }, status: 'Approved' }),
+      leaveModel.countDocuments({ employeeId: { $in: validEmployeeIds }, status: 'Rejected' }),
     ]);
 
     return res.status(200).json({ total, pending, approved, rejected });

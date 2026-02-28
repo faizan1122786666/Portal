@@ -20,7 +20,7 @@
 //   const [title, setTitle] = useState('Dashboard')
 //   const [user, setUser] = useState(null)
 //   const [darkMode, setDarkMode] = useState(false)
-  
+
 //   const handleSlidebar = () => {
 //     setIsOpen(!isOpen)
 //   }
@@ -38,7 +38,7 @@
 //   localStorage.setItem('user',JSON.stringify(userData))
 //   setUser(userData)
 //   }
-  
+
 //   const handleLogout = () => {
 //     localStorage.removeItem('user')
 //     setUser(null)
@@ -54,11 +54,11 @@
 //     darkMode ? html.classList.add('dark')
 //     : html.classList.remove('dark')
 //   }, [darkMode])
-  
+
 
 
 //   return (
-   
+
 //     <AuthContextProvider value={{user, handleLogin, handleLogout}}>
 //       <div className="flex h-screen overflow-hidden">
 //       { user ? (
@@ -95,12 +95,12 @@
 //             <UserAttendance setTitle={setTitle} />
 //             )
 //             } />
-           
+
 //            {/* Employee Detail Route - Only for Admin
 //            {user.role === 'admin' && ( */}
-   
-   
-           
+
+
+
 //            <Route path="/leave" element={
 //             user.role === 'admin' ? (
 //               <AdminLeave setTitle={setTitle} />
@@ -108,10 +108,10 @@
 //               <UserLeave setTitle={setTitle} />
 //             )
 //            } />
-           
+
 //            {/* Redirect to dashboard if already logged in */}
 //            <Route path='/login' element={<Navigate to="/" replace/>} />
-           
+
 //            {/* Catch all - redirect to dashboard */}
 //            <Route path='*' element={<Navigate to="/" replace />} />
 //        </Routes>
@@ -123,7 +123,7 @@
 
 //         </div>
 //     </AuthContextProvider>
-   
+
 //   )
 // }
 
@@ -171,7 +171,7 @@
 //   const [user, setUser] = useState(null)
 //   const [darkMode, setDarkMode] = useState(false)
 //   const [showChangePassword, setShowChangePassword] = useState(false)
-  
+
 //   const handleSlidebar = () => {
 //     setIsOpen(!isOpen)
 //   }
@@ -188,7 +188,7 @@
 //     localStorage.setItem('user', JSON.stringify(userData))
 //     setUser(userData)
 //   }
-  
+
 //   const handleLogout = () => {
 //     localStorage.removeItem('user')
 //     setUser(null)
@@ -274,7 +274,7 @@
 
 //                   {/* Redirect to dashboard if already logged in */}
 //                   <Route path="/login" element={<Navigate to="/" replace />} />
-                  
+
 //                   {/* Catch all - redirect to dashboard */}
 //                   <Route path="*" element={<Navigate to="/" replace />} />
 //                 </Routes>
@@ -912,10 +912,12 @@ import ManageEmployees from './components/layout/ManageEmployees'
 import Profile from './components/layout/Profile'
 
 function App() {
-  const [isOpen, setIsOpen]     = useState(false)
-  const [title, setTitle]       = useState('Dashboard')
-  const [user, setUser]         = useState(null)
-  const [darkMode, setDarkMode] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [title, setTitle] = useState('Dashboard')
+  const [user, setUser] = useState(null)
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem('darkMode') === 'true'
+  )
 
   const handleSlidebar = () => setIsOpen(prev => !prev)
 
@@ -947,7 +949,13 @@ function App() {
 
   useEffect(() => {
     const html = document.documentElement
-    darkMode ? html.classList.add('dark') : html.classList.remove('dark')
+    if (darkMode) {
+      html.classList.add('dark')
+      localStorage.setItem('darkMode', 'true')
+    } else {
+      html.classList.remove('dark')
+      localStorage.setItem('darkMode', 'false')
+    }
   }, [darkMode])
 
   return (
@@ -969,9 +977,9 @@ function App() {
             <Slidebar
               isOpen={isOpen}
               handleSlidebar={handleSlidebar}
-              userEmail={user.email  || ''}
-              userName={user.name    || ''}
-              userShift={user.shift  || ''}
+              userEmail={user.email || ''}
+              userName={user.name || ''}
+              userShift={user.shift || ''}
               userRole={user.role}
               onLogout={handleLogout}
             />
@@ -993,7 +1001,7 @@ function App() {
                     element={
                       user.role === 'admin'
                         ? <AdminDashboard setTitle={setTitle} darkMode={darkMode} />
-                        : <UserDashboard  setTitle={setTitle} darkMode={darkMode} />
+                        : <UserDashboard setTitle={setTitle} darkMode={darkMode} />
                     }
                   />
 
@@ -1003,7 +1011,7 @@ function App() {
                     element={
                       user.role === 'admin'
                         ? <AdminAttendance setTitle={setTitle} />
-                        : <UserAttendance  setTitle={setTitle} />
+                        : <UserAttendance setTitle={setTitle} />
                     }
                   />
 
@@ -1013,7 +1021,7 @@ function App() {
                     element={
                       user.role === 'admin'
                         ? <AdminLeave setTitle={setTitle} />
-                        : <UserLeave  setTitle={setTitle} />
+                        : <UserLeave setTitle={setTitle} />
                     }
                   />
 
@@ -1031,7 +1039,7 @@ function App() {
                     element={
                       <Profile
                         setTitle={setTitle}
-                        userName={user.name   || ''}
+                        userName={user.name || ''}
                         userEmail={user.email || ''}
                         userRole={user.role}
                         userShift={user.shift || ''}
@@ -1041,8 +1049,8 @@ function App() {
                   />
 
                   {/* Auth redirects */}
-                  <Route path="/login" element={<Navigate to="/"      replace />} />
-                  <Route path="*"      element={<Navigate to="/"      replace />} />
+                  <Route path="/login" element={<Navigate to="/" replace />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </main>
             </div>
@@ -1050,7 +1058,7 @@ function App() {
         ) : (
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="*"     element={<Navigate to="/login" replace />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         )}
       </div>

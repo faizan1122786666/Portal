@@ -21,9 +21,9 @@ function getInitials(name) {
 function ShiftBadge({ shift }) {
   if (!shift) return null
   const config = {
-    AM:    { label: 'Morning Shift', icon: <FaSun size={10} />,       className: 'bg-amber-100 text-amber-700 border-amber-200' },
-    PM:    { label: 'Evening Shift', icon: <FaMoon size={10} />,      className: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
-    Night: { label: 'Night Shift',   icon: <FaCloudMoon size={10} />, className: 'bg-slate-100 text-slate-700 border-slate-200' },
+    AM: { label: 'Morning Shift', icon: <FaSun size={10} />, className: 'bg-amber-100 text-amber-700 border-amber-200' },
+    PM: { label: 'Evening Shift', icon: <FaMoon size={10} />, className: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
+    Night: { label: 'Night Shift', icon: <FaCloudMoon size={10} />, className: 'bg-slate-100 text-slate-700 border-slate-200' },
   }
   const c = config[shift]
   if (!c) return null
@@ -37,14 +37,14 @@ function ShiftBadge({ shift }) {
 export default function Profile({ setTitle, userName, userEmail, userRole, userShift, onNameUpdate }) {
   const navigate = useNavigate()
 
-  const [name, setName]               = useState(userName || '')
+  const [name, setName] = useState(userName || '')
   const [nameLoading, setNameLoading] = useState(false)
   const nameChanged = name.trim() !== (userName || '').trim()
   const nameAtLimit = name.length >= 14
 
   const [showPassword, setShowPassword] = useState(false)
-  const [pwForm, setPwForm]             = useState({ oldPassword: '', newPassword: '', confirmPassword: '' })
-  const [pwLoading, setPwLoading]       = useState(false)
+  const [pwForm, setPwForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' })
+  const [pwLoading, setPwLoading] = useState(false)
 
   useEffect(() => {
     setTitle && setTitle('My Profile')
@@ -98,26 +98,28 @@ export default function Profile({ setTitle, userName, userEmail, userRole, userS
   const initials = getInitials(name || userName)
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-gray-50/50 dark:bg-gray-900 p-4 sm:p-6 lg:p-8 transition-colors duration-300">
       <div className="max-w-lg mx-auto">
 
-        <button onClick={() => navigate(-1)} className="mb-6 text-sm text-[#2C5284] hover:underline flex items-center gap-1">
+        <button onClick={() => navigate(-1)} className="mb-6 text-sm text-[#2C5284] dark:text-blue-400 hover:underline flex items-center gap-1">
           ← Back
         </button>
 
         {/* Avatar Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4 flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-full bg-[#2C5284] flex items-center justify-center mb-4 shadow-lg">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-4 flex flex-col items-center text-center transition-colors duration-300">
+          <div className="w-20 h-20 rounded-full bg-[#2C5284] dark:bg-blue-600 flex items-center justify-center mb-4 shadow-lg">
             {initials
               ? <span className="text-white text-2xl font-bold">{initials}</span>
               : <CgProfile size={40} className="text-white" />
             }
           </div>
-          <h2 className="text-lg font-bold text-gray-900">{userName || 'No Name Set'}</h2>
-          <p className="text-sm text-gray-500 mt-0.5">{userEmail}</p>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">{userName || 'No Name Set'}</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{userEmail}</p>
           <div className="flex items-center gap-2 mt-3 flex-wrap justify-center">
             <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold capitalize border
-              ${userRole === 'admin' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>
+              ${userRole === 'admin'
+                ? 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-700'
+                : 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-700'}`}>
               {userRole}
             </span>
             {userShift && <ShiftBadge shift={userShift} />}
@@ -125,12 +127,12 @@ export default function Profile({ setTitle, userName, userEmail, userRole, userS
         </div>
 
         {/* Edit Name Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-4 transition-colors duration-300">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-full bg-[#2C5284]/10 flex items-center justify-center">
-              <AiOutlineUser size={16} className="text-[#2C5284]" />
+            <div className="w-8 h-8 rounded-full bg-[#2C5284]/10 dark:bg-blue-500/10 flex items-center justify-center">
+              <AiOutlineUser size={16} className="text-[#2C5284] dark:text-blue-400" />
             </div>
-            <h3 className="font-semibold text-gray-800">Full Name</h3>
+            <h3 className="font-semibold text-gray-800 dark:text-gray-200">Full Name</h3>
           </div>
 
           <div className="relative">
@@ -140,11 +142,12 @@ export default function Profile({ setTitle, userName, userEmail, userRole, userS
               onChange={e => setName(e.target.value)}
               maxLength={14}
               placeholder="Enter your full name"
-              className={`w-full px-4 py-3 border rounded-xl outline-none text-sm transition-all focus:ring-2 focus:ring-[#2C5284] focus:border-transparent pr-16
-                ${nameAtLimit ? 'border-orange-300 bg-orange-50' : 'border-gray-200'}`}
+              className={`w-full px-4 py-3 border rounded-xl outline-none text-sm transition-all focus:ring-2 focus:ring-[#2C5284] dark:focus:ring-blue-500 focus:border-transparent pr-16
+                bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
+                ${nameAtLimit ? 'border-orange-300 bg-orange-50 dark:bg-orange-900/20 dark:border-orange-500' : 'border-gray-200 dark:border-gray-600'}`}
             />
             <span className={`absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium
-              ${nameAtLimit ? 'text-orange-500' : 'text-gray-400'}`}>
+              ${nameAtLimit ? 'text-orange-500' : 'text-gray-400 dark:text-gray-500'}`}>
               {name.length}/14
             </span>
           </div>
@@ -155,14 +158,14 @@ export default function Profile({ setTitle, userName, userEmail, userRole, userS
             <div className="flex gap-3 mt-4">
               <button
                 onClick={() => setName(userName || '')}
-                className="flex-1 py-2.5 text-sm font-medium border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 transition-colors"
+                className="flex-1 py-2.5 text-sm font-medium border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveName}
                 disabled={nameLoading}
-                className="flex-1 py-2.5 text-sm font-semibold bg-[#2C5284] text-white rounded-xl hover:bg-[#365F8D] transition-colors disabled:opacity-60"
+                className="flex-1 py-2.5 text-sm font-semibold bg-[#2C5284] dark:bg-blue-600 text-white rounded-xl hover:bg-[#365F8D] dark:hover:bg-blue-700 transition-colors disabled:opacity-60"
               >
                 {nameLoading ? 'Saving…' : 'Save Name'}
               </button>
@@ -211,7 +214,7 @@ export default function Profile({ setTitle, userName, userEmail, userRole, userS
                 {pwLoading ? 'Updating…' : 'Update Password'}
               </button>
             </div> */}
-          {/* )}
+        {/* )}
         </div> */}
 
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">

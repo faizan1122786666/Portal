@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
 .boldonse-regular {
   font-family: "Boldonse", system-ui;
   font-weight: 400;

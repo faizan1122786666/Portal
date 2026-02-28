@@ -33,7 +33,7 @@
 
 //       <div className={`h-screen w-64 bg-[#2C5282] text-white fixed top-0 left-0 transform transition-transform duration-300 ease-in-out z-50 flex flex-col
 //       ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static`}> 
-        
+
 //         {/* Header */}
 //         <div className="flex items-center justify-between p-6 border-b border-slate-800">
 //           <AiOutlineTeam size={30} className="text-white mr-4"/>
@@ -79,7 +79,7 @@
 //               <p className="text-xs text-gray-300 truncate">{userEmail}</p>
 //             </div>
 //           </div>
-          
+
 //           {/* Logout Button */}
 //           <button 
 //             onClick={handleLogoutClick}
@@ -587,9 +587,9 @@ function getInitials(name) {
 function ShiftBadge({ shift }) {
   if (!shift) return null;
   const config = {
-    AM:    { icon: <FaSun size={8} />,       className: 'bg-amber-400/20 text-amber-300 border-amber-400/30',   label: 'AM' },
-    PM:    { icon: <FaMoon size={8} />,      className: 'bg-indigo-400/20 text-indigo-300 border-indigo-400/30', label: 'PM' },
-    Night: { icon: <FaCloudMoon size={8} />, className: 'bg-slate-400/20 text-slate-300 border-slate-400/30',   label: 'Night' },
+    AM: { icon: <FaSun size={8} />, className: 'bg-amber-400/20 text-amber-300 border-amber-400/30', label: 'AM' },
+    PM: { icon: <FaMoon size={8} />, className: 'bg-indigo-400/20 text-indigo-300 border-indigo-400/30', label: 'PM' },
+    Night: { icon: <FaCloudMoon size={8} />, className: 'bg-slate-400/20 text-slate-300 border-slate-400/30', label: 'Night' },
   };
   const c = config[shift];
   if (!c) return null;
@@ -612,9 +612,9 @@ export default function Slidebar({
   const navigate = useNavigate();
 
   const baseMenuItems = [
-    { name: 'Dashboard',  icon: AiOutlineDashboard,   path: '/'           },
+    { name: 'Dashboard', icon: AiOutlineDashboard, path: '/' },
     { name: 'Attendance', icon: AiOutlineClockCircle, path: '/attendance' },
-    { name: 'Leave',      icon: AiOutlineCalendar,    path: '/leave'      },
+    { name: 'Leave', icon: AiOutlineCalendar, path: '/leave' },
   ];
   const adminMenuItems = [
     ...baseMenuItems,
@@ -650,15 +650,15 @@ export default function Slidebar({
       )}
 
       <div
-        className={`h-screen w-64 bg-[#2C5282] text-white fixed top-0 left-0 transform
-          transition-transform duration-300 ease-in-out z-50 flex flex-col
+        className={`h-screen w-64 bg-[#2C5282] dark:bg-gray-900 text-white fixed top-0 left-0 transform
+          transition-all duration-300 ease-in-out z-50 flex flex-col
           ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-[#1e3a5f]">
+        <div className="flex items-center justify-between p-5 border-b border-[#1e3a5f] dark:border-gray-700">
           <AiOutlineTeam size={28} className="text-white flex-shrink-0" />
           <h1 className="font-bold text-xl mx-3 flex-1">Employee Portal</h1>
-          <button onClick={handleSlidebar} className="lg:hidden flex-shrink-0">
+          <button onClick={handleSlidebar} className="lg:hidden flex-shrink-0 text-white">
             <AiOutlineClose size={22} />
           </button>
         </div>
@@ -675,8 +675,8 @@ export default function Slidebar({
                 onClick={handleMenuItemClick}
                 className={({ isActive }) =>
                   isActive
-                    ? 'w-full flex items-center px-6 py-3.5 transition-colors bg-[#1e3a5f] text-white border-l-4 border-white'
-                    : 'w-full flex items-center px-6 py-3.5 transition-colors text-white hover:bg-[#1e3a5f] border-l-4 border-transparent'
+                    ? 'w-full flex items-center px-6 py-3.5 transition-colors bg-[#1e3a5f] dark:bg-gray-700 text-white border-l-4 border-white'
+                    : 'w-full flex items-center px-6 py-3.5 transition-colors text-white hover:bg-[#1e3a5f] dark:hover:bg-gray-700 border-l-4 border-transparent'
                 }
               >
                 <Icon size={20} className="mr-3 flex-shrink-0" />
@@ -687,14 +687,14 @@ export default function Slidebar({
         </nav>
 
         {/* User Profile Section — clickable → goes to /profile */}
-        <div className="border-t border-[#1e3a5f] p-4 space-y-1">
+        <div className="border-t border-[#1e3a5f] dark:border-gray-700 p-4 space-y-1">
           <button
             onClick={handleProfileClick}
             title="Edit your profile"
-            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#1e3a5f] transition-colors text-left cursor-pointer"
+            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#1e3a5f] dark:hover:bg-gray-700 transition-colors text-left cursor-pointer"
           >
             {/* Avatar */}
-            <div className="w-9 h-9 rounded-full bg-[#1e3a5f] flex items-center justify-center flex-shrink-0">
+            <div className="w-9 h-9 rounded-full bg-[#1e3a5f] dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
               {initials
                 ? <span className="text-white text-sm font-bold">{initials}</span>
                 : <CgProfile size={22} className="text-white" />
@@ -715,7 +715,7 @@ export default function Slidebar({
 
           <button
             onClick={handleLogoutClick}
-            className="mt-2 w-full flex items-center justify-center gap-2 p-2 rounded-lg hover:bg-slate-800 bg-[#365F8D] transition-colors text-sm cursor-pointer"
+            className="mt-2 w-full flex items-center justify-center gap-2 p-2 rounded-lg hover:bg-gray-700 bg-[#365F8D] dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors text-sm cursor-pointer"
           >
             <AiOutlineLogout size={18} />
             <span className="font-medium">Logout</span>
