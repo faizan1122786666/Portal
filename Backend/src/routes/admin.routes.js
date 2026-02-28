@@ -303,34 +303,79 @@
 
 
 
+// const express = require('express');
+// const router  = express.Router();
+// const attendanceController = require('../controllers/attendance.controller');
+// const { verifyAdmin } = require('../middleware/auth.middleware');
+
+// // All routes require admin role (verifyAdmin checks JWT cookie + role)
+
+// // GET  /api/admin/attendance              → All employees' records
+// //   ?date=2026-01-27                      → filter by date
+// //   ?month=2026-01                        → filter by month
+// //   ?employeeId=xxx                       → filter by employee
+// router.get('/attendance', verifyAdmin, attendanceController.getAllAttendance);
+
+// // GET  /api/admin/attendance/today-summary → Today's present/absent/leave count
+// router.get('/attendance/today-summary', verifyAdmin, attendanceController.getTodaySummary);
+
+// // GET  /api/admin/attendance/employee/:id  → One employee's full history
+// //   ?date=2026-01-27  or  ?month=2026-01
+// router.get('/attendance/employee/:id', verifyAdmin, attendanceController.getEmployeeAttendance);
+
+// // POST /api/admin/attendance/mark          → Manually mark attendance
+// // Body: { employeeId, date, status, checkIn?, checkOut? }
+// router.post('/attendance/mark', verifyAdmin, attendanceController.markAttendance);
+
+// // PUT  /api/admin/attendance/:id           → Edit an existing record
+// router.put('/attendance/:id', verifyAdmin, attendanceController.updateAttendance);
+
+// // DELETE /api/admin/attendance/:id         → Delete a record
+// router.delete('/attendance/:id', verifyAdmin, attendanceController.deleteAttendance);
+
+// module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const express = require('express');
 const router  = express.Router();
+const adminController      = require('../controllers/admin.controller');
 const attendanceController = require('../controllers/attendance.controller');
-const { verifyAdmin } = require('../middleware/auth.middleware');
+const { verifyAdmin }      = require('../middleware/auth.middleware');
 
-// All routes require admin role (verifyAdmin checks JWT cookie + role)
+// ── Employee CRUD ─────────────────────────────────────────────────────────────
+// GET    /api/admin/employees
+router.get('/employees',        verifyAdmin, adminController.getEmployees);
+// POST   /api/admin/employees
+router.post('/employees',       verifyAdmin, adminController.addEmployee);
+// PUT    /api/admin/employees/:id
+router.put('/employees/:id',    verifyAdmin, adminController.updateEmployee);
+// DELETE /api/admin/employees/:id
+router.delete('/employees/:id', verifyAdmin, adminController.deleteEmployee);
 
-// GET  /api/admin/attendance              → All employees' records
-//   ?date=2026-01-27                      → filter by date
-//   ?month=2026-01                        → filter by month
-//   ?employeeId=xxx                       → filter by employee
-router.get('/attendance', verifyAdmin, attendanceController.getAllAttendance);
-
-// GET  /api/admin/attendance/today-summary → Today's present/absent/leave count
-router.get('/attendance/today-summary', verifyAdmin, attendanceController.getTodaySummary);
-
-// GET  /api/admin/attendance/employee/:id  → One employee's full history
-//   ?date=2026-01-27  or  ?month=2026-01
-router.get('/attendance/employee/:id', verifyAdmin, attendanceController.getEmployeeAttendance);
-
-// POST /api/admin/attendance/mark          → Manually mark attendance
-// Body: { employeeId, date, status, checkIn?, checkOut? }
-router.post('/attendance/mark', verifyAdmin, attendanceController.markAttendance);
-
-// PUT  /api/admin/attendance/:id           → Edit an existing record
-router.put('/attendance/:id', verifyAdmin, attendanceController.updateAttendance);
-
-// DELETE /api/admin/attendance/:id         → Delete a record
-router.delete('/attendance/:id', verifyAdmin, attendanceController.deleteAttendance);
+// ── Attendance (specific routes BEFORE param routes) ─────────────────────────
+// GET  /api/admin/attendance/today-summary
+router.get('/attendance/today-summary',    verifyAdmin, attendanceController.getTodaySummary);
+// GET  /api/admin/attendance/employee/:id
+router.get('/attendance/employee/:id',     verifyAdmin, attendanceController.getEmployeeAttendance);
+// GET  /api/admin/attendance  (?date, ?month, ?employeeId)
+router.get('/attendance',                  verifyAdmin, attendanceController.getAllAttendance);
+// POST /api/admin/attendance/mark
+router.post('/attendance/mark',            verifyAdmin, attendanceController.markAttendance);
+// PUT  /api/admin/attendance/:id
+router.put('/attendance/:id',              verifyAdmin, attendanceController.updateAttendance);
+// DELETE /api/admin/attendance/:id
+router.delete('/attendance/:id',           verifyAdmin, attendanceController.deleteAttendance);
 
 module.exports = router;
