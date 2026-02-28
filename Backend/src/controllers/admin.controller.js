@@ -274,8 +274,9 @@
 
 
 
-const userModel = require('../models/user.model');
-const bcrypt = require('bcryptjs');
+const userModel  = require('../models/user.model');
+const leaveModel = require('../models/leave.model');
+const bcrypt     = require('bcryptjs');
 
 const VALID_SHIFTS = ['AM', 'PM', 'Night', ''];
 
@@ -402,6 +403,10 @@ async function deleteEmployee(req, res) {
         const employee = await userModel.findById(id);
         if (!employee) return res.status(404).json({ message: 'Employee not found' });
         if (employee.role === 'admin') return res.status(403).json({ message: 'Cannot delete admin accounts' });
+
+        // Cascade: remove all leave records belonging to this employee
+        await leaveModel.deleteMany({ employeeId: id });
+
         await userModel.findByIdAndDelete(id);
         return res.status(200).json({ message: 'Employee deleted successfully' });
     } catch (error) {

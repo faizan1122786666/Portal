@@ -1,19 +1,19 @@
-const leaveModel  = require('../models/leave.model');
-const userModel   = require('../models/user.model');
+const leaveModel = require('../models/leave.model');
+const userModel = require('../models/user.model');
 
 // ── Helper: today as "YYYY-MM-DD" ─────────────────────────────────────────────
 function getTodayDate() {
-  const now  = new Date();
+  const now = new Date();
   const yyyy = now.getFullYear();
-  const mm   = String(now.getMonth() + 1).padStart(2, '0');
-  const dd   = String(now.getDate()).padStart(2, '0');
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}`;
 }
 
 // ── Helper: calculate days between two YYYY-MM-DD strings (inclusive) ─────────
 function calcDays(startDate, endDate) {
   const start = new Date(startDate + 'T00:00:00');
-  const end   = new Date(endDate   + 'T00:00:00');
+  const end = new Date(endDate + 'T00:00:00');
   if (isNaN(start) || isNaN(end)) return 0;
   const diff = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
   return diff > 0 ? diff : 0;
@@ -33,7 +33,7 @@ const VALID_LEAVE_TYPES = [
 // Employee submits a new leave request
 async function applyLeave(req, res) {
   try {
-    const employeeId              = req.user.id;
+    const employeeId = req.user.id;
     const { leaveType, startDate, endDate, reason } = req.body;
 
     // --- Validation ---
@@ -62,9 +62,9 @@ async function applyLeave(req, res) {
     // Check for overlapping approved/pending leaves
     const overlap = await leaveModel.findOne({
       employeeId,
-      status:    { $in: ['Pending', 'Approved'] },
+      status: { $in: ['Pending', 'Approved'] },
       startDate: { $lte: endDate },
-      endDate:   { $gte: startDate }
+      endDate: { $gte: startDate }
     });
 
     if (overlap) {
@@ -79,9 +79,9 @@ async function applyLeave(req, res) {
       startDate,
       endDate,
       days,
-      reason:      reason.trim(),
+      reason: reason.trim(),
       appliedDate: today,
-      status:      'Pending',
+      status: 'Pending',
       adminComment: ''
     });
 
@@ -102,8 +102,8 @@ async function applyLeave(req, res) {
 // Optional query: ?status=Pending|Approved|Rejected  ?month=2026-02
 async function getMyLeaves(req, res) {
   try {
-    const employeeId          = req.user.id;
-    const { status, month }   = req.query;
+    const employeeId = req.user.id;
+    const { status, month } = req.query;
 
     const filter = { employeeId };
     if (status && ['Pending', 'Approved', 'Rejected'].includes(status)) {
@@ -118,8 +118,8 @@ async function getMyLeaves(req, res) {
       .sort({ createdAt: -1 });
 
     const summary = {
-      total:    leaves.length,
-      pending:  leaves.filter(l => l.status === 'Pending').length,
+      total: leaves.length,
+      pending: leaves.filter(l => l.status === 'Pending').length,
       approved: leaves.filter(l => l.status === 'Approved').length,
       rejected: leaves.filter(l => l.status === 'Rejected').length,
     };
@@ -137,8 +137,8 @@ async function getMyLeaves(req, res) {
 // Employee edits their OWN pending leave request
 async function updateMyLeave(req, res) {
   try {
-    const employeeId                            = req.user.id;
-    const { id }                                = req.params;
+    const employeeId = req.user.id;
+    const { id } = req.params;
     const { leaveType, startDate, endDate, reason } = req.body;
 
     const leave = await leaveModel.findById(id);
@@ -159,7 +159,7 @@ async function updateMyLeave(req, res) {
     // Validate new values
     const today = getTodayDate();
     const newStart = startDate || leave.startDate;
-    const newEnd   = endDate   || leave.endDate;
+    const newEnd = endDate || leave.endDate;
 
     if (newStart < today) {
       return res.status(400).json({ message: 'Start date cannot be in the past' });
@@ -175,11 +175,11 @@ async function updateMyLeave(req, res) {
 
     // Overlap check (excluding self)
     const overlap = await leaveModel.findOne({
-      _id:       { $ne: id },
+      _id: { $ne: id },
       employeeId,
-      status:    { $in: ['Pending', 'Approved'] },
+      status: { $in: ['Pending', 'Approved'] },
       startDate: { $lte: newEnd },
-      endDate:   { $gte: newStart }
+      endDate: { $gte: newStart }
     });
 
     if (overlap) {
@@ -188,10 +188,10 @@ async function updateMyLeave(req, res) {
       });
     }
 
-    if (leaveType)  leave.leaveType  = leaveType;
-    if (startDate)  leave.startDate  = startDate;
-    if (endDate)    leave.endDate    = endDate;
-    if (reason)     leave.reason     = reason.trim();
+    if (leaveType) leave.leaveType = leaveType;
+    if (startDate) leave.startDate = startDate;
+    if (endDate) leave.endDate = endDate;
+    if (reason) leave.reason = reason.trim();
     leave.days = calcDays(leave.startDate, leave.endDate);
 
     await leave.save();
@@ -210,7 +210,7 @@ async function updateMyLeave(req, res) {
 async function deleteMyLeave(req, res) {
   try {
     const employeeId = req.user.id;
-    const { id }     = req.params;
+    const { id } = req.params;
 
     const leave = await leaveModel.findById(id);
 
@@ -259,14 +259,17 @@ async function getAllLeaves(req, res) {
       filter.startDate = { $regex: `^${month}` };
     }
 
-    const leaves = await leaveModel
+    const rawLeaves = await leaveModel
       .find(filter)
       .populate('employeeId', '-password')   // include employee name, email, dept
       .sort({ createdAt: -1 });
 
+    // Filter out orphaned leaves whose employee has been deleted
+    const leaves = rawLeaves.filter(l => l.employeeId != null);
+
     const summary = {
-      total:    leaves.length,
-      pending:  leaves.filter(l => l.status === 'Pending').length,
+      total: leaves.length,
+      pending: leaves.filter(l => l.status === 'Pending').length,
       approved: leaves.filter(l => l.status === 'Approved').length,
       rejected: leaves.filter(l => l.status === 'Rejected').length,
     };
@@ -304,7 +307,7 @@ async function getLeaveSummary(req, res) {
 // Admin views one employee's full leave history
 async function getEmployeeLeaves(req, res) {
   try {
-    const { id }    = req.params;
+    const { id } = req.params;
     const { month } = req.query;
 
     const employee = await userModel.findById(id).select('-password');
@@ -329,8 +332,8 @@ async function getEmployeeLeaves(req, res) {
 // Body: { status: 'Approved' | 'Rejected', adminComment?: string }
 async function reviewLeave(req, res) {
   try {
-    const { id }                     = req.params;
-    const { status, adminComment }   = req.body;
+    const { id } = req.params;
+    const { status, adminComment } = req.body;
 
     if (!status || !['Approved', 'Rejected'].includes(status)) {
       return res.status(400).json({ message: 'status must be "Approved" or "Rejected"' });
@@ -345,10 +348,10 @@ async function reviewLeave(req, res) {
       });
     }
 
-    leave.status       = status;
+    leave.status = status;
     leave.adminComment = adminComment ? adminComment.trim() : (status === 'Approved' ? 'Leave approved' : 'Leave rejected');
-    leave.reviewedBy   = req.user.id;
-    leave.reviewedAt   = new Date();
+    leave.reviewedBy = req.user.id;
+    leave.reviewedAt = new Date();
 
     await leave.save();
 
@@ -368,7 +371,7 @@ async function reviewLeave(req, res) {
 // Admin edits any leave record (status, dates, type, comment)
 async function adminUpdateLeave(req, res) {
   try {
-    const { id }                                                  = req.params;
+    const { id } = req.params;
     const { status, adminComment, leaveType, startDate, endDate, reason } = req.body;
 
     const leave = await leaveModel.findById(id);
@@ -377,16 +380,16 @@ async function adminUpdateLeave(req, res) {
     if (status && ['Pending', 'Approved', 'Rejected'].includes(status)) {
       leave.status = status;
       if (status !== 'Pending') {
-        leave.reviewedBy  = req.user.id;
-        leave.reviewedAt  = new Date();
+        leave.reviewedBy = req.user.id;
+        leave.reviewedAt = new Date();
       }
     }
 
     if (adminComment !== undefined) leave.adminComment = adminComment;
     if (leaveType && VALID_LEAVE_TYPES.includes(leaveType)) leave.leaveType = leaveType;
     if (startDate) leave.startDate = startDate;
-    if (endDate)   leave.endDate   = endDate;
-    if (reason)    leave.reason    = reason.trim();
+    if (endDate) leave.endDate = endDate;
+    if (reason) leave.reason = reason.trim();
 
     // Recalculate days if dates changed
     if (startDate || endDate) {
@@ -409,7 +412,7 @@ async function adminUpdateLeave(req, res) {
 async function adminDeleteLeave(req, res) {
   try {
     const { id } = req.params;
-    const leave  = await leaveModel.findByIdAndDelete(id);
+    const leave = await leaveModel.findByIdAndDelete(id);
     if (!leave) return res.status(404).json({ message: 'Leave request not found' });
     return res.status(200).json({ message: 'Leave record deleted successfully' });
   } catch (error) {
