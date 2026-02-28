@@ -1775,14 +1775,457 @@
 
 
 
+// import { useEffect, useState, useCallback } from 'react'
+// import { CgProfile } from 'react-icons/cg'
+// import { FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+// import { AiOutlineClockCircle } from 'react-icons/ai'
+// import { FaRegCheckCircle } from 'react-icons/fa'
+// import { RxCrossCircled } from 'react-icons/rx'
+// import { CalendarDays } from 'lucide-react'
+// import { apiGetAllAttendance, apiGetTodaySummary } from '../../api/attendanceAPI'
+
+// // ── Circular Progress ─────────────────────────────────────────────────────────
+// function CircularProgress({ workHours }) {
+//   if (!workHours) return (
+//     <div className="flex justify-center items-center">
+//       <div className="w-36 h-36 rounded-full border-8 border-gray-200 flex items-center justify-center">
+//         <span className="text-gray-400 text-sm">No Data</span>
+//       </div>
+//     </div>
+//   )
+//   const parts = workHours.split('h')
+//   const hours = parseInt(parts[0].trim()) || 0
+//   const minutes = parts[1] ? parseInt(parts[1].trim()) || 0 : 0
+//   const totalMinutes = hours * 60 + minutes
+//   const percentage = Math.min((totalMinutes / 540) * 100, 100)
+//   const strokeDasharray = 2 * Math.PI * 60
+//   const strokeDashoffset = strokeDasharray - (strokeDasharray * percentage) / 100
+//   return (
+//     <div className="flex justify-center items-center relative">
+//       <svg className="w-36 h-36 transform -rotate-90">
+//         <circle cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-gray-200" />
+//         <circle cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="8"
+//           strokeDasharray={strokeDasharray} strokeDashoffset={strokeDashoffset}
+//           strokeLinecap="round" fill="transparent" className="text-[#2C5284]" />
+//       </svg>
+//       <div className="absolute flex flex-col items-center">
+//         <span className="text-xl font-bold text-gray-800">{workHours}</span>
+//         <span className="text-xs text-gray-500">Total Hours</span>
+//       </div>
+//     </div>
+//   )
+// }
+
+// // ── Detail Modal ──────────────────────────────────────────────────────────────
+// function AttendanceDetailModal({ record, onClose }) {
+//   const emp      = record.employeeId || {}
+//   const sessions = record.sessions   || []
+
+//   return (
+//     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+//       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+
+//         <div className="bg-[#2C5284] p-5 text-white flex justify-between items-center rounded-t-2xl">
+//           <div>
+//             <h2 className="text-xl font-bold">Attendance Details</h2>
+//             <p className="text-blue-100 text-sm">{record.date}</p>
+//           </div>
+//           <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+//             <FaTimes size={20} />
+//           </button>
+//         </div>
+
+//         <div className="p-6 space-y-5">
+
+//           {/* Employee Info */}
+//           <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+//             <div className="w-14 h-14 rounded-full bg-[#2C5284] flex items-center justify-center text-white flex-shrink-0">
+//               <CgProfile size={32} />
+//             </div>
+//             <div className="flex-1 min-w-0">
+//               <h3 className="font-bold text-gray-900 truncate">{emp.email || 'Unknown'}</h3>
+//               <p className="text-gray-500 text-sm">{emp.department || emp.role || 'Employee'}</p>
+//             </div>
+//             <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase flex-shrink-0 ${
+//               record.status === 'Present' ? 'bg-green-100 text-green-700' :
+//               record.status === 'Leave'   ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
+//             }`}>
+//               {record.status}
+//             </span>
+//           </div>
+
+//           {/* Sessions list */}
+//           {sessions.length > 0 ? (
+//             <div>
+//               <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
+//                 Sessions ({sessions.length})
+//               </h4>
+//               <div className="space-y-2">
+//                 {sessions.map((s, i) => (
+//                   <div key={i} className="flex items-center justify-between bg-gray-50 rounded-lg px-4 py-3 text-sm">
+//                     <span className="text-gray-500 font-medium w-20 flex-shrink-0">Session {i + 1}</span>
+//                     <div className="flex items-center gap-2 text-[#365F8D] font-semibold flex-1 justify-center">
+//                       <AiOutlineClockCircle size={14} />
+//                       <span>{s.checkIn}</span>
+//                       <span className="text-gray-400">→</span>
+//                       {s.checkOut
+//                         ? <span>{s.checkOut}</span>
+//                         : <span className="text-green-600 italic">ongoing</span>
+//                       }
+//                     </div>
+//                     <span className="text-gray-700 font-medium w-16 text-right flex-shrink-0">
+//                       {s.workHours || '...'}
+//                     </span>
+//                   </div>
+//                 ))}
+//               </div>
+//             </div>
+//           ) : (
+//             <p className="text-gray-400 text-sm italic text-center py-4">No sessions recorded.</p>
+//           )}
+
+//           {/* Summary row */}
+//           <div className="flex items-center gap-6 pt-3 border-t border-gray-100">
+//             <div className="flex-1 flex justify-center">
+//               <CircularProgress workHours={record.totalWorkHours} />
+//             </div>
+//             <div className="flex-1 space-y-3">
+//               <div>
+//                 <p className="text-xs text-gray-500 uppercase font-semibold mb-1">First Check-in</p>
+//                 <p className="font-bold text-gray-900">{sessions[0]?.checkIn || '--:--'}</p>
+//               </div>
+//               <div>
+//                 <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Last Check-out</p>
+//                 <p className="font-bold text-gray-900">
+//                   {[...sessions].reverse().find(s => s.checkOut)?.checkOut || '--:--'}
+//                 </p>
+//               </div>
+//               <div>
+//                 <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Total Sessions</p>
+//                 <p className="font-bold text-[#2C5284]">{sessions.length}</p>
+//               </div>
+//             </div>
+//           </div>
+
+//         </div>
+
+//         <div className="p-4 bg-gray-50 flex justify-end rounded-b-2xl">
+//           <button onClick={onClose} className="px-6 py-2 bg-[#2C5284] text-white rounded-lg font-semibold hover:bg-[#1e3a5f] transition-colors">
+//             Close
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+// // ── Main Component ────────────────────────────────────────────────────────────
+// function AdminAttendance({ setTitle }) {
+//   const [records, setRecords]               = useState([])
+//   const [todayStats, setTodayStats]         = useState({ totalEmployees: 0, present: 0, absent: 0, onLeave: 0 })
+//   const [selectedRecord, setSelectedRecord] = useState(null)
+//   const [showModal, setShowModal]           = useState(false)
+//   const [searchTerm, setSearchTerm]         = useState('')
+//   const [selectedDate, setSelectedDate]     = useState('')
+//   const [currentPage, setCurrentPage]       = useState(1)
+//   const [loading, setLoading]               = useState(true)
+//   const [error, setError]                   = useState('')
+//   const itemsPerPage = 8
+
+//   useEffect(() => { setTitle('Attendance Management') }, [setTitle])
+
+//   const fetchSummary = useCallback(async () => {
+//     try {
+//       const data = await apiGetTodaySummary()
+//       setTodayStats(data)
+//     } catch { console.error('Failed to fetch summary') }
+//   }, [])
+
+//   const fetchRecords = useCallback(async () => {
+//     setLoading(true)
+//     setError('')
+//     try {
+//       const filters = {}
+//       if (selectedDate) filters.date = selectedDate
+//       const data = await apiGetAllAttendance(filters)
+//       setRecords(data.records || [])
+//     } catch {
+//       setError('Failed to load attendance records.')
+//     } finally {
+//       setLoading(false)
+//     }
+//   }, [selectedDate])
+
+//   useEffect(() => { fetchSummary() }, [fetchSummary])
+//   useEffect(() => { fetchRecords(); setCurrentPage(1) }, [fetchRecords])
+
+//   const filteredRecords = records.filter(r => {
+//     const emp  = r.employeeId || {}
+//     const text = `${emp.email || ''} ${emp.department || ''}`.toLowerCase()
+//     return text.includes(searchTerm.toLowerCase())
+//   })
+
+//   const totalPages       = Math.ceil(filteredRecords.length / itemsPerPage)
+//   const paginatedRecords = filteredRecords.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+
+//   const getFirstIn      = (sessions = []) => sessions[0]?.checkIn || '------'
+//   const getLastOut      = (sessions = []) => [...sessions].reverse().find(s => s.checkOut)?.checkOut || '------'
+//   const getSessionCount = (sessions = []) => sessions.length
+
+//   return (
+//     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
+//       <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] mb-6">Attendance Management</h1>
+
+//       {/* Stats Cards */}
+//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+//         {[
+//           { label: 'Total Employees', value: todayStats.totalEmployees, icon: <CgProfile size={24} className="text-white" /> },
+//           { label: 'Today Present',   value: todayStats.present,        icon: <FaRegCheckCircle size={24} className="text-white" /> },
+//           { label: 'Today Absent',    value: todayStats.absent,         icon: <RxCrossCircled size={24} className="text-white" /> },
+//           { label: 'Today Leave',     value: todayStats.onLeave,        icon: <CalendarDays size={24} className="text-white" /> },
+//         ].map((card, i) => (
+//           <div key={i} className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
+//             <div>
+//               <p className="text-sm text-[#2C5284]">{card.label}</p>
+//               <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{card.value}</h1>
+//             </div>
+//             <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//               {card.icon}
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+
+//       {/* Filters */}
+//       <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+//         <div className="flex flex-col sm:flex-row gap-3">
+//           <input
+//             type="text"
+//             placeholder="Search by email or department..."
+//             value={searchTerm}
+//             onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1) }}
+//             className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none"
+//           />
+//           <div className="flex items-center gap-2">
+//             <input
+//               type="date"
+//               value={selectedDate}
+//               onChange={(e) => { setSelectedDate(e.target.value); setCurrentPage(1) }}
+//               className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-sm"
+//             />
+//             {selectedDate && (
+//               <button
+//                 onClick={() => { setSelectedDate(''); setCurrentPage(1) }}
+//                 className="px-3 py-2.5 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-1"
+//               >
+//                 <FaTimes size={12} /> Clear
+//               </button>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+
+//       {error && <div className="bg-red-50 text-red-700 px-4 py-3 rounded-xl mb-4 border border-red-200">{error}</div>}
+
+//       {loading ? (
+//         <div className="bg-white rounded-xl p-10 text-center text-gray-400 border border-gray-100">
+//           Loading attendance records...
+//         </div>
+//       ) : (
+//         <>
+//           {/* Desktop Table */}
+//           <div className="hidden lg:block bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+//             <table className="min-w-full divide-y divide-gray-200">
+//               <thead className="bg-[#2C5284]">
+//                 <tr>
+//                   <th className="px-6 py-4 text-left text-sm font-semibold text-white">Employee</th>
+//                   <th className="px-6 py-4 text-left text-sm font-semibold text-white">Date</th>
+//                   <th className="px-6 py-4 text-left text-sm font-semibold text-white">First In</th>
+//                   <th className="px-6 py-4 text-left text-sm font-semibold text-white">Last Out</th>
+//                   <th className="px-6 py-4 text-left text-sm font-semibold text-white">Sessions</th>
+//                   <th className="px-6 py-4 text-left text-sm font-semibold text-white">Total Hours</th>
+//                   <th className="px-6 py-4 text-left text-sm font-semibold text-white">Status</th>
+//                 </tr>
+//               </thead>
+//               <tbody className="bg-white divide-y divide-gray-200">
+//                 {paginatedRecords.map((record) => {
+//                   const emp = record.employeeId || {}
+//                   return (
+//                     <tr key={record._id}
+//                       onClick={() => { setSelectedRecord(record); setShowModal(true) }}
+//                       className="hover:bg-blue-50 cursor-pointer transition-colors">
+//                       <td className="px-6 py-4 whitespace-nowrap">
+//                         <div className="flex items-center gap-3">
+//                           <div className="w-9 h-9 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
+//                             <CgProfile size={18} className="text-white" />
+//                           </div>
+//                           <div>
+//                             <div className="text-sm font-medium text-gray-900">{emp.email || 'Unknown'}</div>
+//                             <div className="text-xs text-gray-500">{emp.department || emp.role || ''}</div>
+//                           </div>
+//                         </div>
+//                       </td>
+//                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{record.date}</td>
+//                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{getFirstIn(record.sessions)}</td>
+//                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{getLastOut(record.sessions)}</td>
+//                       <td className="px-6 py-4 whitespace-nowrap">
+//                         <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">
+//                           {getSessionCount(record.sessions)} session{getSessionCount(record.sessions) !== 1 ? 's' : ''}
+//                         </span>
+//                       </td>
+//                       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#2C5284]">
+//                         {record.totalWorkHours || '------'}
+//                       </td>
+//                       <td className="px-6 py-4 whitespace-nowrap">
+//                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+//                           record.status === 'Present' ? 'bg-green-100 text-green-800' :
+//                           record.status === 'Leave'   ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
+//                         }`}>{record.status}</span>
+//                       </td>
+//                     </tr>
+//                   )
+//                 })}
+//                 {paginatedRecords.length === 0 && (
+//                   <tr><td colSpan={7} className="px-6 py-10 text-center text-gray-400 italic">No records found.</td></tr>
+//                 )}
+//               </tbody>
+//             </table>
+//             <p className="text-xs text-gray-400 text-center py-3 border-t border-gray-100">
+//               Click any row to view full session details
+//             </p>
+//           </div>
+
+//           {/* Mobile Cards */}
+//           <div className="lg:hidden space-y-4">
+//             {paginatedRecords.map((record) => {
+//               const emp = record.employeeId || {}
+//               return (
+//                 <div key={record._id}
+//                   onClick={() => { setSelectedRecord(record); setShowModal(true) }}
+//                   className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 cursor-pointer active:scale-[0.98] transition-all">
+//                   <div className="p-4 flex items-center gap-3 border-b border-gray-100 bg-gray-50/50">
+//                     <div className="w-10 h-10 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
+//                       <CgProfile size={20} className="text-white" />
+//                     </div>
+//                     <div className="flex-1 min-w-0">
+//                       <p className="font-semibold text-gray-900 text-sm truncate">{emp.email || 'Unknown'}</p>
+//                       <p className="text-xs text-gray-500">{emp.department || emp.role || ''}</p>
+//                     </div>
+//                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase flex-shrink-0 ${
+//                       record.status === 'Present' ? 'bg-green-100 text-green-700' :
+//                       record.status === 'Leave'   ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
+//                     }`}>{record.status}</span>
+//                   </div>
+//                   <div className="p-4 grid grid-cols-2 gap-3">
+//                     <div><p className="text-[10px] text-gray-400 uppercase font-bold">Date</p><p className="text-sm text-gray-700">{record.date}</p></div>
+//                     <div><p className="text-[10px] text-gray-400 uppercase font-bold">Total Hours</p><p className="text-sm font-semibold text-[#2C5284]">{record.totalWorkHours || '------'}</p></div>
+//                     <div><p className="text-[10px] text-gray-400 uppercase font-bold">First In</p><p className="text-sm text-gray-700">{getFirstIn(record.sessions)}</p></div>
+//                     <div><p className="text-[10px] text-gray-400 uppercase font-bold">Sessions</p><p className="text-sm text-gray-700">{getSessionCount(record.sessions)}</p></div>
+//                   </div>
+//                 </div>
+//               )
+//             })}
+//             {paginatedRecords.length === 0 && (
+//               <div className="bg-white rounded-xl p-10 text-center text-gray-400 italic border border-gray-100">No records found.</div>
+//             )}
+//           </div>
+
+//           {/* Pagination */}
+//           {totalPages > 1 && (
+//             <div className="mt-8 flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+//               <p className="text-sm text-gray-600">Showing {paginatedRecords.length} of {filteredRecords.length} entries</p>
+//               <div className="flex items-center gap-2">
+//                 <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}
+//                   className="p-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50"><FaChevronLeft size={14} /></button>
+//                 {[...Array(totalPages)].map((_, i) => (
+//                   <button key={i + 1} onClick={() => setCurrentPage(i + 1)}
+//                     className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
+//                       currentPage === i + 1 ? 'bg-[#2C5284] text-white' : 'text-gray-600 hover:bg-gray-50 border border-gray-200'
+//                     }`}>{i + 1}</button>
+//                 ))}
+//                 <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}
+//                   className="p-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50"><FaChevronRight size={14} /></button>
+//               </div>
+//             </div>
+//           )}
+//         </>
+//       )}
+
+//       {showModal && selectedRecord && (
+//         <AttendanceDetailModal
+//           record={selectedRecord}
+//           onClose={() => { setShowModal(false); setSelectedRecord(null) }}
+//         />
+//       )}
+//     </div>
+//   )
+// }
+
+// export default AdminAttendance
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { useEffect, useState, useCallback } from 'react'
+import Select from 'react-select'
 import { CgProfile } from 'react-icons/cg'
-import { FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { FaTimes, FaChevronLeft, FaChevronRight, FaPlus } from 'react-icons/fa'
 import { AiOutlineClockCircle } from 'react-icons/ai'
 import { FaRegCheckCircle } from 'react-icons/fa'
 import { RxCrossCircled } from 'react-icons/rx'
 import { CalendarDays } from 'lucide-react'
-import { apiGetAllAttendance, apiGetTodaySummary } from '../../api/attendanceAPI'
+import {
+  apiGetAllAttendance,
+  apiGetTodaySummary,
+  apiGetEmployees,
+  apiMarkAttendance,
+} from '../../api/attendanceAPI'
+
+// ── React Select custom styles to match app theme ────────────────────────────
+const selectStyles = {
+  control: (base, state) => ({
+    ...base,
+    borderColor: state.isFocused ? '#2C5284' : '#d1d5db',
+    boxShadow: state.isFocused ? '0 0 0 2px rgba(44,82,132,0.2)' : 'none',
+    borderRadius: '0.5rem',
+    minHeight: '42px',
+    '&:hover': { borderColor: '#2C5284' },
+  }),
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isSelected
+      ? '#2C5284'
+      : state.isFocused
+      ? '#EBF2FB'
+      : 'white',
+    color: state.isSelected ? 'white' : '#111827',
+    cursor: 'pointer',
+  }),
+  placeholder: (base) => ({ ...base, color: '#9ca3af' }),
+}
+
+// ── Status options ────────────────────────────────────────────────────────────
+const statusOptions = [
+  { value: 'Present', label: 'Present' },
+  { value: 'Absent',  label: 'Absent'  },
+  { value: 'Leave',   label: 'Leave'   },
+]
 
 // ── Circular Progress ─────────────────────────────────────────────────────────
 function CircularProgress({ workHours }) {
@@ -1824,7 +2267,6 @@ function AttendanceDetailModal({ record, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-
         <div className="bg-[#2C5284] p-5 text-white flex justify-between items-center rounded-t-2xl">
           <div>
             <h2 className="text-xl font-bold">Attendance Details</h2>
@@ -1836,8 +2278,6 @@ function AttendanceDetailModal({ record, onClose }) {
         </div>
 
         <div className="p-6 space-y-5">
-
-          {/* Employee Info */}
           <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
             <div className="w-14 h-14 rounded-full bg-[#2C5284] flex items-center justify-center text-white flex-shrink-0">
               <CgProfile size={32} />
@@ -1854,7 +2294,6 @@ function AttendanceDetailModal({ record, onClose }) {
             </span>
           </div>
 
-          {/* Sessions list */}
           {sessions.length > 0 ? (
             <div>
               <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">
@@ -1884,7 +2323,6 @@ function AttendanceDetailModal({ record, onClose }) {
             <p className="text-gray-400 text-sm italic text-center py-4">No sessions recorded.</p>
           )}
 
-          {/* Summary row */}
           <div className="flex items-center gap-6 pt-3 border-t border-gray-100">
             <div className="flex-1 flex justify-center">
               <CircularProgress workHours={record.totalWorkHours} />
@@ -1906,7 +2344,6 @@ function AttendanceDetailModal({ record, onClose }) {
               </div>
             </div>
           </div>
-
         </div>
 
         <div className="p-4 bg-gray-50 flex justify-end rounded-b-2xl">
@@ -1919,12 +2356,212 @@ function AttendanceDetailModal({ record, onClose }) {
   )
 }
 
+// ── Mark Attendance Modal ─────────────────────────────────────────────────────
+function MarkAttendanceModal({ employees, onClose, onSuccess }) {
+  const [selectedEmployee, setSelectedEmployee] = useState(null)
+  const [selectedStatus, setSelectedStatus]     = useState(null)
+  const [selectedDate, setSelectedDate]         = useState(() => {
+    // default to today
+    const now  = new Date()
+    const yyyy = now.getFullYear()
+    const mm   = String(now.getMonth() + 1).padStart(2, '0')
+    const dd   = String(now.getDate()).padStart(2, '0')
+    return `${yyyy}-${mm}-${dd}`
+  })
+  const [checkIn, setCheckIn]   = useState('')
+  const [checkOut, setCheckOut] = useState('')
+  const [loading, setLoading]   = useState(false)
+  const [error, setError]       = useState('')
+  const [success, setSuccess]   = useState('')
+
+  // Build employee options for React Select
+  const employeeOptions = employees.map(emp => ({
+    value: emp._id,
+    label: emp.email,
+    sub:   emp.department || emp.role || 'Employee',
+  }))
+
+  const handleSubmit = async () => {
+    if (!selectedEmployee) return setError('Please select an employee.')
+    if (!selectedStatus)   return setError('Please select a status.')
+    if (!selectedDate)     return setError('Please select a date.')
+
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      const payload = {
+        employeeId: selectedEmployee.value,
+        date:       selectedDate,
+        status:     selectedStatus.value,
+      }
+      if (checkIn)  payload.checkIn  = checkIn
+      if (checkOut) payload.checkOut = checkOut
+
+      const data = await apiMarkAttendance(payload)
+
+      if (data.message && data.message.toLowerCase().includes('successfully')) {
+        setSuccess(`✅ Attendance marked as "${selectedStatus.value}" for ${selectedEmployee.label} on ${selectedDate}.`)
+        setTimeout(() => {
+          onSuccess()   // refresh parent list
+          onClose()
+        }, 1500)
+      } else {
+        setError(data.message || 'Something went wrong.')
+      }
+    } catch {
+      setError('Failed to mark attendance. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+
+        {/* Header */}
+        <div className="bg-[#2C5284] p-5 text-white flex justify-between items-center rounded-t-2xl">
+          <div>
+            <h2 className="text-xl font-bold">Mark Attendance</h2>
+            <p className="text-blue-100 text-sm">Manually set attendance for an employee</p>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+            <FaTimes size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-5">
+
+          {/* Employee Select */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Employee <span className="text-red-500">*</span>
+            </label>
+            <Select
+              options={employeeOptions}
+              value={selectedEmployee}
+              onChange={setSelectedEmployee}
+              styles={selectStyles}
+              placeholder="Search and select employee..."
+              formatOptionLabel={(opt) => (
+                <div>
+                  <div className="text-sm font-medium text-gray-900">{opt.label}</div>
+                  <div className="text-xs text-gray-400">{opt.sub}</div>
+                </div>
+              )}
+              isSearchable
+            />
+          </div>
+
+          {/* Date */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+            />
+          </div>
+
+          {/* Status Select */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Status <span className="text-red-500">*</span>
+            </label>
+            <Select
+              options={statusOptions}
+              value={selectedStatus}
+              onChange={setSelectedStatus}
+              styles={selectStyles}
+              placeholder="Select attendance status..."
+              isSearchable={false}
+            />
+          </div>
+
+          {/* Optional times — only shown when Present */}
+          {selectedStatus?.value === 'Present' && (
+            <div className="grid grid-cols-2 gap-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
+                  Check-in Time <span className="text-gray-400 font-normal">(optional)</span>
+                </label>
+                <input
+                  type="time"
+                  value={checkIn}
+                  onChange={(e) => setCheckIn(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
+                  Check-out Time <span className="text-gray-400 font-normal">(optional)</span>
+                </label>
+                <input
+                  type="time"
+                  value={checkOut}
+                  onChange={(e) => setCheckOut(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-sm"
+                />
+              </div>
+              <p className="col-span-2 text-xs text-blue-600">
+                💡 Leave times empty to just mark as Present without clock-in/out data.
+              </p>
+            </div>
+          )}
+
+          {/* Error / Success */}
+          {error   && <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-xl border border-red-200">{error}</div>}
+          {success && <div className="bg-green-50 text-green-700 text-sm px-4 py-3 rounded-xl border border-green-200">{success}</div>}
+        </div>
+
+        {/* Footer */}
+        <div className="p-5 bg-gray-50 flex items-center justify-between gap-3 rounded-b-2xl border-t border-gray-100">
+          <button
+            onClick={onClose}
+            className="px-5 py-2.5 text-sm font-semibold text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="flex items-center gap-2 px-6 py-2.5 bg-[#2C5284] text-white text-sm font-semibold rounded-lg hover:bg-[#1e3a5f] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Saving...
+              </>
+            ) : (
+              <>
+                <FaRegCheckCircle size={15} />
+                Mark Attendance
+              </>
+            )}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
 // ── Main Component ────────────────────────────────────────────────────────────
 function AdminAttendance({ setTitle }) {
   const [records, setRecords]               = useState([])
+  const [employees, setEmployees]           = useState([])
   const [todayStats, setTodayStats]         = useState({ totalEmployees: 0, present: 0, absent: 0, onLeave: 0 })
   const [selectedRecord, setSelectedRecord] = useState(null)
-  const [showModal, setShowModal]           = useState(false)
+  const [showDetailModal, setShowDetailModal] = useState(false)
+  const [showMarkModal, setShowMarkModal]   = useState(false)
   const [searchTerm, setSearchTerm]         = useState('')
   const [selectedDate, setSelectedDate]     = useState('')
   const [currentPage, setCurrentPage]       = useState(1)
@@ -1956,8 +2593,17 @@ function AdminAttendance({ setTitle }) {
     }
   }, [selectedDate])
 
+  // Load employees list (for the Mark modal dropdown)
+  const fetchEmployees = useCallback(async () => {
+    try {
+      const data = await apiGetEmployees()
+      setEmployees(data.employees || [])
+    } catch { console.error('Failed to fetch employees') }
+  }, [])
+
   useEffect(() => { fetchSummary() }, [fetchSummary])
   useEffect(() => { fetchRecords(); setCurrentPage(1) }, [fetchRecords])
+  useEffect(() => { fetchEmployees() }, [fetchEmployees])
 
   const filteredRecords = records.filter(r => {
     const emp  = r.employeeId || {}
@@ -1972,9 +2618,26 @@ function AdminAttendance({ setTitle }) {
   const getLastOut      = (sessions = []) => [...sessions].reverse().find(s => s.checkOut)?.checkOut || '------'
   const getSessionCount = (sessions = []) => sessions.length
 
+  // After marking attendance, refresh both summary & records
+  const handleMarkSuccess = () => {
+    fetchRecords()
+    fetchSummary()
+  }
+
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
-      <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] mb-6">Attendance Management</h1>
+
+      {/* Page header with Mark Attendance button */}
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284]">Attendance Management</h1>
+        <button
+          onClick={() => setShowMarkModal(true)}
+          className="flex items-center gap-2 px-6 py-4 bg-[#2C5284] text-white text-sm font-semibold rounded-xl shadow hover:bg-[#1e3a5f] transition-all hover:shadow-md active:scale-[0.97]"
+        >
+          <FaPlus size={13} />
+          Mark Attendance
+        </button>
+      </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -2052,7 +2715,7 @@ function AdminAttendance({ setTitle }) {
                   const emp = record.employeeId || {}
                   return (
                     <tr key={record._id}
-                      onClick={() => { setSelectedRecord(record); setShowModal(true) }}
+                      onClick={() => { setSelectedRecord(record); setShowDetailModal(true) }}
                       className="hover:bg-blue-50 cursor-pointer transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-3">
@@ -2090,9 +2753,9 @@ function AdminAttendance({ setTitle }) {
                 )}
               </tbody>
             </table>
-            <p className="text-xs text-gray-400 text-center py-3 border-t border-gray-100">
+            {/* <p className="text-xs text-gray-400 text-center py-3 border-t border-gray-100">
               Click any row to view full session details
-            </p>
+            </p> */}
           </div>
 
           {/* Mobile Cards */}
@@ -2101,7 +2764,7 @@ function AdminAttendance({ setTitle }) {
               const emp = record.employeeId || {}
               return (
                 <div key={record._id}
-                  onClick={() => { setSelectedRecord(record); setShowModal(true) }}
+                  onClick={() => { setSelectedRecord(record); setShowDetailModal(true) }}
                   className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 cursor-pointer active:scale-[0.98] transition-all">
                   <div className="p-4 flex items-center gap-3 border-b border-gray-100 bg-gray-50/50">
                     <div className="w-10 h-10 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
@@ -2151,12 +2814,23 @@ function AdminAttendance({ setTitle }) {
         </>
       )}
 
-      {showModal && selectedRecord && (
+      {/* Detail Modal */}
+      {showDetailModal && selectedRecord && (
         <AttendanceDetailModal
           record={selectedRecord}
-          onClose={() => { setShowModal(false); setSelectedRecord(null) }}
+          onClose={() => { setShowDetailModal(false); setSelectedRecord(null) }}
         />
       )}
+
+      {/* Mark Attendance Modal */}
+      {showMarkModal && (
+        <MarkAttendanceModal
+          employees={employees}
+          onClose={() => setShowMarkModal(false)}
+          onSuccess={handleMarkSuccess}
+        />
+      )}
+
     </div>
   )
 }
