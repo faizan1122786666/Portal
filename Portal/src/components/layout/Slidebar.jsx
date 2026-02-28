@@ -395,7 +395,6 @@
 
 
 
-import React from 'react';
 import {
   AiOutlineClose,
   AiOutlineDashboard,
