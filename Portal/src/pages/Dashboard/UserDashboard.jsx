@@ -1712,10 +1712,345 @@
 
 
 
+// import { useEffect, useState, useCallback } from 'react';
+// import { FaClock, FaSignInAlt, FaSignOutAlt, FaCalendarAlt, FaChartLine, FaSun, FaMoon } from 'react-icons/fa';
+// import { RxCrossCircled } from 'react-icons/rx';
+// import { FaRegCheckCircle } from 'react-icons/fa';
+// import { format } from 'date-fns';
+// import { Line, Doughnut } from 'react-chartjs-2';
+// import { apiCheckIn, apiCheckOut, apiGetTodayStatus, apiGetMyAttendance } from '../../api/attendanceAPI';
+
+// function buildDoughnut(present, absent, leave) {
+//   return {
+//     labels: ['Present', 'Absent', 'Leave'],
+//     datasets: [{
+//       data: [present, absent, leave],
+//       backgroundColor: ['rgb(54, 95, 141)', 'rgb(148, 163, 184)', 'rgb(203, 213, 225)'],
+//       borderWidth: 0,
+//       hoverOffset: 4,
+//     }],
+//   };
+// }
+
+// const weeklyHours = {
+//   labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+//   datasets: [{
+//     label: 'Work Hours',
+//     data: [9, 8.5, 9.2, 8.8, 9, 0, 0],
+//     fill: true,
+//     borderColor: 'rgb(54, 95, 141)',
+//     backgroundColor: 'rgba(54, 95, 141, 0.1)',
+//     tension: 0.4,
+//     pointBackgroundColor: 'rgb(54, 95, 141)',
+//     pointBorderColor: '#fff',
+//     pointBorderWidth: 2,
+//     pointRadius: 5,
+//     pointHoverRadius: 7,
+//   }],
+// };
+
+// // ── Shift Banner ──────────────────────────────────────────────────────────────
+// function ShiftBanner({ shift }) {
+//   if (!shift) return null;
+
+//   const isAM = shift === 'AM';
+//   return (
+//     <div className={`rounded-xl p-4 mb-6 flex items-center gap-4 border ${
+//       isAM
+//         ? 'bg-amber-50 border-amber-200 text-amber-900'
+//         : 'bg-indigo-50 border-indigo-200 text-indigo-900'
+//     }`}>
+//       <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+//         isAM ? 'bg-amber-400' : 'bg-indigo-500'
+//       }`}>
+//         {isAM ? <FaSun size={18} className="text-white" /> : <FaMoon size={18} className="text-white" />}
+//       </div>
+//       <div>
+//         <p className="font-semibold text-sm">
+//           {isAM ? 'Morning Shift' : 'Afternoon Shift'}
+//         </p>
+//         <p className={`text-xs mt-0.5 ${isAM ? 'text-amber-700' : 'text-indigo-700'}`}>
+//           {isAM ? 'Typically 8:00 AM – 4:00 PM' : 'Typically 1:00 PM – 9:00 PM'}
+//         </p>
+//       </div>
+//       <span className={`ml-auto px-3 py-1 rounded-full text-xs font-bold ${
+//         isAM ? 'bg-amber-400 text-white' : 'bg-indigo-500 text-white'
+//       }`}>
+//         {shift} Shift
+//       </span>
+//     </div>
+//   );
+// }
+
+// function UserDashboard({ setTitle, user }) {
+//   const [currentTime, setCurrentTime] = useState(new Date());
+//   const [todayStatus, setTodayStatus] = useState(null);
+//   const [summary, setSummary]         = useState({ present: 0, absent: 0, leave: 0 });
+//   const [loading, setLoading]         = useState(false);
+//   const [actionMsg, setActionMsg]     = useState('');
+//   const [msgType, setMsgType]         = useState('success');
+
+//   // Derive display name and shift from the user prop (passed from app context)
+//   const displayName = user?.name || '';
+//   const userShift   = user?.shift || '';
+
+//   useEffect(() => {
+//     setTitle('Dashboard Page');
+//     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+//     return () => clearInterval(timer);
+//   }, [setTitle]);
+
+//   const fetchTodayStatus = useCallback(async () => {
+//     try {
+//       const data = await apiGetTodayStatus();
+//       setTodayStatus(data);
+//     } catch { console.error('Failed to fetch today status'); }
+//   }, []);
+
+//   const fetchSummary = useCallback(async () => {
+//     try {
+//       const currentMonth = format(new Date(), 'yyyy-MM');
+//       const data = await apiGetMyAttendance({ month: currentMonth });
+//       if (data.summary) setSummary(data.summary);
+//     } catch { console.error('Failed to fetch summary'); }
+//   }, []);
+
+//   useEffect(() => {
+//     fetchTodayStatus();
+//     fetchSummary();
+//   }, [fetchTodayStatus, fetchSummary]);
+
+//   const handleClockIn = async () => {
+//     setLoading(true); setActionMsg('');
+//     try {
+//       const data = await apiCheckIn();
+//       setActionMsg(data.message || '');
+//       setMsgType(data.record ? 'success' : 'error');
+//       await fetchTodayStatus();
+//     } catch {
+//       setActionMsg('Clock in failed.'); setMsgType('error');
+//     } finally { setLoading(false); }
+//   };
+
+//   const handleClockOut = async () => {
+//     setLoading(true); setActionMsg('');
+//     try {
+//       const data = await apiCheckOut();
+//       setActionMsg(data.message || '');
+//       setMsgType(data.record ? 'success' : 'error');
+//       await fetchTodayStatus();
+//       await fetchSummary();
+//     } catch {
+//       setActionMsg('Clock out failed.'); setMsgType('error');
+//     } finally { setLoading(false); }
+//   };
+
+//   const canCheckIn  = todayStatus?.canCheckIn  ?? true;
+//   const canCheckOut = todayStatus?.canCheckOut ?? false;
+//   const sessions    = todayStatus?.sessions    || [];
+//   const totalHours  = todayStatus?.totalWorkHours || null;
+
+//   const statusLabel = !todayStatus ? 'Loading...'
+//     : canCheckOut ? `Checked in at ${todayStatus.currentCheckIn}`
+//     : sessions.length > 0 ? `Done — Total: ${totalHours || '0h 0m'}`
+//     : 'Not yet checked in';
+
+//   const doughnutData = buildDoughnut(summary.present, summary.absent, summary.leave);
+
+//   return (
+//     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
+
+//       {/* ── Welcome Banner ── */}
+//       {displayName && (
+//         <div className="bg-white rounded-xl shadow-sm px-5 py-4 mb-5 border-l-4 border-[#2C5284] flex items-center gap-3">
+//           <div>
+//             <h2 className="text-lg font-bold text-[#2C5284]">
+//               Welcome back, {displayName} 👋
+//             </h2>
+//             <p className="text-xs text-gray-500 mt-0.5">
+//               {format(currentTime, 'EEEE, MMMM d, yyyy')}
+//             </p>
+//           </div>
+//         </div>
+//       )}
+
+//       {/* ── Shift Banner ── */}
+//       <ShiftBanner shift={userShift} />
+
+//       {/* ── Quick Stats ── */}
+//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-3">
+//         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-xs sm:text-sm text-gray-600 mb-1">This Month</p>
+//               <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{summary.present}</p>
+//               <p className="text-xs text-gray-500">Present Days</p>
+//             </div>
+//             <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//               <FaRegCheckCircle size={24} className="text-white" />
+//             </div>
+//           </div>
+//         </div>
+//         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-xs sm:text-sm text-gray-600 mb-1">This Month</p>
+//               <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{summary.absent}</p>
+//               <p className="text-xs text-gray-500">Absent Days</p>
+//             </div>
+//             <div className="bg-[#2C5284] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//               <RxCrossCircled size={24} className="text-white" />
+//             </div>
+//           </div>
+//         </div>
+//         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-xs sm:text-sm text-gray-600 mb-1">Leave Days</p>
+//               <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{summary.leave}</p>
+//               <p className="text-xs text-gray-500">This Month</p>
+//             </div>
+//             <div className="bg-[#2C5284] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//               <FaCalendarAlt size={24} className="text-white" />
+//             </div>
+//           </div>
+//         </div>
+//         <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <p className="text-xs sm:text-sm text-gray-600 mb-1">Today</p>
+//               <p className="text-lg sm:text-xl font-bold text-[#365F8D]">{totalHours || '--'}</p>
+//               <p className="text-xs text-gray-500">Total Work Hours</p>
+//             </div>
+//             <div className="bg-[#2C5284] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+//               <FaClock size={24} className="text-white" />
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ── Clock In / Out + Doughnut ── */}
+//       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+//         <div className="lg:col-span-2 bg-white p-6 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
+//           <div className="flex flex-col items-center">
+//             <div className="bg-[#365F8D] w-16 h-16 rounded-full flex items-center justify-center mb-4">
+//               <FaClock size={32} className="text-white" />
+//             </div>
+//             <h1 className="text-3xl sm:text-4xl font-bold text-[#2C5284] mb-1">
+//               {format(currentTime, 'hh:mm:ss a')}
+//             </h1>
+//             <p className="text-gray-500 text-sm mb-4">{format(currentTime, 'EEEE, MMMM d, yyyy')}</p>
+//             <h2 className="text-xl font-bold text-[#2C5284] mb-3">Today's Attendance</h2>
+
+//             {/* Shift reminder */}
+//             {userShift && (
+//               <div className={`flex items-center gap-2 mb-3 px-4 py-1.5 rounded-full text-xs font-semibold ${
+//                 userShift === 'AM' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800'
+//               }`}>
+//                 {userShift === 'AM' ? <FaSun size={11} /> : <FaMoon size={11} />}
+//                 {userShift === 'AM' ? 'Morning Shift (8 AM – 4 PM)' : 'Afternoon Shift (1 PM – 9 PM)'}
+//               </div>
+//             )}
+
+//             <p className="text-base font-semibold mb-4 text-center">
+//               Status:{' '}
+//               <span className={canCheckOut ? 'text-green-600' : sessions.length > 0 ? 'text-blue-600' : 'text-gray-500'}>
+//                 {statusLabel}
+//               </span>
+//             </p>
+
+//             {sessions.length > 0 && (
+//               <div className="w-full mb-4 space-y-2">
+//                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-center mb-2">Today's Sessions</p>
+//                 {sessions.map((s, i) => (
+//                   <div key={i} className="flex items-center justify-between bg-gray-50 rounded-lg px-4 py-2 text-sm">
+//                     <span className="text-gray-500 font-medium">Session {i + 1}</span>
+//                     <span className="text-[#365F8D] font-semibold">
+//                       {s.checkIn}{s.checkOut ? ` → ${s.checkOut}` : ' → ongoing'}
+//                     </span>
+//                     <span className="text-gray-700 font-medium">{s.workHours || '...'}</span>
+//                   </div>
+//                 ))}
+//                 {totalHours && (
+//                   <div className="flex items-center justify-between bg-[#2C5284] rounded-lg px-4 py-2 text-sm mt-1">
+//                     <span className="text-white font-semibold">Total</span>
+//                     <span className="text-white font-bold">{totalHours}</span>
+//                   </div>
+//                 )}
+//               </div>
+//             )}
+
+//             {actionMsg && (
+//               <p className={`text-sm px-4 py-2 rounded-lg mb-4 text-center w-full ${
+//                 msgType === 'success' ? 'text-green-700 bg-green-50' : 'text-red-700 bg-red-50'
+//               }`}>{actionMsg}</p>
+//             )}
+
+//             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+//               <button onClick={handleClockIn} disabled={!canCheckIn || loading}
+//                 className={`flex items-center justify-center gap-3 px-8 py-4 rounded-lg font-medium text-base transition w-full sm:w-48
+//                   ${!canCheckIn || loading ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-[#365F8D] text-white hover:bg-[#2C5284]'}`}>
+//                 <FaSignInAlt size={20} />{loading ? 'Wait...' : 'Clock In'}
+//               </button>
+//               <button onClick={handleClockOut} disabled={!canCheckOut || loading}
+//                 className={`flex items-center justify-center gap-3 px-8 py-4 rounded-lg font-medium text-base transition w-full sm:w-48
+//                   ${!canCheckOut || loading ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-red-600 text-white hover:bg-red-700'}`}>
+//                 <FaSignOutAlt size={20} />{loading ? 'Wait...' : 'Clock Out'}
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+
+//         <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+//           <h3 className="text-lg font-bold text-[#2C5284] mb-4 flex items-center gap-2">
+//             <FaChartLine /> This Month
+//           </h3>
+//           <div className="flex justify-center">
+//             <div className="w-48 h-48">
+//               <Doughnut data={doughnutData} options={{ maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 11 } } } } }} />
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ── Weekly Work Hours ── */}
+//       <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow mb-6">
+//         <h2 className="text-lg font-bold text-[#2C5284] flex items-center gap-2 mb-6">
+//           <FaChartLine /> Weekly Work Hours
+//         </h2>
+//         <div className="h-64 sm:h-80">
+//           <Line data={weeklyHours} options={{ maintainAspectRatio: false, responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 10, ticks: { stepSize: 2 } } } }} />
+//         </div>
+//       </div>
+
+//     </div>
+//   );
+// }
+
+// export default UserDashboard;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { useEffect, useState, useCallback } from 'react';
-import { FaClock, FaSignInAlt, FaSignOutAlt, FaCalendarAlt, FaChartLine, FaSun, FaMoon } from 'react-icons/fa';
+import { FaClock, FaSignInAlt, FaSignOutAlt, FaCalendarAlt, FaChartLine, FaSun, FaMoon, FaStar } from 'react-icons/fa';
 import { RxCrossCircled } from 'react-icons/rx';
 import { FaRegCheckCircle } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 import { format } from 'date-fns';
 import { Line, Doughnut } from 'react-chartjs-2';
 import { apiCheckIn, apiCheckOut, apiGetTodayStatus, apiGetMyAttendance } from '../../api/attendanceAPI';
@@ -1749,50 +2084,165 @@ const weeklyHours = {
   }],
 };
 
-// ── Shift Banner ──────────────────────────────────────────────────────────────
-function ShiftBanner({ shift }) {
-  if (!shift) return null;
+// ── Shift options config ───────────────────────────────────────────────────────
+const SHIFT_OPTIONS = [
+  {
+    value: 'AM',
+    label: 'Morning Shift',
+    time: '9:00 AM – 6:00 PM',
+    icon: FaSun,
+    bg: 'bg-amber-50',
+    border: 'border-amber-300',
+    selectedBg: 'bg-amber-500',
+    selectedText: 'text-white',
+    iconColor: 'text-amber-500',
+    selectedIconColor: 'text-white',
+    badgeBg: 'bg-amber-100',
+    badgeText: 'text-amber-800',
+  },
+  {
+    value: 'PM',
+    label: 'Evening Shift',
+    time: '2:00 PM – 11:00 PM',
+    icon: FaStar,
+    bg: 'bg-indigo-50',
+    border: 'border-indigo-300',
+    selectedBg: 'bg-indigo-600',
+    selectedText: 'text-white',
+    iconColor: 'text-indigo-500',
+    selectedIconColor: 'text-white',
+    badgeBg: 'bg-indigo-100',
+    badgeText: 'text-indigo-800',
+  },
+  {
+    value: 'Night',
+    label: 'Night Shift',
+    time: '10:00 PM – 7:00 AM',
+    icon: FaMoon,
+    bg: 'bg-slate-50',
+    border: 'border-slate-400',
+    selectedBg: 'bg-slate-700',
+    selectedText: 'text-white',
+    iconColor: 'text-slate-500',
+    selectedIconColor: 'text-white',
+    badgeBg: 'bg-slate-200',
+    badgeText: 'text-slate-800',
+  },
+];
 
-  const isAM = shift === 'AM';
+// ── Shift Selector Modal ──────────────────────────────────────────────────────
+function ShiftSelectorModal({ onConfirm, onClose, defaultShift }) {
+  const [selected, setSelected] = useState(defaultShift || '');
+
   return (
-    <div className={`rounded-xl p-4 mb-6 flex items-center gap-4 border ${
-      isAM
-        ? 'bg-amber-50 border-amber-200 text-amber-900'
-        : 'bg-indigo-50 border-indigo-200 text-indigo-900'
-    }`}>
-      <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-        isAM ? 'bg-amber-400' : 'bg-indigo-500'
-      }`}>
-        {isAM ? <FaSun size={18} className="text-white" /> : <FaMoon size={18} className="text-white" />}
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+
+        {/* Header */}
+        <div className="flex items-center justify-between p-5 bg-[#2C5284] rounded-t-2xl">
+          <div>
+            <h2 className="text-lg font-bold text-white">Select Your Shift</h2>
+            <p className="text-blue-200 text-xs mt-0.5">Choose the shift you are clocking in for</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-white hover:bg-white/10 rounded-full p-2 transition-colors"
+          >
+            <FaTimes size={16} />
+          </button>
+        </div>
+
+        {/* Shift Options */}
+        <div className="p-5 space-y-3">
+          {SHIFT_OPTIONS.map((shift) => {
+            const Icon = shift.icon;
+            const isSelected = selected === shift.value;
+            return (
+              <button
+                key={shift.value}
+                onClick={() => setSelected(shift.value)}
+                className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-200 text-left
+                  ${isSelected
+                    ? `${shift.selectedBg} ${shift.border} border-opacity-100`
+                    : `${shift.bg} ${shift.border} border-opacity-50 hover:border-opacity-100`
+                  }`}
+              >
+                <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
+                  isSelected ? 'bg-white/20' : 'bg-white shadow-sm'
+                }`}>
+                  <Icon size={20} className={isSelected ? shift.selectedIconColor : shift.iconColor} />
+                </div>
+                <div className="flex-1">
+                  <p className={`font-bold text-sm ${isSelected ? shift.selectedText : 'text-gray-800'}`}>
+                    {shift.label}
+                  </p>
+                  <p className={`text-xs mt-0.5 ${isSelected ? 'text-white/80' : 'text-gray-500'}`}>
+                    {shift.time}
+                  </p>
+                </div>
+                {isSelected && (
+                  <div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Footer */}
+        <div className="px-5 pb-5 flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 py-3 rounded-xl border border-gray-300 text-gray-600 font-medium text-sm hover:bg-gray-50 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => selected && onConfirm(selected)}
+            disabled={!selected}
+            className={`flex-1 py-3 rounded-xl font-medium text-sm transition-colors ${
+              selected
+                ? 'bg-[#365F8D] text-white hover:bg-[#2C5284]'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            }`}
+          >
+            Clock In
+          </button>
+        </div>
       </div>
-      <div>
-        <p className="font-semibold text-sm">
-          {isAM ? 'Morning Shift' : 'Afternoon Shift'}
-        </p>
-        <p className={`text-xs mt-0.5 ${isAM ? 'text-amber-700' : 'text-indigo-700'}`}>
-          {isAM ? 'Typically 8:00 AM – 4:00 PM' : 'Typically 1:00 PM – 9:00 PM'}
-        </p>
-      </div>
-      <span className={`ml-auto px-3 py-1 rounded-full text-xs font-bold ${
-        isAM ? 'bg-amber-400 text-white' : 'bg-indigo-500 text-white'
-      }`}>
-        {shift} Shift
-      </span>
     </div>
   );
 }
 
-function UserDashboard({ setTitle, user }) {
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [todayStatus, setTodayStatus] = useState(null);
-  const [summary, setSummary]         = useState({ present: 0, absent: 0, leave: 0 });
-  const [loading, setLoading]         = useState(false);
-  const [actionMsg, setActionMsg]     = useState('');
-  const [msgType, setMsgType]         = useState('success');
+// ── Shift Badge (shown in clock card after check-in) ─────────────────────────
+function ShiftBadge({ shift }) {
+  if (!shift) return null;
+  const s = SHIFT_OPTIONS.find(o => o.value === shift);
+  if (!s) return null;
+  const Icon = s.icon;
+  return (
+    <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold mb-3 ${s.badgeBg} ${s.badgeText}`}>
+      <Icon size={11} />
+      {s.label} · {s.time}
+    </div>
+  );
+}
 
-  // Derive display name and shift from the user prop (passed from app context)
-  const displayName = user?.name || '';
-  const userShift   = user?.shift || '';
+// ── Main Component ────────────────────────────────────────────────────────────
+function UserDashboard({ setTitle, user }) {
+  const [currentTime, setCurrentTime]       = useState(new Date());
+  const [todayStatus, setTodayStatus]       = useState(null);
+  const [summary, setSummary]               = useState({ present: 0, absent: 0, leave: 0 });
+  const [loading, setLoading]               = useState(false);
+  const [actionMsg, setActionMsg]           = useState('');
+  const [msgType, setMsgType]               = useState('success');
+  const [showShiftModal, setShowShiftModal] = useState(false);
+
+  const displayName = user?.name  || '';
+  const userShift   = user?.shift || '';   // admin-assigned shift (default suggestion)
 
   useEffect(() => {
     setTitle('Dashboard Page');
@@ -1820,20 +2270,42 @@ function UserDashboard({ setTitle, user }) {
     fetchSummary();
   }, [fetchTodayStatus, fetchSummary]);
 
-  const handleClockIn = async () => {
-    setLoading(true); setActionMsg('');
+  // ── Called when user clicks "Clock In" button ─────────────────────────────
+  // If it's the FIRST check-in of the day (no record yet), show shift modal.
+  // If re-clocking in (second session same day), skip the modal.
+  const handleClockInClick = () => {
+    const hasExistingRecord = todayStatus?.hasRecord;
+    if (!hasExistingRecord) {
+      // First clock-in of the day → must choose shift
+      setShowShiftModal(true);
+    } else {
+      // Re-clocking in (second+ session) → no shift selection needed
+      performClockIn(null);
+    }
+  };
+
+  const performClockIn = async (shift) => {
+    setLoading(true);
+    setActionMsg('');
+    setShowShiftModal(false);
     try {
-      const data = await apiCheckIn();
+      const body = shift ? { shift } : {};
+      const data = await apiCheckIn(body);
       setActionMsg(data.message || '');
       setMsgType(data.record ? 'success' : 'error');
       await fetchTodayStatus();
-    } catch {
-      setActionMsg('Clock in failed.'); setMsgType('error');
-    } finally { setLoading(false); }
+    } catch (err) {
+      const msg = err?.response?.data?.message || 'Clock in failed.';
+      setActionMsg(msg);
+      setMsgType('error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClockOut = async () => {
-    setLoading(true); setActionMsg('');
+    setLoading(true);
+    setActionMsg('');
     try {
       const data = await apiCheckOut();
       setActionMsg(data.message || '');
@@ -1841,14 +2313,18 @@ function UserDashboard({ setTitle, user }) {
       await fetchTodayStatus();
       await fetchSummary();
     } catch {
-      setActionMsg('Clock out failed.'); setMsgType('error');
-    } finally { setLoading(false); }
+      setActionMsg('Clock out failed.');
+      setMsgType('error');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const canCheckIn  = todayStatus?.canCheckIn  ?? true;
-  const canCheckOut = todayStatus?.canCheckOut ?? false;
-  const sessions    = todayStatus?.sessions    || [];
-  const totalHours  = todayStatus?.totalWorkHours || null;
+  const canCheckIn   = todayStatus?.canCheckIn  ?? true;
+  const canCheckOut  = todayStatus?.canCheckOut ?? false;
+  const sessions     = todayStatus?.sessions    || [];
+  const totalHours   = todayStatus?.totalWorkHours || null;
+  const todayShift   = todayStatus?.shift || null;  // shift chosen at first clock-in
 
   const statusLabel = !todayStatus ? 'Loading...'
     : canCheckOut ? `Checked in at ${todayStatus.currentCheckIn}`
@@ -1873,9 +2349,6 @@ function UserDashboard({ setTitle, user }) {
           </div>
         </div>
       )}
-
-      {/* ── Shift Banner ── */}
-      <ShiftBanner shift={userShift} />
 
       {/* ── Quick Stats ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-3">
@@ -1942,15 +2415,15 @@ function UserDashboard({ setTitle, user }) {
             <p className="text-gray-500 text-sm mb-4">{format(currentTime, 'EEEE, MMMM d, yyyy')}</p>
             <h2 className="text-xl font-bold text-[#2C5284] mb-3">Today's Attendance</h2>
 
-            {/* Shift reminder */}
-            {userShift && (
-              <div className={`flex items-center gap-2 mb-3 px-4 py-1.5 rounded-full text-xs font-semibold ${
-                userShift === 'AM' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800'
-              }`}>
-                {userShift === 'AM' ? <FaSun size={11} /> : <FaMoon size={11} />}
-                {userShift === 'AM' ? 'Morning Shift (8 AM – 4 PM)' : 'Afternoon Shift (1 PM – 9 PM)'}
-              </div>
-            )}
+            {/* Today's shift badge (shown after first check-in) */}
+            {todayShift
+              ? <ShiftBadge shift={todayShift} />
+              : canCheckIn && !sessions.length && (
+                  <p className="text-xs text-gray-400 mb-3">
+                    You'll choose your shift when clocking in
+                  </p>
+                )
+            }
 
             <p className="text-base font-semibold mb-4 text-center">
               Status:{' '}
@@ -1959,6 +2432,7 @@ function UserDashboard({ setTitle, user }) {
               </span>
             </p>
 
+            {/* Sessions list */}
             {sessions.length > 0 && (
               <div className="w-full mb-4 space-y-2">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-center mb-2">Today's Sessions</p>
@@ -1987,14 +2461,20 @@ function UserDashboard({ setTitle, user }) {
             )}
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <button onClick={handleClockIn} disabled={!canCheckIn || loading}
+              <button
+                onClick={handleClockInClick}
+                disabled={!canCheckIn || loading}
                 className={`flex items-center justify-center gap-3 px-8 py-4 rounded-lg font-medium text-base transition w-full sm:w-48
-                  ${!canCheckIn || loading ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-[#365F8D] text-white hover:bg-[#2C5284]'}`}>
+                  ${!canCheckIn || loading ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-[#365F8D] text-white hover:bg-[#2C5284]'}`}
+              >
                 <FaSignInAlt size={20} />{loading ? 'Wait...' : 'Clock In'}
               </button>
-              <button onClick={handleClockOut} disabled={!canCheckOut || loading}
+              <button
+                onClick={handleClockOut}
+                disabled={!canCheckOut || loading}
                 className={`flex items-center justify-center gap-3 px-8 py-4 rounded-lg font-medium text-base transition w-full sm:w-48
-                  ${!canCheckOut || loading ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-red-600 text-white hover:bg-red-700'}`}>
+                  ${!canCheckOut || loading ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-red-600 text-white hover:bg-red-700'}`}
+              >
                 <FaSignOutAlt size={20} />{loading ? 'Wait...' : 'Clock Out'}
               </button>
             </div>
@@ -2007,7 +2487,10 @@ function UserDashboard({ setTitle, user }) {
           </h3>
           <div className="flex justify-center">
             <div className="w-48 h-48">
-              <Doughnut data={doughnutData} options={{ maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 11 } } } } }} />
+              <Doughnut
+                data={doughnutData}
+                options={{ maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 11 } } } } }}
+              />
             </div>
           </div>
         </div>
@@ -2019,9 +2502,21 @@ function UserDashboard({ setTitle, user }) {
           <FaChartLine /> Weekly Work Hours
         </h2>
         <div className="h-64 sm:h-80">
-          <Line data={weeklyHours} options={{ maintainAspectRatio: false, responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 10, ticks: { stepSize: 2 } } } }} />
+          <Line
+            data={weeklyHours}
+            options={{ maintainAspectRatio: false, responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 10, ticks: { stepSize: 2 } } } }}
+          />
         </div>
       </div>
+
+      {/* ── Shift Selector Modal ── */}
+      {showShiftModal && (
+        <ShiftSelectorModal
+          defaultShift={userShift}   // pre-select admin-assigned shift if any
+          onConfirm={(shift) => performClockIn(shift)}
+          onClose={() => setShowShiftModal(false)}
+        />
+      )}
 
     </div>
   );
