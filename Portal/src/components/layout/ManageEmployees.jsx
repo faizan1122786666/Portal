@@ -3298,31 +3298,31 @@ const DEPARTMENTS = [
 // ── Shift config: only for employees ─────────────────────────────────────────
 const SHIFTS = [
   {
-    value:  'AM',
-    label:  'Morning',
-    time:   '9:00 AM – 6:00 PM',
-    icon:   <FaSun size={13} />,
+    value: 'AM',
+    label: 'Morning',
+    time: '9:00 AM – 6:00 PM',
+    icon: <FaSun size={13} />,
     active: 'border-amber-400 bg-amber-400 text-white',
-    hover:  'border-gray-200 hover:border-amber-300 text-gray-600',
-    badge:  'bg-amber-100 text-amber-800',
+    hover: 'border-gray-200 hover:border-amber-300 text-gray-600',
+    badge: 'bg-amber-100 text-amber-800',
   },
   {
-    value:  'PM',
-    label:  'Evening',
-    time:   '2:00 PM – 11:00 PM',
-    icon:   <FaMoon size={13} />,
+    value: 'PM',
+    label: 'Afternoon',
+    time: '2:00 PM – 11:00 PM',
+    icon: <FaMoon size={13} />,
     active: 'border-indigo-500 bg-indigo-500 text-white',
-    hover:  'border-gray-200 hover:border-indigo-300 text-gray-600',
-    badge:  'bg-indigo-100 text-indigo-800',
+    hover: 'border-gray-200 hover:border-indigo-300 text-gray-600',
+    badge: 'bg-indigo-100 text-indigo-800',
   },
   {
-    value:  'Night',
-    label:  'Night',
-    time:   '10:00 PM – 7:00 AM',
-    icon:   <FaCloudMoon size={13} />,
+    value: 'Night',
+    label: 'Night',
+    time: '10:00 PM – 7:00 AM',
+    icon: <FaCloudMoon size={13} />,
     active: 'border-slate-700 bg-slate-700 text-white',
-    hover:  'border-gray-200 hover:border-slate-400 text-gray-600',
-    badge:  'bg-slate-200 text-slate-800',
+    hover: 'border-gray-200 hover:border-slate-400 text-gray-600',
+    badge: 'bg-slate-200 text-slate-800',
   },
 ]
 
@@ -3340,12 +3340,13 @@ function ShiftBadge({ shift }) {
 // ── Add / Edit Modal ──────────────────────────────────────────────────────────
 function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
   const [form, setForm] = useState({
-    name:       editingEmployee?.name       || '',
-    email:      editingEmployee?.email      || '',
-    password:   '',
-    role:       editingEmployee?.role       || 'employee',
+    name: editingEmployee?.name || '',
+    email: editingEmployee?.email || '',
+    password: '',
+    role: editingEmployee?.role || 'employee',
     department: editingEmployee?.department || '',
-    shift:      editingEmployee?.shift      || '',
+    shift: editingEmployee?.shift || '',
+    salary: editingEmployee?.salary || 0,
   })
   const [error, setError] = useState('')
 
@@ -3366,9 +3367,9 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
     onSubmit(form)
   }
 
-  const nameCount   = form.name.length
+  const nameCount = form.name.length
   const nameAtLimit = nameCount >= 14
-  const isEmployee  = form.role === 'employee'
+  const isEmployee = form.role === 'employee'
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -3402,9 +3403,8 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
             <input
               type="text" name="name" value={form.name} onChange={handle}
               maxLength={14} placeholder="e.g. Ali Hassan"
-              className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm transition-colors ${
-                nameAtLimit ? 'border-orange-300 bg-orange-50' : 'border-gray-300'
-              }`}
+              className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm transition-colors ${nameAtLimit ? 'border-orange-300 bg-orange-50' : 'border-gray-300'
+                }`}
             />
             {nameAtLimit && <p className="text-xs text-orange-500 mt-1">Maximum 14 characters reached</p>}
           </div>
@@ -3471,6 +3471,19 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
             </select>
           </div>
 
+          {/* Salary */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Salary</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+              <input
+                type="number" name="salary" value={form.salary} onChange={handle}
+                placeholder="0.00"
+                className="w-full pl-7 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+              />
+            </div>
+          </div>
+
           {/* Shift — only for employees */}
           {isEmployee && (
             <div>
@@ -3487,9 +3500,8 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
                     <input type="radio" name="shift" value={value}
                       checked={form.shift === value} onChange={handle} className="sr-only" />
                     <span className="flex items-center gap-1.5">{icon} {label}</span>
-                    <span className={`text-[10px] font-normal leading-tight text-center ${
-                      form.shift === value ? 'opacity-80' : 'text-gray-400'
-                    }`}>
+                    <span className={`text-[10px] font-normal leading-tight text-center ${form.shift === value ? 'opacity-80' : 'text-gray-400'
+                      }`}>
                       {time}
                     </span>
                   </label>
@@ -3554,14 +3566,23 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
 
 // ── Main Component ────────────────────────────────────────────────────────────
 function ManageEmployees({ setTitle }) {
-  const [employees, setEmployees]       = useState([])
-  const [loading, setLoading]           = useState(true)
-  const [showModal, setShowModal]       = useState(false)
-  const [editingEmp, setEditingEmp]     = useState(null)
-  const [search, setSearch]             = useState('')
-  const [filterDept, setFilterDept]     = useState('')
-  const [filterRole, setFilterRole]     = useState('')
-  const [filterShift, setFilterShift]   = useState('')
+  const [employees, setEmployees] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [showModal, setShowModal] = useState(false)
+  const [editingEmp, setEditingEmp] = useState(null)
+  const [search, setSearch] = useState('')
+
+  // Confirmation modal state
+  const [confirm, setConfirm] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => { },
+    type: 'danger'
+  })
+  const [filterDept, setFilterDept] = useState('')
+  const [filterRole, setFilterRole] = useState('')
+  const [filterShift, setFilterShift] = useState('')
 
   const fetchEmployees = async () => {
     setLoading(true)
@@ -3584,24 +3605,26 @@ function ManageEmployees({ setTitle }) {
     try {
       if (editingEmp) {
         const payload = {
-          email:      form.email,
-          role:       form.role,
+          email: form.email,
+          role: form.role,
           department: form.department,
-          name:       form.name,
+          name: form.name,
+          salary: form.salary,
           // Only send shift for employees; clear it for admins
-          shift:      form.role === 'employee' ? form.shift : '',
+          shift: form.role === 'employee' ? form.shift : '',
         }
         if (form.password) payload.password = form.password
         await api.put(`/employees/${editingEmp._id}`, payload)
         toast.success('Employee updated successfully!')
       } else {
         await api.post('/employees', {
-          email:      form.email,
-          password:   form.password,
-          role:       form.role,
+          email: form.email,
+          password: form.password,
+          role: form.role,
           department: form.department,
-          name:       form.name,
-          shift:      form.role === 'employee' ? form.shift : '',
+          name: form.name,
+          salary: form.salary,
+          shift: form.role === 'employee' ? form.shift : '',
         })
         toast.success('Employee added successfully!')
       }
@@ -3630,16 +3653,16 @@ function ManageEmployees({ setTitle }) {
   const filtered = employees.filter(e => {
     const q = search.toLowerCase()
     const matchSearch = e.email?.toLowerCase().includes(q) || e.name?.toLowerCase().includes(q)
-    const matchDept   = filterDept  ? e.department === filterDept : true
-    const matchRole   = filterRole  ? e.role       === filterRole  : true
-    const matchShift  = filterShift ? e.shift      === filterShift : true
+    const matchDept = filterDept ? e.department === filterDept : true
+    const matchRole = filterRole ? e.role === filterRole : true
+    const matchShift = filterShift ? e.shift === filterShift : true
     return matchSearch && matchDept && matchRole && matchShift
   })
 
   const stats = {
-    total:  employees.length,
+    total: employees.length,
     admins: employees.filter(e => e.role === 'admin').length,
-    staff:  employees.filter(e => e.role === 'employee').length,
+    staff: employees.filter(e => e.role === 'employee').length,
   }
 
   const activeDepts = [...new Set(employees.map(e => e.department).filter(Boolean))]
@@ -3730,7 +3753,7 @@ function ManageEmployees({ setTitle }) {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-[#2C5284]">
                 <tr>
-                  {['Employee', 'Department', 'Shift', 'Role', 'Actions'].map(h => (
+                  {['Employee', 'Department', 'Shift', 'Salary', 'Role', 'Actions'].map(h => (
                     <th key={h} className="px-6 py-4 text-left text-sm font-semibold text-white">{h}</th>
                   ))}
                 </tr>
@@ -3744,8 +3767,8 @@ function ManageEmployees({ setTitle }) {
                         <div className="w-9 h-9 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
                           {emp.name
                             ? <span className="text-white text-xs font-bold">
-                                {emp.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()}
-                              </span>
+                              {emp.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()}
+                            </span>
                             : <CgProfile size={18} className="text-white" />
                           }
                         </div>
@@ -3768,6 +3791,10 @@ function ManageEmployees({ setTitle }) {
                         ? <ShiftBadge shift={emp.shift} />
                         : <span className="text-gray-300 italic text-xs">N/A</span>
                       }
+                    </td>
+                    {/* Salary cell */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium">
+                      {emp.salary ? `$${Number(emp.salary).toLocaleString()}` : <span className="text-gray-300 italic">—</span>}
                     </td>
                     {/* Role cell */}
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -3809,8 +3836,8 @@ function ManageEmployees({ setTitle }) {
                     <div className="w-10 h-10 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
                       {emp.name
                         ? <span className="text-white text-xs font-bold">
-                            {emp.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()}
-                          </span>
+                          {emp.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()}
+                        </span>
                         : <CgProfile size={20} className="text-white" />
                       }
                     </div>
@@ -3850,17 +3877,20 @@ function ManageEmployees({ setTitle }) {
             )}
           </div>
         </>
-      )}
+      )
+      }
 
       {/* Modal */}
-      {showModal && (
-        <EmployeeModal
-          editingEmployee={editingEmp}
-          onClose={() => { setShowModal(false); setEditingEmp(null) }}
-          onSubmit={handleSubmit}
-        />
-      )}
-    </div>
+      {
+        showModal && (
+          <EmployeeModal
+            editingEmployee={editingEmp}
+            onClose={() => { setShowModal(false); setEditingEmp(null) }}
+            onSubmit={handleSubmit}
+          />
+        )
+      }
+    </div >
   )
 }
 

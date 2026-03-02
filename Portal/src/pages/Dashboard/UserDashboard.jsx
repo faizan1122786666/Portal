@@ -2102,7 +2102,7 @@ const SHIFT_OPTIONS = [
   },
   {
     value: 'PM',
-    label: 'Evening Shift',
+    label: 'Afternoon Shift',
     time: '2:00 PM – 11:00 PM',
     icon: FaStar,
     bg: 'bg-indigo-50',
@@ -2167,9 +2167,8 @@ function ShiftSelectorModal({ onConfirm, onClose, defaultShift }) {
                     : `${shift.bg} ${shift.border} border-opacity-50 hover:border-opacity-100`
                   }`}
               >
-                <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
-                  isSelected ? 'bg-white/20' : 'bg-white shadow-sm'
-                }`}>
+                <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${isSelected ? 'bg-white/20' : 'bg-white shadow-sm'
+                  }`}>
                   <Icon size={20} className={isSelected ? shift.selectedIconColor : shift.iconColor} />
                 </div>
                 <div className="flex-1">
@@ -2203,11 +2202,10 @@ function ShiftSelectorModal({ onConfirm, onClose, defaultShift }) {
           <button
             onClick={() => selected && onConfirm(selected)}
             disabled={!selected}
-            className={`flex-1 py-3 rounded-xl font-medium text-sm transition-colors ${
-              selected
+            className={`flex-1 py-3 rounded-xl font-medium text-sm transition-colors ${selected
                 ? 'bg-[#365F8D] text-white hover:bg-[#2C5284]'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            }`}
+              }`}
           >
             Clock In
           </button>
@@ -2233,16 +2231,16 @@ function ShiftBadge({ shift }) {
 
 // ── Main Component ────────────────────────────────────────────────────────────
 function UserDashboard({ setTitle, user }) {
-  const [currentTime, setCurrentTime]       = useState(new Date());
-  const [todayStatus, setTodayStatus]       = useState(null);
-  const [summary, setSummary]               = useState({ present: 0, absent: 0, leave: 0 });
-  const [loading, setLoading]               = useState(false);
-  const [actionMsg, setActionMsg]           = useState('');
-  const [msgType, setMsgType]               = useState('success');
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [todayStatus, setTodayStatus] = useState(null);
+  const [summary, setSummary] = useState({ present: 0, absent: 0, leave: 0 });
+  const [loading, setLoading] = useState(false);
+  const [actionMsg, setActionMsg] = useState('');
+  const [msgType, setMsgType] = useState('success');
   const [showShiftModal, setShowShiftModal] = useState(false);
 
-  const displayName = user?.name  || '';
-  const userShift   = user?.shift || '';   // admin-assigned shift (default suggestion)
+  const displayName = user?.name || '';
+  const userShift = user?.shift || '';   // admin-assigned shift (default suggestion)
 
   useEffect(() => {
     setTitle('Dashboard Page');
@@ -2320,16 +2318,16 @@ function UserDashboard({ setTitle, user }) {
     }
   };
 
-  const canCheckIn   = todayStatus?.canCheckIn  ?? true;
-  const canCheckOut  = todayStatus?.canCheckOut ?? false;
-  const sessions     = todayStatus?.sessions    || [];
-  const totalHours   = todayStatus?.totalWorkHours || null;
-  const todayShift   = todayStatus?.shift || null;  // shift chosen at first clock-in
+  const canCheckIn = todayStatus?.canCheckIn ?? true;
+  const canCheckOut = todayStatus?.canCheckOut ?? false;
+  const sessions = todayStatus?.sessions || [];
+  const totalHours = todayStatus?.totalWorkHours || null;
+  const todayShift = todayStatus?.shift || null;  // shift chosen at first clock-in
 
   const statusLabel = !todayStatus ? 'Loading...'
     : canCheckOut ? `Checked in at ${todayStatus.currentCheckIn}`
-    : sessions.length > 0 ? `Done — Total: ${totalHours || '0h 0m'}`
-    : 'Not yet checked in';
+      : sessions.length > 0 ? `Done — Total: ${totalHours || '0h 0m'}`
+        : 'Not yet checked in';
 
   const doughnutData = buildDoughnut(summary.present, summary.absent, summary.leave);
 
@@ -2419,10 +2417,10 @@ function UserDashboard({ setTitle, user }) {
             {todayShift
               ? <ShiftBadge shift={todayShift} />
               : canCheckIn && !sessions.length && (
-                  <p className="text-xs text-gray-400 mb-3">
-                    You'll choose your shift when clocking in
-                  </p>
-                )
+                <p className="text-xs text-gray-400 mb-3">
+                  You'll choose your shift when clocking in
+                </p>
+              )
             }
 
             <p className="text-base font-semibold mb-4 text-center">
@@ -2455,9 +2453,8 @@ function UserDashboard({ setTitle, user }) {
             )}
 
             {actionMsg && (
-              <p className={`text-sm px-4 py-2 rounded-lg mb-4 text-center w-full ${
-                msgType === 'success' ? 'text-green-700 bg-green-50' : 'text-red-700 bg-red-50'
-              }`}>{actionMsg}</p>
+              <p className={`text-sm px-4 py-2 rounded-lg mb-4 text-center w-full ${msgType === 'success' ? 'text-green-700 bg-green-50' : 'text-red-700 bg-red-50'
+                }`}>{actionMsg}</p>
             )}
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">

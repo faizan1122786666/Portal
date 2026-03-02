@@ -22,7 +22,7 @@ function ShiftBadge({ shift }) {
   if (!shift) return null
   const config = {
     AM: { label: 'Morning Shift', icon: <FaSun size={10} />, className: 'bg-amber-100 text-amber-700 border-amber-200' },
-    PM: { label: 'Evening Shift', icon: <FaMoon size={10} />, className: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
+    PM: { label: 'Afternoon Shift', icon: <FaMoon size={10} />, className: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
     Night: { label: 'Night Shift', icon: <FaCloudMoon size={10} />, className: 'bg-slate-100 text-slate-700 border-slate-200' },
   }
   const c = config[shift]

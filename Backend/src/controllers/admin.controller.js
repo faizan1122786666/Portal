@@ -274,16 +274,16 @@
 
 
 
-const userModel  = require('../models/user.model');
+const userModel = require('../models/user.model');
 const leaveModel = require('../models/leave.model');
-const bcrypt     = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
 const VALID_SHIFTS = ['AM', 'PM', 'Night', ''];
 
 // ── GET all employees ─────────────────────────────────────────────────────────
 async function getEmployees(req, res) {
     try {
-        const employees = await userModel.find({ role: 'employee' }).select('-password');
+        const employees = await userModel.find().select('-password');
         return res.status(200).json({ message: 'Employees fetched successfully', employees });
     } catch (error) {
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -293,7 +293,7 @@ async function getEmployees(req, res) {
 // ── POST: Add new employee ────────────────────────────────────────────────────
 async function addEmployee(req, res) {
     try {
-        const { email, password, role = 'employee', department = '', name = '', shift = '' } = req.body;
+        const { email, password, role = 'employee', department = '', name = '', shift = '', salary = 0 } = req.body;
 
         if (!email || !password) {
             return res.status(400).json({ message: 'Email and password are required' });
@@ -316,13 +316,14 @@ async function addEmployee(req, res) {
         }
 
         const hash = await bcrypt.hash(password, 10);
-        const employee = await userModel.create({ email, password: hash, role, department, name, shift: assignedShift });
+        const employee = await userModel.create({ email, password: hash, role, department, name, shift: assignedShift, salary });
 
         return res.status(201).json({
             message: 'Employee added successfully',
             employee: {
                 _id: employee._id, email: employee.email, role: employee.role,
-                department: employee.department, name: employee.name, shift: employee.shift
+                department: employee.department, name: employee.name, shift: employee.shift,
+                salary: employee.salary
             }
         });
 
@@ -335,7 +336,7 @@ async function addEmployee(req, res) {
 async function updateEmployee(req, res) {
     try {
         const { id } = req.params;
-        const { email, password, role, department, name, shift } = req.body;
+        const { email, password, role, department, name, shift, salary } = req.body;
 
         const employee = await userModel.findById(id);
         if (!employee) {
@@ -377,9 +378,15 @@ async function updateEmployee(req, res) {
             employee.shift = '';
         }
 
-        if (password)                 employee.password   = await bcrypt.hash(password, 10);
-        if (role)                     employee.role       = role;
+        if (password) {
+            if (password.length > 20) {
+                return res.status(400).json({ message: 'Password cannot exceed 20 characters' });
+            }
+            employee.password = await bcrypt.hash(password, 10);
+        }
+        if (role) employee.role = role;
         if (department !== undefined) employee.department = department;
+        if (salary !== undefined) employee.salary = salary;
 
         await employee.save();
 
@@ -387,7 +394,8 @@ async function updateEmployee(req, res) {
             message: 'Employee updated successfully',
             employee: {
                 _id: employee._id, email: employee.email, role: employee.role,
-                department: employee.department, name: employee.name, shift: employee.shift
+                department: employee.department, name: employee.name, shift: employee.shift,
+                salary: employee.salary
             }
         });
 
