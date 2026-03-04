@@ -276,9 +276,10 @@
 
 const userModel = require('../models/user.model');
 const leaveModel = require('../models/leave.model');
+const taskModel = require('../models/task.model');    // ← NEW
 const bcrypt = require('bcryptjs');
 
-const VALID_SHIFTS = ['AM', 'PM', 'Night', ''];
+const VALID_SHIFTS = ['Morning', 'Evening', ''];
 
 // ── GET all employees ─────────────────────────────────────────────────────────
 async function getEmployees(req, res) {
@@ -307,7 +308,7 @@ async function addEmployee(req, res) {
         const assignedShift = role === 'admin' ? '' : shift;
 
         if (assignedShift && !VALID_SHIFTS.includes(assignedShift)) {
-            return res.status(400).json({ message: 'Shift must be AM, PM, or Night' });
+            return res.status(400).json({ message: 'Shift must be Morning or Evening' });
         }
 
         const existingUser = await userModel.findOne({ email });
@@ -367,7 +368,7 @@ async function updateEmployee(req, res) {
                 employee.shift = '';
             } else {
                 if (shift && !VALID_SHIFTS.includes(shift)) {
-                    return res.status(400).json({ message: 'Shift must be AM, PM, or Night' });
+                    return res.status(400).json({ message: 'Shift must be Morning or Evening' });
                 }
                 employee.shift = shift;
             }
@@ -414,6 +415,9 @@ async function deleteEmployee(req, res) {
 
         // Cascade: remove all leave records belonging to this employee
         await leaveModel.deleteMany({ employeeId: id });
+
+        // Cascade: remove all tasks assigned to this employee
+        await taskModel.deleteMany({ assignedTo: id });
 
         await userModel.findByIdAndDelete(id);
         return res.status(200).json({ message: 'Employee deleted successfully' });

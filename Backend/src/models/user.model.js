@@ -112,7 +112,7 @@ const userSchema = new mongoose.Schema({
     },
     shift: {
         type: String,
-        enum: ['AM', 'PM', 'Night', ''],
+        enum: ['Morning', 'Evening', ''],
         default: ''
     },
     salary: {

@@ -1280,9 +1280,8 @@ function minutesBetween(checkIn, checkOut) {
 
 // ── Shift Time Boundaries ──────────────────────────────────────────────────
 const SHIFT_TIMES = {
-  AM: { start: '09:00 AM', end: '06:00 PM' },
-  PM: { start: '02:00 PM', end: '11:00 PM' },
-  Night: { start: '10:00 PM', end: '07:00 AM' }
+  Morning: { start: '09:00 AM', end: '06:00 PM' },
+  Evening: { start: '06:00 PM', end: '03:00 AM' },
 };
 
 // Helper: check if time A is before time B ("09:00 AM" vs "10:00 AM")
@@ -1338,10 +1337,10 @@ async function checkIn(req, res) {
         });
       }
     } else {
-      const VALID_SHIFTS_ENUM = ['AM', 'PM', 'Night'];
+      const VALID_SHIFTS_ENUM = ['Morning', 'Evening'];
       if (!shift || !VALID_SHIFTS_ENUM.includes(shift)) {
         return res.status(400).json({
-          message: 'Please select a shift (AM, PM, or Night) before clocking in.'
+          message: 'Please select a valid shift (Morning or Evening) before clocking in.'
         });
       }
     }
@@ -1392,29 +1391,6 @@ async function checkOut(req, res) {
     // 1. Try to find an open session for TODAY
     let record = await attendanceModel.findOne({ employeeId, date: today });
     let openSession = record?.sessions.find(s => s.checkIn && !s.checkOut);
-
-    // 2. If no open session today, check if it's a Night shift from YESTERDAY
-    if (!openSession) {
-      const yesterdayDate = new Date();
-      yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-      const yyyy = yesterdayDate.getFullYear();
-      const mm = String(yesterdayDate.getMonth() + 1).padStart(2, '0');
-      const dd = String(yesterdayDate.getDate()).padStart(2, '0');
-      const yesterdayStr = `${yyyy}-${mm}-${dd}`;
-
-      const yesterdayRecord = await attendanceModel.findOne({
-        employeeId,
-        date: yesterdayStr,
-        shift: 'Night'
-      });
-
-      if (yesterdayRecord) {
-        openSession = yesterdayRecord.sessions.find(s => s.checkIn && !s.checkOut);
-        if (openSession) {
-          record = yesterdayRecord;
-        }
-      }
-    }
 
     if (!record || !openSession) {
       return res.status(400).json({ message: 'No open check-in found. Please check in first.' });
@@ -1481,30 +1457,6 @@ async function getTodayStatus(req, res) {
 
     let record = await attendanceModel.findOne({ employeeId, date: today });
     let openSession = record?.sessions?.find(s => s.checkIn && !s.checkOut) || null;
-
-    // If no open session today, check if user is still clocked in from a Night shift started yesterday
-    if (!openSession) {
-      const yesterdayDate = new Date();
-      yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-      const yyyy = yesterdayDate.getFullYear();
-      const mm = String(yesterdayDate.getMonth() + 1).padStart(2, '0');
-      const dd = String(yesterdayDate.getDate()).padStart(2, '0');
-      const yesterdayStr = `${yyyy}-${mm}-${dd}`;
-
-      const yesterdayRecord = await attendanceModel.findOne({
-        employeeId,
-        date: yesterdayStr,
-        shift: 'Night'
-      });
-
-      if (yesterdayRecord) {
-        const yesterdayOpen = yesterdayRecord.sessions.find(s => s.checkIn && !s.checkOut);
-        if (yesterdayOpen) {
-          record = yesterdayRecord;
-          openSession = yesterdayOpen;
-        }
-      }
-    }
 
     const isCheckedIn = !!openSession;
 

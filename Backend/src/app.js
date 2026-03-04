@@ -72,14 +72,15 @@
 
 
 
-const express      = require('express');
+const express = require('express');
 const cookieParser = require('cookie-parser');
-const cors         = require('cors');
+const cors = require('cors');
 
-const authRoutes       = require('./routes/auth.routes');
-const adminRoutes      = require('./routes/admin.routes');
+const authRoutes = require('./routes/auth.routes');
+const adminRoutes = require('./routes/admin.routes');
 const attendanceRoutes = require('./routes/attendance.routes');
-const leaveRoutes      = require('./routes/leave.routes');       // ← NEW
+const leaveRoutes = require('./routes/leave.routes');       // ← NEW
+const taskRoutes = require('./routes/task.routes');         // ← NEW
 
 const app = express();
 
@@ -87,7 +88,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-    origin:      'http://localhost:5173',
+    origin: 'http://localhost:5173',
     credentials: true
 }));
 
@@ -102,5 +103,8 @@ app.use('/api/attendance', attendanceRoutes);
 
 // Employee leave    →  /api/leave/apply, /my, /:id
 app.use('/api/leave', leaveRoutes);
+
+// Employee tasks    →  /api/tasks/my, /api/tasks/:id/complete
+app.use('/api/tasks', taskRoutes);
 
 module.exports = app;

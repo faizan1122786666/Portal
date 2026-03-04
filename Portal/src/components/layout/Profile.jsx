@@ -173,50 +173,6 @@ export default function Profile({ setTitle, userName, userEmail, userRole, userS
           )}
         </div>
 
-        {/* Change Password Card */}
-        {/* <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-4">
-          <button
-            onClick={() => setShowPassword(v => !v)}
-            className="w-full flex items-center justify-between p-6 hover:bg-gray-50 transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-[#2C5284]/10 flex items-center justify-center">
-                <AiOutlineLock size={16} className="text-[#2C5284]" />
-              </div>
-              <h3 className="font-semibold text-gray-800">Change Password</h3>
-            </div>
-            {showPassword ? <FaChevronUp size={13} className="text-gray-400" /> : <FaChevronDown size={13} className="text-gray-400" />}
-          </button>
-
-          {showPassword && (
-            <div className="px-6 pb-6 space-y-3 border-t border-gray-100 pt-5">
-              {[
-                { key: 'oldPassword',     label: 'Current Password', placeholder: 'Enter current password' },
-                { key: 'newPassword',     label: 'New Password',     placeholder: 'At least 6 characters' },
-                { key: 'confirmPassword', label: 'Confirm Password', placeholder: 'Repeat new password' },
-              ].map(({ key, label, placeholder }) => (
-                <div key={key}>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">{label}</label>
-                  <input
-                    type="password"
-                    value={pwForm[key]}
-                    onChange={e => setPwForm(prev => ({ ...prev, [key]: e.target.value }))}
-                    placeholder={placeholder}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-[#2C5284] focus:border-transparent"
-                  />
-                </div>
-              ))}
-              <button
-                onClick={handleSavePassword}
-                disabled={pwLoading}
-                className="w-full py-3 mt-2 text-sm font-semibold bg-[#2C5284] text-white rounded-xl hover:bg-[#365F8D] transition-colors disabled:opacity-60"
-              >
-                {pwLoading ? 'Updating…' : 'Update Password'}
-              </button>
-            </div> */}
-        {/* )}
-        </div> */}
-
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
           <FaShieldAlt size={14} className="text-[#2C5284] mt-0.5 flex-shrink-0" />
           <p className="text-xs text-[#2C5284] leading-relaxed">
