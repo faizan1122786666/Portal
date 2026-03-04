@@ -7,7 +7,7 @@ import { CgProfile } from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { useAuthContext } from '../../context'
+import useAuthContext  from '../../context'
 import ChangePassword from './ChangePassword'
 
 function Login() {

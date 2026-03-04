@@ -149,6 +149,7 @@ function AdminDashboard({ setTitle }) {
     }],
   }
 
+  // eslint-disable-next-line no-undef
   const dark = typeof darkMode !== 'undefined' ? darkMode : document.documentElement.classList.contains('dark')
 
   const chartOptions = {
