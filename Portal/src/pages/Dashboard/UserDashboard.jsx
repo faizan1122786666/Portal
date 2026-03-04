@@ -679,7 +679,7 @@ import { RxCrossCircled } from 'react-icons/rx';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import { format } from 'date-fns';
 import { Line, Doughnut } from 'react-chartjs-2';
-import  useAuthContext from '../../context';
+import { useAuthContext } from '../../context';
 import { apiCheckIn, apiCheckOut, apiGetTodayStatus, apiGetMyAttendance } from '../../api/attendanceAPI';
 
 function buildDoughnut(present, absent, leave) {
@@ -831,12 +831,12 @@ function UserDashboard({ setTitle }) {
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
 
       {/* Welcome Banner */}
-      {displayName && (
+      {/* {displayName && (
         <div className="bg-white rounded-xl shadow-sm px-5 py-4 mb-5 border-l-4 border-[#2C5284]">
           <h2 className="text-lg font-bold text-[#2C5284]">Welcome back, {displayName} 👋</h2>
           <p className="text-xs text-gray-500 mt-0.5">{format(currentTime, 'EEEE, MMMM d, yyyy')}</p>
         </div>
-      )}
+      )} */}
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-3">

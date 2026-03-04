@@ -47,18 +47,37 @@ const SHIFT_TIMES = {
   Evening: { start: '06:00 PM', end: '03:00 AM' },
 };
 
-// Helper: check if time A is before time B ("09:00 AM" vs "10:00 AM")
-// Note: This needs to handle 12-hour format correctly.
-function isTimeBefore(timeA, timeB) {
-  const parse = (s) => {
-    let [t, mod] = s.split(' ');
-    let [h, m] = t.split(':').map(Number);
-    if (mod === 'PM' && h !== 12) h += 12;
-    if (mod === 'AM' && h === 12) h = 0;
-    return h * 60 + m;
-  };
-  return parse(timeA) < parse(timeB);
+// ── Helper: parse time string to minutes (0-1439) ─────────────────────────────
+function toMins(timeStr) {
+  if (!timeStr) return 0;
+  const [time, modifier] = timeStr.split(' ');
+  let [hours, minutes] = time.split(':').map(Number);
+  if (modifier === 'PM' && hours !== 12) hours += 12;
+  if (modifier === 'AM' && hours === 12) hours = 0;
+  return hours * 60 + minutes;
 }
+
+// ── Helper: check if currentTime is within given shift boundaries ─────────────
+function isWithinShift(timeStr, shift) {
+  const cfg = SHIFT_TIMES[shift];
+  if (!cfg) return true; // fallback if no config
+  const t = toMins(timeStr);
+  const s = toMins(cfg.start);
+  const e = toMins(cfg.end);
+
+  if (e > s) {
+    return t >= s && t < e;
+  } else {
+    // Crosses midnight (e.g., 6 PM to 3 AM)
+    return t >= s || t < e;
+  }
+}
+
+// ── Helper: check if time A is before time B ──────────────────────────────────
+function isBeforeTime(timeA, timeB) {
+  return toMins(timeA) < toMins(timeB);
+}
+
 
 // ── Helper: format minutes as "Xh Ym" ────────────────────────────────────────
 function formatMinutes(totalMinutes) {
@@ -82,6 +101,36 @@ function recalcTotal(sessions) {
 // ═══════════════════════════════════════════════════════════════════════════════
 //  EMPLOYEE CONTROLLERS
 // ═══════════════════════════════════════════════════════════════════════════════
+
+// ── Helper: Automatic Clock-Out ──────────────────────────────────────────────
+async function handleAutoCheckOut(record) {
+  if (!record || record.status !== 'Present') return record;
+
+  const openSession = record.sessions.find(s => s.checkIn && !s.checkOut);
+  if (!openSession) return record;
+
+  const currentShift = record.shift;
+  const cfg = SHIFT_TIMES[currentShift];
+  if (!cfg) return record;
+
+  const currentTime = getCurrentTime();
+
+  // If current time is no longer within the shift, auto-checkout at shift end
+  if (!isWithinShift(currentTime, currentShift)) {
+    // Only auto-checkout if current time is AFTER the shift end.
+    // (Wait, if isWithinShift is false, it's either before or after).
+    // If it's after end but before next day's start, it should be auto-checked out.
+
+    // To be safe: if toMins(currentTime) is between end and end + some margin
+    // Actually, user said "if the time up the clock out automatically done"
+    // So if they are NOT in shift, and they HAD an open session, close it.
+    openSession.checkOut = cfg.end;
+    openSession.workHours = formatMinutes(minutesBetween(openSession.checkIn, cfg.end));
+    record.totalWorkHours = recalcTotal(record.sessions);
+    await record.save();
+  }
+  return record;
+}
 
 // ── POST /api/attendance/checkin ──────────────────────────────────────────────
 async function checkIn(req, res) {
@@ -108,14 +157,43 @@ async function checkIn(req, res) {
       }
     }
 
-    const currentShift = shift || record.shift;
     const checkInTime = getCurrentTime();
 
-    // ── SHIFT RESTRICTION: Cannot clock in before exact time ────────────────
-    const shiftStart = SHIFT_TIMES[currentShift]?.start;
-    if (shiftStart && isTimeBefore(checkInTime, shiftStart)) {
+    // ── SHIFT RESTRICTION: Check Assigned Shift from User Profile ─────────────
+    const user = await userModel.findById(employeeId);
+    const assignedShift = user?.shift;
+
+    if (!assignedShift || !SHIFT_TIMES[assignedShift]) {
       return res.status(400).json({
-        message: `You cannot clock in before your shift starts at ${shiftStart}. Current time: ${checkInTime}`
+        message: 'No valid work shift (Morning/Evening) is assigned to your account. Please contact your admin.'
+      });
+    }
+
+    // Step 1: Check if current time belongs to the assigned shift
+    if (!isWithinShift(checkInTime, assignedShift)) {
+      const otherShift = assignedShift === 'Morning' ? 'Evening' : 'Morning';
+      if (isWithinShift(checkInTime, otherShift)) {
+        return res.status(400).json({
+          message: `You are assigned a ${assignedShift} shift. You cannot clock in during the ${otherShift}.`
+        });
+      }
+      // If it's neither (e.g., dead zone), show generic "not your shift time"
+      return res.status(400).json({
+        message: `It is currently not your shift time (${SHIFT_TIMES[assignedShift].start} – ${SHIFT_TIMES[assignedShift].end}).`
+      });
+    }
+
+    // Step 2: Prevent clock-in BEFORE the shift start time
+    // If they are more than 2 hours before, we already showed "not your shift time".
+    // If they are within 2 hours BEFORE the start, show the specific "cannot clock in before" message.
+    const startMins = toMins(SHIFT_TIMES[assignedShift].start);
+    const nowMins = toMins(checkInTime);
+    let diff = startMins - nowMins;
+    if (diff < 0) diff += 1440; // handle wrap around for evening start (e.g. now is 5 PM, start is 6 PM)
+
+    if (diff > 0 && diff <= 120) { // If within 2 hours before start
+      return res.status(400).json({
+        message: `Your shift starts at ${SHIFT_TIMES[assignedShift].start}. You cannot clock in before that. Current time: ${checkInTime}`
       });
     }
 
@@ -123,7 +201,7 @@ async function checkIn(req, res) {
       record = await attendanceModel.create({
         employeeId,
         date: today,
-        shift: shift,
+        shift: assignedShift,
         sessions: [{ checkIn: checkInTime }],
         status: 'Present'
       });
@@ -165,32 +243,13 @@ async function checkOut(req, res) {
     // ── SHIFT RESTRICTION: Cannot clock out after given time ────────────────
     const shiftEnd = SHIFT_TIMES[currentShift]?.end;
     if (shiftEnd) {
-      const isNight = currentShift === 'Night';
-      const checkInTime = openSession.checkIn;
-
-      const toMin = (s) => {
-        let [t, mod] = s.split(' ');
-        let [h, m] = t.split(':').map(Number);
-        if (mod === 'PM' && h !== 12) h += 12;
-        if (mod === 'AM' && h === 12) h = 0;
-        return h * 60 + m;
-      };
-
-      const startMin = toMin(checkInTime);
-      const endMin = toMin(shiftEnd);
-      let curMin = toMin(checkOutTime);
-
-      // Normalize curMin if it wrapped (next day)
-      if (curMin < startMin) curMin += 1440;
-      let normalizedEndMin = endMin;
-      if (endMin < startMin) normalizedEndMin += 1440;
-
-      if (curMin > normalizedEndMin) {
+      if (!isWithinShift(checkOutTime, currentShift)) {
         return res.status(400).json({
           message: `You cannot clock out after your shift ends at ${shiftEnd}. Current time: ${checkOutTime}`
         });
       }
     }
+
 
     const sessionMins = minutesBetween(openSession.checkIn, checkOutTime);
 
@@ -215,10 +274,19 @@ async function checkOut(req, res) {
 // ── GET /api/attendance/today-status ─────────────────────────────────────────
 async function getTodayStatus(req, res) {
   try {
-    const employeeId = req.user.id;
     const today = getTodayDate();
 
+    // Fetch user to get their assigned shift
+    const user = await userModel.findById(employeeId);
+    const assignedShift = user?.shift || null;
+
     let record = await attendanceModel.findOne({ employeeId, date: today });
+
+    // ── NEW: Trigger Auto Checkout if shift ended ──────────────────────────
+    if (record) {
+      record = await handleAutoCheckOut(record);
+    }
+
     let openSession = record?.sessions?.find(s => s.checkIn && !s.checkOut) || null;
 
     const isCheckedIn = !!openSession;
@@ -226,7 +294,8 @@ async function getTodayStatus(req, res) {
     return res.status(200).json({
       date: record?.date || today,
       hasRecord: !!record,
-      shift: record?.shift || null,
+      shift: record?.shift || assignedShift, // record shift if clocked in, else assigned shift
+      assignedShift,
       sessions: record?.sessions || [],
       totalWorkHours: record?.totalWorkHours || null,
       status: record?.status || 'Not Marked',
