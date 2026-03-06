@@ -10,6 +10,7 @@ import {
 import { CgProfile } from 'react-icons/cg';
 import { FiUser } from "react-icons/fi";
 import { FaSun, FaMoon, FaCloudMoon } from 'react-icons/fa';
+import { MdBadge } from 'react-icons/md';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -42,6 +43,8 @@ export default function Slidebar({
   userEmail,
   userName,
   userShift,
+  userDesignation,
+  userProfileImage,
   userRole,
   onLogout,
 }) {
@@ -131,19 +134,39 @@ export default function Slidebar({
             className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#1e3a5f] dark:hover:bg-gray-700 transition-colors text-left cursor-pointer"
           >
             {/* Avatar */}
-            <div className="w-9 h-9 rounded-full bg-[#1e3a5f] dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
-              {initials
-                ? <span className="text-white text-sm font-bold">{initials}</span>
-                : <CgProfile size={22} className="text-white" />
-              }
+            <div className="w-10 h-10 rounded-full bg-[#1e3a5f] dark:bg-gray-700 flex items-center justify-center flex-shrink-0 overflow-hidden border border-white/10">
+              {userProfileImage ? (
+                <img
+                  src={userProfileImage && userProfileImage.startsWith('http') ? userProfileImage : `http://localhost:3000/uploads/profile/${userProfileImage}`}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.style.display = 'none';
+                    e.target.parentElement.innerHTML = initials
+                      ? `<span class="text-white text-xs font-bold">${initials}</span>`
+                      : `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="20" width="20" xmlns="http://www.w3.org/2000/svg" class="text-white"><path d="M858.5 763.6l-66.9-149.8C770.8 565.3 731.5 533 686 533h-10c-18.4 0-35.3 5.3-49.7 14.5a160 160 0 1 0-252.6 0A101.4 101.4 0 0 0 348 533h-10c-45.5 0-84.8 32.3-95.6 70.8l-66.9 149.8C162.7 782.9 178.5 811 202.9 811h618.2c24.4 0 40.2-28.1 27.4-47.4z"></path></svg>`;
+                  }}
+                />
+              ) : (
+                initials
+                  ? <span className="text-white text-xs font-bold">{initials}</span>
+                  : <CgProfile size={22} className="text-white" />
+              )}
             </div>
 
-            {/* Name + email + shift */}
+            {/* Name + email + shift + designation */}
             <div className="flex-1 overflow-hidden min-w-0">
               {userName && (
                 <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
                   <p className="text-sm font-bold text-white truncate" title={userName}>{userName}</p>
                   {userShift && <ShiftBadge shift={userShift} />}
+                </div>
+              )}
+              {userDesignation && (
+                <div className="flex items-center gap-1 text-[10px] text-blue-200 mt-0.5 mb-1 px-1.5 py-0.5 bg-white/10 rounded-full w-fit max-w-full">
+                  <MdBadge size={10} className="flex-shrink-0" />
+                  <span className="truncate">{userDesignation}</span>
                 </div>
               )}
               <p className="text-xs text-gray-300 truncate">{userEmail}</p>

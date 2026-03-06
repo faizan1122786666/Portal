@@ -144,6 +144,10 @@ const userSchema = new mongoose.Schema({
     designation: {
         type: String,
         default: ''
+    },
+    profileImage: {
+        type: String,
+        default: ''
     }
 })
 

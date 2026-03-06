@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import Slidebar from './components/layout/Slidebar'
 import Header from './components/layout/Header'
 import Login from './pages/Auth/Login.jsx'
-import  { AuthContextProvider } from './context/index.js'
+import { AuthContextProvider } from './context/index.js'
 import { AdminDashboard, UserDashboard } from './pages/Dashboard/index'
 import { AdminAttendance, UserAttendance } from './pages/Attendance/index'
 import { AdminLeave, UserLeave } from './pages/Leave/index'
@@ -90,6 +90,8 @@ function App() {
               userEmail={user.email || ''}
               userName={user.name || ''}
               userShift={user.shift || ''}
+              userDesignation={user.designation || ''}
+              userProfileImage={user.profileImage || ''}
               userRole={user.role}
               onLogout={handleLogout}
             />
@@ -163,7 +165,10 @@ function App() {
                         userEmail={user.email || ''}
                         userRole={user.role}
                         userShift={user.shift || ''}
+                        userDesignation={user.designation || ''}
+                        userProfileImage={user.profileImage || ''}
                         onNameUpdate={handleNameUpdate}
+                        onProfileUpdate={handleLogin}
                       />
                     }
                   />

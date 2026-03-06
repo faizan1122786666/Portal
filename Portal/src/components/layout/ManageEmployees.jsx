@@ -665,22 +665,22 @@ const DESIGNATIONS = [
 
 // ── Designation badge colors
 const DESIGNATION_COLORS = {
-  'Frontend Developer':   'bg-blue-100 text-blue-700',
-  'Backend Developer':    'bg-purple-100 text-purple-700',
+  'Frontend Developer': 'bg-blue-100 text-blue-700',
+  'Backend Developer': 'bg-purple-100 text-purple-700',
   'Full Stack Developer': 'bg-indigo-100 text-indigo-700',
-  'Mobile Developer':     'bg-cyan-100 text-cyan-700',
-  'UI/UX Designer':       'bg-pink-100 text-pink-700',
-  'DevOps Engineer':      'bg-orange-100 text-orange-700',
-  'QA Engineer':          'bg-yellow-100 text-yellow-700',
-  'Project Manager':      'bg-green-100 text-green-700',
-  'Product Manager':      'bg-teal-100 text-teal-700',
-  'Data Analyst':         'bg-lime-100 text-lime-700',
-  'Data Scientist':       'bg-emerald-100 text-emerald-700',
-  'HR Manager':           'bg-rose-100 text-rose-700',
-  'Marketing Manager':    'bg-fuchsia-100 text-fuchsia-700',
-  'Sales Manager':        'bg-amber-100 text-amber-700',
-  'Accountant':           'bg-sky-100 text-sky-700',
-  'Other':                'bg-gray-100 text-gray-700',
+  'Mobile Developer': 'bg-cyan-100 text-cyan-700',
+  'UI/UX Designer': 'bg-pink-100 text-pink-700',
+  'DevOps Engineer': 'bg-orange-100 text-orange-700',
+  'QA Engineer': 'bg-yellow-100 text-yellow-700',
+  'Project Manager': 'bg-green-100 text-green-700',
+  'Product Manager': 'bg-teal-100 text-teal-700',
+  'Data Analyst': 'bg-lime-100 text-lime-700',
+  'Data Scientist': 'bg-emerald-100 text-emerald-700',
+  'HR Manager': 'bg-rose-100 text-rose-700',
+  'Marketing Manager': 'bg-fuchsia-100 text-fuchsia-700',
+  'Sales Manager': 'bg-amber-100 text-amber-700',
+  'Accountant': 'bg-sky-100 text-sky-700',
+  'Other': 'bg-gray-100 text-gray-700',
 }
 
 function DesignationBadge({ designation }) {
@@ -729,14 +729,14 @@ function ShiftBadge({ shift }) {
 // ── Add / Edit Modal ──────────────────────────────────────────────────────────
 function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
   const [form, setForm] = useState({
-    name:        editingEmployee?.name        || '',
-    email:       editingEmployee?.email       || '',
-    password:    '',
-    role:        editingEmployee?.role        || 'employee',
-    department:  editingEmployee?.department  || '',
+    name: editingEmployee?.name || '',
+    email: editingEmployee?.email || '',
+    password: '',
+    role: editingEmployee?.role || 'employee',
+    department: editingEmployee?.department || '',
     designation: editingEmployee?.designation || '',
-    shift:       editingEmployee?.shift       || '',
-    salary:      editingEmployee?.salary      || 0,
+    shift: editingEmployee?.shift || '',
+    salary: editingEmployee?.salary || 0,
   })
   const [error, setError] = useState('')
 
@@ -756,9 +756,9 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
     onSubmit(form)
   }
 
-  const nameCount   = form.name.length
+  const nameCount = form.name.length
   const nameAtLimit = nameCount >= 14
-  const isEmployee  = form.role === 'employee'
+  const isEmployee = form.role === 'employee'
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -792,9 +792,8 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
             <input
               type="text" name="name" value={form.name} onChange={handle}
               maxLength={14} placeholder="e.g. Ali Hassan"
-              className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm transition-colors ${
-                nameAtLimit ? 'border-orange-300 bg-orange-50' : 'border-gray-300'
-              }`}
+              className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm transition-colors ${nameAtLimit ? 'border-orange-300 bg-orange-50' : 'border-gray-300'
+                }`}
             />
             {nameAtLimit && <p className="text-xs text-orange-500 mt-1">Maximum 14 characters reached</p>}
           </div>
@@ -908,9 +907,8 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
                     <input type="radio" name="shift" value={value}
                       checked={form.shift === value} onChange={handle} className="sr-only" />
                     <span className="flex items-center gap-1.5">{icon} {label}</span>
-                    <span className={`text-[10px] font-normal leading-tight text-center ${
-                      form.shift === value ? 'opacity-80' : 'text-gray-400'
-                    }`}>
+                    <span className={`text-[10px] font-normal leading-tight text-center ${form.shift === value ? 'opacity-80' : 'text-gray-400'
+                      }`}>
                       {time}
                     </span>
                   </label>
@@ -978,13 +976,13 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
 
 // ── Main Component ────────────────────────────────────────────────────────────
 function ManageEmployees({ setTitle }) {
-  const [employees, setEmployees]     = useState([])
-  const [loading, setLoading]         = useState(true)
-  const [showModal, setShowModal]     = useState(false)
-  const [editingEmp, setEditingEmp]   = useState(null)
-  const [search, setSearch]           = useState('')
-  const [filterDept, setFilterDept]   = useState('')
-  const [filterRole, setFilterRole]   = useState('')
+  const [employees, setEmployees] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [showModal, setShowModal] = useState(false)
+  const [editingEmp, setEditingEmp] = useState(null)
+  const [search, setSearch] = useState('')
+  const [filterDept, setFilterDept] = useState('')
+  const [filterRole, setFilterRole] = useState('')
   const [filterShift, setFilterShift] = useState('')
 
   const fetchEmployees = async () => {
@@ -1008,27 +1006,27 @@ function ManageEmployees({ setTitle }) {
     try {
       if (editingEmp) {
         const payload = {
-          email:       form.email,
-          role:        form.role,
-          department:  form.department,
+          email: form.email,
+          role: form.role,
+          department: form.department,
           designation: form.designation,
-          name:        form.name,
-          salary:      form.salary,
-          shift:       form.role === 'employee' ? form.shift : '',
+          name: form.name,
+          salary: form.salary,
+          shift: form.role === 'employee' ? form.shift : '',
         }
         if (form.password) payload.password = form.password
         await api.put(`/employees/${editingEmp._id}`, payload)
         toast.success('Employee updated successfully!')
       } else {
         await api.post('/employees', {
-          email:       form.email,
-          password:    form.password,
-          role:        form.role,
-          department:  form.department,
+          email: form.email,
+          password: form.password,
+          role: form.role,
+          department: form.department,
           designation: form.designation,
-          name:        form.name,
-          salary:      form.salary,
-          shift:       form.role === 'employee' ? form.shift : '',
+          name: form.name,
+          salary: form.salary,
+          shift: form.role === 'employee' ? form.shift : '',
         })
         toast.success('Employee added successfully!')
       }
@@ -1057,16 +1055,16 @@ function ManageEmployees({ setTitle }) {
   const filtered = employees.filter(e => {
     const q = search.toLowerCase()
     const matchSearch = e.email?.toLowerCase().includes(q) || e.name?.toLowerCase().includes(q) || e.designation?.toLowerCase().includes(q)
-    const matchDept  = filterDept  ? e.department === filterDept : true
-    const matchRole  = filterRole  ? e.role === filterRole       : true
-    const matchShift = filterShift ? e.shift === filterShift     : true
+    const matchDept = filterDept ? e.department === filterDept : true
+    const matchRole = filterRole ? e.role === filterRole : true
+    const matchShift = filterShift ? e.shift === filterShift : true
     return matchSearch && matchDept && matchRole && matchShift
   })
 
   const stats = {
-    total:  employees.length,
+    total: employees.length,
     admins: employees.filter(e => e.role === 'admin').length,
-    staff:  employees.filter(e => e.role === 'employee').length,
+    staff: employees.filter(e => e.role === 'employee').length,
   }
 
   const activeDepts = [...new Set(employees.map(e => e.department).filter(Boolean))]
@@ -1168,13 +1166,27 @@ function ManageEmployees({ setTitle }) {
                     {/* Employee */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
-                          {emp.name
-                            ? <span className="text-white text-xs font-bold">
+                        <div className="w-10 h-10 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0 overflow-hidden border-2 border-white shadow-sm">
+                          {emp.profileImage ? (
+                            <img
+                              src={`http://localhost:3000/uploads/profile/${emp.profileImage}`}
+                              alt={emp.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.style.display = 'none';
+                                e.target.parentElement.innerHTML = emp.name
+                                  ? `<span class="text-white text-xs font-bold">${emp.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()}</span>`
+                                  : `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="20" width="20" xmlns="http://www.w3.org/2000/svg" class="text-white"><path d="M858.5 763.6l-66.9-149.8C770.8 565.3 731.5 533 686 533h-10c-18.4 0-35.3 5.3-49.7 14.5a160 160 0 1 0-252.6 0A101.4 101.4 0 0 0 348 533h-10c-45.5 0-84.8 32.3-95.6 70.8l-66.9 149.8C162.7 782.9 178.5 811 202.9 811h618.2c24.4 0 40.2-28.1 27.4-47.4z"></path></svg>`;
+                              }}
+                            />
+                          ) : (
+                            emp.name
+                              ? <span className="text-white text-xs font-bold">
                                 {emp.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()}
                               </span>
-                            : <CgProfile size={18} className="text-white" />
-                          }
+                              : <CgProfile size={20} className="text-white" />
+                          )}
                         </div>
                         <div>
                           {emp.name && <p className="text-sm font-semibold text-gray-900">{emp.name}</p>}
@@ -1238,13 +1250,27 @@ function ManageEmployees({ setTitle }) {
               <div key={emp._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="p-4 flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
-                      {emp.name
-                        ? <span className="text-white text-xs font-bold">
+                    <div className="w-12 h-12 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0 overflow-hidden border-2 border-white shadow-sm">
+                      {emp.profileImage ? (
+                        <img
+                          src={`http://localhost:3000/uploads/profile/${emp.profileImage}`}
+                          alt={emp.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.style.display = 'none';
+                            e.target.parentElement.innerHTML = emp.name
+                              ? `<span class="text-white text-xs font-bold">${emp.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()}</span>`
+                              : `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="24" width="24" xmlns="http://www.w3.org/2000/svg" class="text-white"><path d="M858.5 763.6l-66.9-149.8C770.8 565.3 731.5 533 686 533h-10c-18.4 0-35.3 5.3-49.7 14.5a160 160 0 1 0-252.6 0A101.4 101.4 0 0 0 348 533h-10c-45.5 0-84.8 32.3-95.6 70.8l-66.9 149.8C162.7 782.9 178.5 811 202.9 811h618.2c24.4 0 40.2-28.1 27.4-47.4z"></path></svg>`;
+                          }}
+                        />
+                      ) : (
+                        emp.name
+                          ? <span className="text-white text-sm font-bold">
                             {emp.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()}
                           </span>
-                        : <CgProfile size={20} className="text-white" />
-                      }
+                          : <CgProfile size={24} className="text-white" />
+                      )}
                     </div>
                     <div className="min-w-0">
                       {emp.name && <p className="font-semibold text-gray-900 text-sm">{emp.name}</p>}

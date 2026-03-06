@@ -75,6 +75,8 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 
 const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
@@ -83,6 +85,11 @@ const leaveRoutes = require('./routes/leave.routes');       // ← NEW
 const taskRoutes = require('./routes/task.routes');         // ← NEW
 
 const app = express();
+const uploadDir = path.join(__dirname, '../public/uploads/profile');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -106,5 +113,14 @@ app.use('/api/leave', leaveRoutes);
 
 // Employee tasks    →  /api/tasks/my, /api/tasks/:id/complete
 app.use('/api/tasks', taskRoutes);
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('SERVER ERROR:', err);
+    if (err.name === 'MulterError') {
+        return res.status(400).json({ message: `Upload Error: ${err.message}` });
+    }
+    res.status(500).json({ message: err.message || 'Internal Server Error' });
+});
 
 module.exports = app;
