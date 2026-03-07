@@ -1172,7 +1172,7 @@ function ManageEmployees({ setTitle }) {
                         <div className="w-10 h-10 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0 overflow-hidden border-2 border-white shadow-sm">
                           {emp.profileImage ? (
                             <img
-                              src={`http://localhost:3000/uploads/profile/${emp.profileImage}`}
+                              src={emp.profileImage.startsWith('http') ? emp.profileImage : `http://localhost:3000/uploads/profile/${emp.profileImage}`}
                               alt={emp.name}
                               className="w-full h-full object-cover"
                               onError={(e) => {
@@ -1256,7 +1256,7 @@ function ManageEmployees({ setTitle }) {
                     <div className="w-12 h-12 rounded-full bg-[#2C5284] dark:bg-gray-800 flex items-center justify-center flex-shrink-0 overflow-hidden border-2 border-white dark:border-white/10 shadow-sm">
                       {emp.profileImage ? (
                         <img
-                          src={`http://localhost:3000/uploads/profile/${emp.profileImage}`}
+                          src={emp.profileImage.startsWith('http') ? emp.profileImage : `http://localhost:3000/uploads/profile/${emp.profileImage}`}
                           alt={emp.name}
                           className="w-full h-full object-cover"
                           onError={(e) => {
