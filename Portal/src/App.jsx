@@ -17,6 +17,7 @@ import { AuthContextProvider } from './context/index.js'
 import { AdminDashboard, UserDashboard } from './pages/Dashboard/index'
 import { AdminAttendance, UserAttendance } from './pages/Attendance/index'
 import { AdminLeave, UserLeave } from './pages/Leave/index'
+import { AdminTasks, EmployeeTasks } from './pages/Tasks/index'
 import ManageEmployees from './components/layout/ManageEmployees'
 import Profile from './components/layout/Profile'
 
@@ -134,6 +135,16 @@ function App() {
                         user.role === 'admin'
                           ? <AdminLeave setTitle={setTitle} />
                           : <UserLeave setTitle={setTitle} />
+                      }
+                    />
+
+                    {/* Tasks */}
+                    <Route
+                      path="/tasks"
+                      element={
+                        user.role === 'admin'
+                          ? <AdminTasks setTitle={setTitle} />
+                          : <EmployeeTasks setTitle={setTitle} />
                       }
                     />
 

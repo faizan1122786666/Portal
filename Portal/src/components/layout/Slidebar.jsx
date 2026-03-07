@@ -54,6 +54,7 @@ export default function Slidebar({
     { name: 'Dashboard', icon: AiOutlineDashboard, path: '/' },
     { name: 'Attendance', icon: AiOutlineClockCircle, path: '/attendance' },
     { name: 'Leave', icon: AiOutlineCalendar, path: '/leave' },
+    { name: 'Tasks', icon: AiOutlineCheckSquare, path: '/tasks' },
   ];
   const adminMenuItems = [
     ...baseMenuItems,
