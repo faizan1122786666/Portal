@@ -55,7 +55,7 @@ function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
       await onSubmit({
         leaveType: leaveType.value,
         startDate: startDate.toISOString().split('T')[0],
-        endDate:   endDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
         reason,
       });
     } catch (err) {
@@ -65,7 +65,7 @@ function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border dark:border-white/5">
         <div className="flex items-center justify-between p-5 bg-[#2C5284] rounded-t-2xl">
           <h2 className="text-lg font-bold text-white">
             {editingLeave ? 'Edit Leave Request' : 'Apply for Leave'}
@@ -78,13 +78,13 @@ function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
 
         <form onSubmit={handleSubmit} className="p-5 space-y-5">
           {formError && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div className="p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-lg text-red-700 dark:text-red-400 text-sm">
               {formError}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               Leave Type <span className="text-red-500">*</span>
             </label>
             <Select
@@ -92,19 +92,34 @@ function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
               onChange={setLeaveType}
               options={leaveTypeOptions}
               placeholder="Select leave type..."
+              className="react-select-container"
+              classNamePrefix="react-select"
+              menuPortalTarget={document.body}
               styles={{
                 control: (base, state) => ({
                   ...base,
-                  borderColor: state.isFocused ? '#2C5284' : '#d1d5db',
+                  backgroundColor: 'transparent',
+                  borderColor: state.isFocused ? '#2C5284' : 'var(--select-border)',
                   borderRadius: '0.5rem',
                   padding: '2px',
                   boxShadow: state.isFocused ? '0 0 0 2px rgba(44,82,132,0.2)' : 'none',
                   '&:hover': { borderColor: '#2C5284' },
                 }),
+                singleValue: (base) => ({
+                  ...base,
+                  color: 'inherit',
+                }),
                 option: (base, state) => ({
                   ...base,
-                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? '#f3f4f6' : 'white',
-                  color: state.isSelected ? 'white' : '#1f2937',
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'var(--select-hover)' : 'transparent',
+                  color: state.isSelected ? 'white' : 'inherit',
+                  cursor: 'pointer',
+                }),
+                menu: (base) => ({
+                  ...base,
+                  backgroundColor: 'var(--select-bg)',
+                  border: '1px solid var(--select-border)',
+                  zIndex: 50,
                 }),
               }}
             />
@@ -112,7 +127,7 @@ function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Start Date <span className="text-red-500">*</span>
               </label>
               <DatePicker
@@ -120,12 +135,12 @@ function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
                 onChange={(date) => { setStartDate(date); if (endDate && date > endDate) setEndDate(null); }}
                 minDate={new Date()}
                 dateFormat="yyyy-MM-dd"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+                className="w-full px-4 py-2.5 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
                 placeholderText="Select start date"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 End Date <span className="text-red-500">*</span>
               </label>
               <DatePicker
@@ -133,15 +148,15 @@ function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
                 onChange={(date) => setEndDate(date)}
                 minDate={startDate || new Date()}
                 dateFormat="yyyy-MM-dd"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+                className="w-full px-4 py-2.5 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
                 placeholderText="Select end date"
               />
             </div>
           </div>
 
           {days > 0 && (
-            <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 flex items-center justify-between">
-              <span className="text-sm text-blue-700 font-medium">Total Duration</span>
+            <div className="bg-blue-50 dark:bg-white/5 border border-blue-100 dark:border-white/10 rounded-lg p-3 flex items-center justify-between">
+              <span className="text-sm text-blue-700 dark:text-blue-300 font-medium">Total Duration</span>
               <span className="bg-[#2C5284] text-white text-sm font-bold px-3 py-1 rounded-full">
                 {days} day{days > 1 ? 's' : ''}
               </span>
@@ -149,21 +164,21 @@ function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
           )}
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               Reason <span className="text-red-500">*</span>
             </label>
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={4}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none resize-none text-sm"
+              className="w-full px-4 py-2.5 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none resize-none text-sm"
               placeholder="Enter the reason for your leave..."
             />
           </div>
 
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose}
-              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors text-sm">
+              className="flex-1 px-4 py-3 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-sm">
               Cancel
             </button>
             <button type="submit" disabled={submitting}
@@ -181,17 +196,17 @@ function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
 function UserLeave({ setTitle }) {
   const ITEMS_PER_PAGE = 5;
 
-  const [leaves, setLeaves]                   = useState([]);
-  const [loading, setLoading]                 = useState(true);
-  const [error, setError]                     = useState('');
-  const [submitting, setSubmitting]           = useState(false);
-  const [showApplyModal, setShowApplyModal]   = useState(false);
-  const [selectedLeave, setSelectedLeave]     = useState(null);
+  const [leaves, setLeaves] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [showApplyModal, setShowApplyModal] = useState(false);
+  const [selectedLeave, setSelectedLeave] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [editingLeave, setEditingLeave]       = useState(null);
-  const [currentPage, setCurrentPage]         = useState(1);
-  const [filterDate, setFilterDate]           = useState('');
-  const [filterStatus, setFilterStatus]       = useState('All');
+  const [editingLeave, setEditingLeave] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filterDate, setFilterDate] = useState('');
+  const [filterStatus, setFilterStatus] = useState('All');
 
   // Fetch from backend
   const fetchLeaves = async () => {
@@ -216,9 +231,9 @@ function UserLeave({ setTitle }) {
   // ── Filtering ──────────────────────────────────────────────────────────────
   const filteredLeaves = leaves.filter(leave => {
     const matchesStatus = filterStatus === 'All' || leave.status === filterStatus;
-    const matchesDate   = !filterDate ||
+    const matchesDate = !filterDate ||
       leave.startDate === filterDate ||
-      leave.endDate   === filterDate ||
+      leave.endDate === filterDate ||
       leave.appliedDate === filterDate ||
       (leave.startDate <= filterDate && leave.endDate >= filterDate);
     return matchesStatus && matchesDate;
@@ -233,7 +248,7 @@ function UserLeave({ setTitle }) {
   };
 
   // ── Pagination ─────────────────────────────────────────────────────────────
-  const totalPages      = Math.ceil(filteredLeaves.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredLeaves.length / ITEMS_PER_PAGE);
   const paginatedLeaves = filteredLeaves.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
@@ -283,8 +298,8 @@ function UserLeave({ setTitle }) {
   };
 
   const stats = {
-    total:    leaves.length,
-    pending:  leaves.filter(l => l.status === 'Pending').length,
+    total: leaves.length,
+    pending: leaves.filter(l => l.status === 'Pending').length,
     approved: leaves.filter(l => l.status === 'Approved').length,
     rejected: leaves.filter(l => l.status === 'Rejected').length,
   };
@@ -295,21 +310,16 @@ function UserLeave({ setTitle }) {
   const PaginationBar = () => {
     if (totalPages <= 1) return null;
     return (
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-1">
-        <p className="text-sm text-gray-500">
-          Showing{' '}
-          <span className="font-semibold text-gray-800">
-            {filteredLeaves.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1}
-          </span>{' '}to{' '}
-          <span className="font-semibold text-gray-800">
-            {Math.min(currentPage * ITEMS_PER_PAGE, filteredLeaves.length)}
-          </span>{' '}of{' '}
-          <span className="font-semibold text-gray-800">{filteredLeaves.length}</span> requests
+      <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-white/5 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Showing <span className="font-semibold text-gray-900 dark:text-gray-100">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{' '}
+          <span className="font-semibold text-gray-900 dark:text-gray-100">{Math.min(currentPage * ITEMS_PER_PAGE, filteredLeaves.length)}</span> of{' '}
+          <span className="font-semibold text-gray-900 dark:text-gray-100">{filteredLeaves.length}</span> entries
         </p>
-        <div className="flex items-center gap-1">
-          <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}
-            className="p-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
-            <FaChevronLeft size={12} />
+        <div className="flex items-center gap-2">
+          <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}
+            className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+            <FaChevronLeft size={14} className="text-gray-600 dark:text-gray-400" />
           </button>
           {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
             <button key={page} onClick={() => setCurrentPage(page)}
@@ -318,9 +328,9 @@ function UserLeave({ setTitle }) {
               {page}
             </button>
           ))}
-          <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}
-            className="p-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
-            <FaChevronRight size={12} />
+          <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}
+            className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+            <FaChevronRight size={14} className="text-gray-600 dark:text-gray-400" />
           </button>
         </div>
       </div>
@@ -329,11 +339,11 @@ function UserLeave({ setTitle }) {
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
 
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284]">My Leave Requests</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] dark:text-blue-300">My Leave Requests</h1>
         <button
           onClick={() => { setEditingLeave(null); setShowApplyModal(true); }}
           className="flex items-center gap-2 px-6 py-4 bg-[#2C5284] text-white rounded-lg font-medium hover:bg-[#365F8D] transition-colors text-sm shadow"
@@ -355,19 +365,19 @@ function UserLeave({ setTitle }) {
       {/* Stat Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         {[
-          { label: 'Total',    value: stats.total,    sub: 'Requests', icon: <CgProfile size={22} className="text-white" /> },
-          { label: 'Pending',  value: stats.pending,  sub: 'Awaiting', icon: <CalendarDays size={22} className="text-white" /> },
+          { label: 'Total', value: stats.total, sub: 'Requests', icon: <CgProfile size={22} className="text-white" /> },
+          { label: 'Pending', value: stats.pending, sub: 'Awaiting', icon: <CalendarDays size={22} className="text-white" /> },
           { label: 'Approved', value: stats.approved, sub: 'Accepted', icon: <FaRegCheckCircle size={22} className="text-white" /> },
           { label: 'Rejected', value: stats.rejected, sub: 'Declined', icon: <RxCrossCircled size={22} className="text-white" /> },
         ].map(({ label, value, sub, icon }) => (
           <div key={label}
-            className="bg-white p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow hover:shadow-xl transition-shadow duration-300 min-h-24">
+            className="bg-white dark:bg-white/5 p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-shadow duration-300 min-h-24">
             <div>
-              <p className="text-xs sm:text-sm text-[#2C5284]">{label}</p>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{value}</h2>
-              <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
+              <p className="text-xs sm:text-sm text-[#2C5284] dark:text-gray-300">{label}</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{value}</h2>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{sub}</p>
             </div>
-            <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
+            <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
               {icon}
             </div>
           </div>
@@ -375,27 +385,31 @@ function UserLeave({ setTitle }) {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+      <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-4 mb-6">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex items-center gap-2 flex-1">
-            <CalendarDays size={18} className="text-[#2C5284] flex-shrink-0" />
+            <CalendarDays size={18} className="text-[#2C5284] dark:text-blue-300 flex-shrink-0" />
             <input
               type="date"
               value={filterDate}
               onChange={e => setFilterDate(e.target.value)}
-              className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
+              className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
             />
           </div>
           <div className="sm:w-48">
             <Select
               value={filterStatus === 'All' ? { value: 'All', label: 'All Statuses' } : { value: filterStatus, label: filterStatus }}
               onChange={opt => setFilterStatus(opt ? opt.value : 'All')}
-              options={statusOptions.map(s => ({ value: s, label: s === 'All' ? 'All Statuses' : s }))}
+              options={statusOptions.map(s => ({ value: s, label: s, label: s === 'All' ? 'All Statuses' : s }))}
               placeholder="Filter by status..."
+              className="react-select-container"
+              classNamePrefix="react-select"
+              menuPortalTarget={document.body}
               styles={{
                 control: (base, state) => ({
                   ...base,
-                  borderColor: state.isFocused ? '#2C5284' : '#d1d5db',
+                  backgroundColor: 'transparent',
+                  borderColor: state.isFocused ? '#2C5284' : 'var(--select-border)',
                   borderRadius: '0.5rem',
                   minHeight: '42px',
                   boxShadow: state.isFocused ? '0 0 0 2px rgba(44,82,132,0.2)' : 'none',
@@ -403,11 +417,27 @@ function UserLeave({ setTitle }) {
                 }),
                 option: (base, state) => ({
                   ...base,
-                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? '#f3f4f6' : 'white',
-                  color: state.isSelected ? 'white' : '#1f2937',
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'var(--select-hover)' : 'transparent',
+                  color: state.isSelected ? 'white' : 'inherit',
                   fontSize: '0.875rem',
+                  cursor: 'pointer',
                 }),
-                singleValue: (base) => ({ ...base, fontSize: '0.875rem', color: '#1f2937' }),
+                menu: (base) => ({
+                  ...base,
+                  backgroundColor: 'var(--select-bg)',
+                  border: '1px solid var(--select-border)',
+                  zIndex: 50,
+                }),
+                singleValue: (base) => ({
+                  ...base,
+                  fontSize: '0.875rem',
+                  color: 'inherit'
+                }),
+                placeholder: (base) => ({
+                  ...base,
+                  color: 'var(--select-text)',
+                  opacity: 0.6
+                })
               }}
             />
           </div>
@@ -437,26 +467,26 @@ function UserLeave({ setTitle }) {
 
       {/* Desktop Table */}
       {!loading && (
-        <div className="hidden lg:block bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-[#2C5284]">
+        <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
+            <thead className="bg-[#2C5284] dark:bg-white/10">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Leave Type</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Duration</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Applied Date</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Leave Type</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Duration</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Applied Date</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Status</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/5">
               {paginatedLeaves.length > 0 ? paginatedLeaves.map(leave => (
-                <tr key={leave._id} className="hover:bg-blue-50/30 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{leave.leaveType}</td>
+                <tr key={leave._id} className="hover:bg-blue-50 dark:hover:bg-white/5 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{leave.leaveType}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{leave.startDate} → {leave.endDate}</div>
-                    <div className="text-xs text-gray-500">{leave.days} day(s)</div>
+                    <div className="text-sm text-gray-900 dark:text-gray-100">{leave.startDate} → {leave.endDate}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{leave.days} day(s)</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{leave.appliedDate}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{leave.appliedDate}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full ${getStatusColor(leave.status)}`}>
                       {leave.status}
@@ -465,7 +495,7 @@ function UserLeave({ setTitle }) {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-2">
                       <button onClick={() => { setSelectedLeave(leave); setShowDetailModal(true); }}
-                        className="p-2 text-[#2C5284] hover:bg-blue-50 rounded-lg transition-colors" title="View Details">
+                        className="p-2 text-[#2C5284] dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-white/10 rounded-lg transition-colors" title="View Details">
                         <FaEye size={16} />
                       </button>
                       {leave.status === 'Pending' && (
@@ -502,33 +532,34 @@ function UserLeave({ setTitle }) {
 
       {/* Mobile Cards */}
       {!loading && (
-        <div className="lg:hidden space-y-3">
+        <div className="lg:hidden space-y-4">
           {paginatedLeaves.length > 0 ? paginatedLeaves.map(leave => (
-            <div key={leave._id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-              <div className="p-4 flex items-center justify-between border-b border-gray-100 bg-gray-50/50">
-                <div>
-                  <p className="font-semibold text-gray-900 text-sm">{leave.leaveType}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{leave.startDate} → {leave.endDate}</p>
-                </div>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(leave.status)}`}>
+            <div key={leave._id} className="bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
+              <div className="p-4 flex items-center justify-between border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5">
+                <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{leave.leaveType}</span>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${getStatusColor(leave.status)}`}>
                   {leave.status}
                 </span>
               </div>
-              <div className="p-4">
-                <div className="grid grid-cols-2 gap-3 mb-4 text-xs">
+              <div className="p-4 space-y-3">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-gray-400 uppercase font-bold mb-1">Duration</p>
-                    <p className="text-gray-900 font-medium">{leave.days} day(s)</p>
+                    <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold mb-1">Duration</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{leave.days} day(s)</p>
                   </div>
                   <div>
-                    <p className="text-gray-400 uppercase font-bold mb-1">Applied</p>
-                    <p className="text-gray-900 font-medium">{leave.appliedDate}</p>
+                    <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold mb-1">Applied Date</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{leave.appliedDate}</p>
                   </div>
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                <div>
+                  <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold mb-1">Period</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{leave.startDate} to {leave.endDate}</p>
+                </div>
+                <div className="pt-3 flex items-center justify-between border-t border-gray-50 dark:border-white/5">
                   <button onClick={() => { setSelectedLeave(leave); setShowDetailModal(true); }}
-                    className="flex items-center gap-1.5 text-xs font-bold text-[#2C5284] uppercase tracking-wider">
-                    <FaEye size={13} /> View Details
+                    className="flex items-center gap-2 text-xs font-bold text-[#2C5284] dark:text-blue-300 uppercase tracking-wider">
+                    <FaEye size={14} /> View Details
                   </button>
                   {leave.status === 'Pending' && (
                     <div className="flex items-center gap-2">
@@ -544,7 +575,7 @@ function UserLeave({ setTitle }) {
               </div>
             </div>
           )) : (
-            <div className="bg-white rounded-xl p-10 text-center text-gray-400 italic border border-gray-100">
+            <div className="bg-white dark:bg-white/5 p-10 rounded-xl text-center text-gray-500 dark:text-gray-400 italic border border-gray-100 dark:border-white/5">
               {hasActiveFilter ? 'No records match the selected filters.' : 'No leave requests yet. Tap "Apply" to get started.'}
             </div>
           )}

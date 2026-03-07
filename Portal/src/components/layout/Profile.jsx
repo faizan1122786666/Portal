@@ -472,13 +472,13 @@ function ShiftBadge({ shift }) {
 // ── Info Row ──────────────────────────────────────────────────────────────────
 function InfoRow({ icon: Icon, label, value, iconColor = 'text-[#2C5284]' }) {
   return (
-    <div className="flex items-start gap-4 py-4 border-b border-gray-100 last:border-0">
-      <div className={`w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0 ${iconColor}`}>
+    <div className="flex items-start gap-4 py-4 border-b border-gray-100 dark:border-white/5 last:border-0">
+      <div className={`w-9 h-9 rounded-lg bg-blue-50 dark:bg-white/5 flex items-center justify-center flex-shrink-0 ${iconColor}`}>
         <Icon size={17} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">{label}</p>
-        <div className="text-sm font-medium text-gray-800">{value}</div>
+        <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-0.5">{label}</p>
+        <div className="text-sm font-medium text-gray-800 dark:text-gray-200">{value}</div>
       </div>
     </div>
   );
@@ -514,8 +514,8 @@ function EditNameModal({ currentName, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
-        <div className="bg-[#2C5284] p-5 rounded-t-2xl flex items-center justify-between">
+      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-sm border border-transparent dark:border-white/10">
+        <div className="bg-[#2C5284] dark:bg-white/10 p-5 rounded-t-2xl flex items-center justify-between">
           <h2 className="text-lg font-bold text-white">Edit Display Name</h2>
           <button onClick={onClose} className="text-white hover:bg-white/10 rounded-full p-1.5 transition-colors">
             <FaTimes size={16} />
@@ -523,19 +523,19 @@ function EditNameModal({ currentName, onClose, onSave }) {
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-              Full Name <span className="text-gray-400 font-normal">(max 14 characters)</span>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+              Full Name <span className="text-gray-400 dark:text-gray-500 font-normal">(max 14 characters)</span>
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               maxLength={14}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-sm"
+              className="w-full px-4 py-2.5 border border-gray-300 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-[#2C5284] dark:focus:ring-blue-500/50 outline-none text-sm dark:bg-white/5 dark:text-white"
               placeholder="Enter your name..."
               autoFocus
             />
-            <p className="text-xs text-gray-400 mt-1 text-right">{name.length}/14</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 text-right">{name.length}/14</p>
           </div>
           {error && (
             <div className="text-sm text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-lg">
@@ -544,11 +544,11 @@ function EditNameModal({ currentName, onClose, onSave }) {
           )}
           <div className="flex gap-3 pt-1">
             <button type="button" onClick={onClose}
-              className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors text-sm">
+              className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-sm text-center">
               Cancel
             </button>
             <button type="submit" disabled={loading}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[#2C5284] text-white rounded-lg font-medium hover:bg-[#1e3a5f] transition-colors text-sm disabled:opacity-60">
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[#2C5284] dark:bg-blue-600 text-white rounded-lg font-medium hover:bg-[#1e3a5f] dark:hover:bg-blue-700 transition-colors text-sm disabled:opacity-60">
               <FaCheck size={13} />
               {loading ? 'Saving...' : 'Save'}
             </button>
@@ -618,18 +618,18 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
   const isAdmin = user?.role === 'admin';
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-transparent">
 
       {/* ── Page Title ── */}
-      <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] mb-6">My Profile</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] dark:text-blue-300 mb-6">My Profile</h1>
 
       <div className="max-w-2xl mx-auto space-y-5">
 
         {/* ── Avatar Card ── */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col sm:flex-row items-center gap-5">
+        <div className="bg-white dark:bg-white/5 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 p-6 flex flex-col sm:flex-row items-center gap-5">
           {/* Avatar with upload trigger */}
           <div className="relative group">
-            <div className="w-24 h-24 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0 shadow-md overflow-hidden border-4 border-white">
+            <div className="w-24 h-24 rounded-full bg-[#2C5284] dark:bg-white/10 flex items-center justify-center flex-shrink-0 shadow-md overflow-hidden border-4 border-white dark:border-white/10">
               {(userProfileImage || user?.profileImage) ? (
                 <img
                   src={(userProfileImage || user?.profileImage).startsWith('http') ? (userProfileImage || user?.profileImage) : `http://localhost:3000/uploads/profile/${userProfileImage || user.profileImage}`}
@@ -651,16 +651,16 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
               )}
             </div>
 
-            <label className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center cursor-pointer hover:bg-blue-50 transition-colors">
+            <label className="absolute bottom-0 right-0 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-100 dark:border-white/10 flex items-center justify-center cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors">
               <input type="file" className="hidden" onChange={handleImageUpload} accept="image/*" />
-              <MdPhotoCamera size={16} className="text-[#2C5284]" />
+              <MdPhotoCamera size={16} className="text-[#2C5284] dark:text-blue-400" />
             </label>
           </div>
 
           {/* Name + role */}
           <div className="flex-1 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                 {user?.name || <span className="text-gray-400 italic">No name set</span>}
               </h2>
               <button
@@ -671,14 +671,14 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
                 <FaEdit size={13} />
               </button>
             </div>
-            <p className="text-sm text-gray-500 mt-0.5">{user?.email}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{user?.email}</p>
             <div className="mt-2 flex items-center justify-center sm:justify-start gap-2 flex-wrap">
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase ${isAdmin ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
+              <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase ${isAdmin ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300' : 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300'
                 }`}>
                 {user?.role || 'employee'}
               </span>
               {(userDesignation || user?.designation) && (
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300">
                   {userDesignation || user.designation}
                 </span>
               )}
@@ -687,9 +687,9 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
         </div>
 
         {/* ── Details Card ── */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-          <h3 className="text-base font-bold text-gray-700 mb-1">Profile Details</h3>
-          <p className="text-xs text-gray-400 mb-4">Information managed by your administrator</p>
+        <div className="bg-white dark:bg-white/5 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 p-5">
+          <h3 className="text-base font-bold text-gray-700 dark:text-blue-200 mb-1">Profile Details</h3>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">Information managed by your administrator</p>
 
           <InfoRow
             icon={FaEnvelope}
@@ -744,32 +744,32 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
         </div>
 
         {/* ── Account Actions Card ── */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-          <h3 className="text-base font-bold text-gray-700 mb-4">Account Settings</h3>
+        <div className="bg-white dark:bg-white/5 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 p-5">
+          <h3 className="text-base font-bold text-gray-700 dark:text-blue-200 mb-4">Account Settings</h3>
           <div className="space-y-3">
             <button
               onClick={() => setShowEditName(true)}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-[#2C5284] hover:bg-blue-50/50 transition-all group text-left"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:border-[#2C5284] dark:hover:border-blue-500/50 hover:bg-blue-50/50 dark:hover:bg-white/5 transition-all group text-left"
             >
-              <div className="w-9 h-9 rounded-lg bg-blue-50 group-hover:bg-[#2C5284] flex items-center justify-center transition-colors flex-shrink-0">
-                <FaEdit size={15} className="text-[#2C5284] group-hover:text-white transition-colors" />
+              <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-white/10 group-hover:bg-[#2C5284] dark:group-hover:bg-blue-600 flex items-center justify-center transition-colors flex-shrink-0">
+                <FaEdit size={15} className="text-[#2C5284] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-800">Edit Display Name</p>
-                <p className="text-xs text-gray-400">Update how your name appears in the portal</p>
+                <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">Edit Display Name</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">Update how your name appears in the portal</p>
               </div>
             </button>
 
             <button
               onClick={() => setShowChangePass(true)}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-[#2C5284] hover:bg-blue-50/50 transition-all group text-left"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:border-[#2C5284] dark:hover:border-blue-500/50 hover:bg-blue-50/50 dark:hover:bg-white/5 transition-all group text-left"
             >
-              <div className="w-9 h-9 rounded-lg bg-blue-50 group-hover:bg-[#2C5284] flex items-center justify-center transition-colors flex-shrink-0">
-                <CgProfile size={17} className="text-[#2C5284] group-hover:text-white transition-colors" />
+              <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-white/10 group-hover:bg-[#2C5284] dark:group-hover:bg-blue-600 flex items-center justify-center transition-colors flex-shrink-0">
+                <CgProfile size={17} className="text-[#2C5284] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-800">Change Password</p>
-                <p className="text-xs text-gray-400">Update your account password</p>
+                <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">Change Password</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">Update your account password</p>
               </div>
             </button>
           </div>

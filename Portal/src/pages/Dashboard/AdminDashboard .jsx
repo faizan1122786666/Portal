@@ -28,14 +28,14 @@ ChartJS.register(ArcElement, LineElement, PointElement, CategoryScale, LinearSca
 // ── Stat Card ─────────────────────────────────────────────────────────────────
 function StatCard({ icon: Icon, label, value, loading }) {
   return (
-    <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-28 hover:shadow-xl transition-all duration-300">
+    <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
       <div>
-        <p className="text-sm sm:text-base text-[#2C5284]">{label}</p>
-        <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D]">
+        <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">{label}</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-gray-100">
           {loading ? <span className="text-gray-300 animate-pulse">--</span> : value}
         </h1>
       </div>
-      <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
+      <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
         <Icon size={24} className="text-white" />
       </div>
     </div>
@@ -45,8 +45,8 @@ function StatCard({ icon: Icon, label, value, loading }) {
 // ── Chart Card ────────────────────────────────────────────────────────────────
 function ChartCard({ title, children }) {
   return (
-    <div className="bg-white p-6 rounded-xl shadow hover:shadow-xl transition-all duration-300">
-      <h2 className="text-lg font-bold mb-4 text-[#2C5284]">{title}</h2>
+    <div className="bg-white dark:bg-white/5 p-6 rounded-xl shadow hover:shadow-xl transition-all duration-300 border border-transparent dark:border-white/5">
+      <h2 className="text-lg font-bold mb-4 text-[#2C5284] dark:text-blue-300">{title}</h2>
       {children}
     </div>
   )
@@ -166,7 +166,7 @@ function AdminDashboard({ setTitle }) {
   }
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 bg-gray-50/50 dark:bg-gray-900">
+    <div className="p-4 sm:p-6 space-y-6">
 
       {/* ── Stat Cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-5">
@@ -178,9 +178,9 @@ function AdminDashboard({ setTitle }) {
 
       {/* ── Attendance Rate Banner ── */}
       {!statsLoading && todayStats.totalEmployees > 0 && (
-        <div className="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow p-5 flex items-center justify-between border-l-4 border-[#2C5284] dark:border-blue-500 dark:border-opacity-80">
+        <div className="mt-6 bg-white dark:bg-white/5 rounded-xl shadow p-5 flex items-center justify-between border-l-4 border-[#2C5284] dark:border-[#365F8D] border-opacity-80 transition-colors duration-300">
           <div>
-            <p className="text-sm text-[#2C5284] dark:text-blue-300 font-medium">Today's Attendance Rate</p>
+            <p className="text-sm text-[#2C5284] dark:text-gray-300 font-medium">Today's Attendance Rate</p>
             <h2 className="text-3xl font-bold text-[#365F8D] dark:text-white">{attendanceRate}%</h2>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               {todayStats.present} out of {todayStats.totalEmployees} employees present
@@ -226,7 +226,7 @@ function AdminDashboard({ setTitle }) {
               <div className="w-64">
                 <Doughnut data={AttendanceRateData} options={chartOptions} />
               </div>
-              <p className="mt-3 text-2xl font-bold text-[#2C5284]">{attendanceRate}% Present</p>
+              <p className="mt-3 text-2xl font-bold text-[#2C5284] dark:text-blue-200">{attendanceRate}% Present</p>
             </div>
           )}
         </ChartCard>

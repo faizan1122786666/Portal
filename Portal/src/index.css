@@ -3,8 +3,134 @@
 /* Enable class-based dark mode for Tailwind v4 */
 @custom-variant dark (&:where(.dark, .dark *));
 
+@layer base {
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* Prevent body-level scrolling */
+  }
+
+  /* Force the custom dark color globally */
+  .dark {
+    background-color: #292c35 !important;
+    color: #f3f4f6;
+    --select-bg: #292c35;
+    --select-text: #f3f4f6;
+    --select-border: rgba(255, 255, 255, 0.1);
+    --select-hover: rgba(255, 255, 255, 0.05);
+  }
+
+  :root {
+    --select-bg: #ffffff;
+    --select-text: #1f2937;
+    --select-border: #d1d5db;
+    --select-hover: #f3f4f6;
+  }
+
+  /* Custom Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+  }
+
+  .dark * {
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+}
+
 .boldonse-regular {
   font-family: "Boldonse", system-ui;
   font-weight: 400;
   font-style: normal;
+}
+
+/* --- Global React-Select Overrides for Dark Mode --- */
+/* Target elements when .dark is present anywhere above them */
+.dark .react-select__control,
+:is(.dark) .react-select__control {
+  background-color: transparent !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .react-select__control--is-focused,
+:is(.dark) .react-select__control--is-focused {
+  border-color: #2C5284 !important;
+  box-shadow: 0 0 0 1px #2C5284 !important;
+}
+
+.dark .react-select__menu,
+:is(.dark) .react-select__menu {
+  background-color: #292c35 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  z-index: 9999 !important;
+}
+
+.dark .react-select__menu-list,
+:is(.dark) .react-select__menu-list {
+  background-color: #292c35 !important;
+}
+
+.dark .react-select__option,
+:is(.dark) .react-select__option {
+  background-color: transparent !important;
+  color: #f3f4f6 !important;
+}
+
+.dark .react-select__option--is-focused,
+:is(.dark) .react-select__option--is-focused {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dark .react-select__option--is-selected,
+:is(.dark) .react-select__option--is-selected {
+  background-color: #2C5284 !important;
+  color: white !important;
+}
+
+.dark .react-select__single-value,
+:is(.dark) .react-select__single-value {
+  color: #f3f4f6 !important;
+}
+
+.dark .react-select__input-container,
+:is(.dark) .react-select__input-container {
+  color: #f3f4f6 !important;
+}
+
+.dark .react-select__placeholder,
+:is(.dark) .react-select__placeholder {
+  color: #9ca3af !important;
 }

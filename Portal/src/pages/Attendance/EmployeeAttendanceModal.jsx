@@ -52,18 +52,18 @@ function EmployeeAttendanceModal({ employee, onClose, isAdmin = false }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border dark:border-white/5">
         <div className="p-6 sm:p-8">
-          <h2 className="text-2xl font-bold text-[#2C5284] mb-6">
+          <h2 className="text-2xl font-bold text-[#2C5284] dark:text-gray-100 mb-6">
             {isAdmin ? `${employee.name}'s` : 'My'} Attendance Details
           </h2>
 
           {/* Attendance Records Table */}
           <div className="mb-10">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Attendance Records</h3>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Attendance Records</h3>
             {records.length > 0 ? (
-              <div className="overflow-x-auto rounded-lg border border-gray-200">
-                <table className="min-w-full divide-y divide-gray-200">
+              <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-white/10">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-white/10">
                   <thead className="bg-[#365F8D]">
                     <tr>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-white">Date</th>
@@ -73,45 +73,44 @@ function EmployeeAttendanceModal({ employee, onClose, isAdmin = false }) {
                       <th className="px-6 py-4 text-left text-sm font-semibold text-white">Work Hours</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200 bg-white">
+                  <tbody className="divide-y divide-gray-200 dark:divide-white/10 bg-white dark:bg-transparent">
                     {records.map((record) => (
-                      <tr key={record.id} className={`${getRowBg(record.status)} hover:bg-gray-50 transition-colors`}>
-                        <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{record.date}</td>
-                        <td className="px-6 py-4 text-sm text-gray-700">{record.checkIn}</td>
-                        <td className="px-6 py-4 text-sm text-gray-700">{record.checkOut}</td>
+                      <tr key={record.id} className={`${getRowBg(record.status)} hover:bg-gray-50 dark:hover:bg-white/5 transition-colors`}>
+                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap">{record.date}</td>
+                        <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">{record.checkIn}</td>
+                        <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">{record.checkOut}</td>
                         <td className="px-6 py-4">
                           <span
-                            className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full ${
-                              record.status === 'Present' ? 'bg-green-100 text-green-800' :
-                              record.status === 'Absent' ? 'bg-red-100 text-red-800' :
-                              'bg-yellow-100 text-yellow-800'
-                            }`}
+                            className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full ${record.status === 'Present' ? 'bg-green-100 text-green-800' :
+                                record.status === 'Absent' ? 'bg-red-100 text-red-800' :
+                                  'bg-yellow-100 text-yellow-800'
+                              }`}
                           >
                             {record.status}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-700">{record.workHours}</td>
+                        <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">{record.workHours}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             ) : (
-              <p className="text-gray-500 text-center py-8">No records found.</p>
+              <p className="text-gray-500 dark:text-gray-400 text-center py-8">No records found.</p>
             )}
           </div>
 
           {/* Leave Section */}
           <div className="mb-10">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Leaves</h3>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Leaves</h3>
             {leaves.length > 0 ? (
               <div className="space-y-4">
                 {leaves.map((leave) => (
-                  <div key={leave.id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <div key={leave.id} className="bg-gray-50 dark:bg-white/5 p-4 rounded-lg border border-gray-200 dark:border-white/10">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium text-gray-900">{leave.date}</p>
-                        <p className="text-gray-700 mt-1">{leave.reason}</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">{leave.date}</p>
+                        <p className="text-gray-700 dark:text-gray-300 mt-1">{leave.reason}</p>
                       </div>
                       {isAdmin ? (
                         <Select
@@ -129,29 +128,29 @@ function EmployeeAttendanceModal({ employee, onClose, isAdmin = false }) {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500">No leave requests yet.</p>
+              <p className="text-gray-500 dark:text-gray-400">No leave requests yet.</p>
             )}
 
             {!isAdmin && (
-              <div className="mt-8 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                <h4 className="text-lg font-semibold text-[#2C5284] mb-4">Apply New Leave</h4>
+              <div className="mt-8 bg-white dark:bg-white/5 p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
+                <h4 className="text-lg font-semibold text-[#2C5284] dark:text-blue-300 mb-4">Apply New Leave</h4>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date</label>
                     <input
                       type="date"
                       value={newLeave.date}
                       onChange={(e) => setNewLeave({ ...newLeave, date: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#365F8D] focus:border-[#365F8D]"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#365F8D] focus:border-[#365F8D] outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Reason</label>
                     <textarea
                       value={newLeave.reason}
                       onChange={(e) => setNewLeave({ ...newLeave, reason: e.target.value })}
                       rows={3}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#365F8D] focus:border-[#365F8D]"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#365F8D] focus:border-[#365F8D] outline-none"
                       placeholder="Enter reason for leave..."
                     />
                   </div>
@@ -169,7 +168,7 @@ function EmployeeAttendanceModal({ employee, onClose, isAdmin = false }) {
           <div className="flex justify-end">
             <button
               onClick={onClose}
-              className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-medium"
+              className="px-6 py-3 bg-gray-200 dark:bg-white/10 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-white/20 transition font-medium"
             >
               Close
             </button>

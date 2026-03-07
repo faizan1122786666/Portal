@@ -476,14 +476,14 @@ function CircularProgress({ workHours }) {
   return (
     <div className="flex justify-center items-center relative">
       <svg className="w-32 h-32 transform -rotate-90">
-        <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-gray-200" />
+        <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-gray-200 dark:text-white/10" />
         <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="8"
           strokeDasharray={strokeDasharray} strokeDashoffset={strokeDashoffset}
-          strokeLinecap="round" fill="transparent" className="text-[#2C5284]" />
+          strokeLinecap="round" fill="transparent" className="text-[#2C5284] dark:text-[#365f8d]" />
       </svg>
       <div className="absolute flex flex-col items-center">
-        <span className="text-lg font-bold text-gray-800">{workHours}</span>
-        <span className="text-xs text-gray-500">Work Hours</span>
+        <span className="text-lg font-bold text-gray-800 dark:text-gray-100">{workHours}</span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">Work Hours</span>
       </div>
     </div>
   )
@@ -491,21 +491,21 @@ function CircularProgress({ workHours }) {
 
 // ── Detail Modal ──────────────────────────────────────────────────────────────
 function AttendanceDetailModal({ record, onClose }) {
-  const sessions     = record.sessions || []
+  const sessions = record.sessions || []
   const firstCheckIn = getFirstCheckIn(sessions)
   const lastCheckOut = getLastCheckOut(sessions)
-  const totalHours   = record.totalWorkHours || null
+  const totalHours = record.totalWorkHours || null
 
-  const dateObj       = new Date(record.date + 'T00:00:00')
-  const dayName       = dateObj.toLocaleDateString('en-US', { weekday: 'long' })
+  const dateObj = new Date(record.date + 'T00:00:00')
+  const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' })
   const formattedDate = record.date.split('-').reverse().join('-')
 
   const isPresent = record.status === 'Present'
-  const isLeave   = record.status === 'Leave'
+  const isLeave = record.status === 'Leave'
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border dark:border-white/5">
 
         {/* Header */}
         <div className="flex items-center justify-between p-5 bg-[#2C5284] rounded-t-2xl">
@@ -535,27 +535,26 @@ function AttendanceDetailModal({ record, onClose }) {
             {/* Left: circular progress */}
             <div className="flex flex-col items-center gap-2 flex-shrink-0">
               <CircularProgress workHours={totalHours} />
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                record.status === 'Present' ? 'bg-green-100 text-green-800' :
-                record.status === 'Leave'   ? 'bg-yellow-100 text-yellow-800' :
-                'bg-red-100 text-red-800'
-              }`}>{record.status}</span>
+              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${record.status === 'Present' ? 'bg-green-100 text-green-800' :
+                record.status === 'Leave' ? 'bg-yellow-100 text-yellow-800' :
+                  'bg-red-100 text-red-800'
+                }`}>{record.status}</span>
             </div>
 
             {/* Right: first in / last out / total */}
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="bg-gray-50 rounded-xl p-4">
-                <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">First Clock In</p>
-                <p className="text-2xl font-bold text-gray-900">{firstCheckIn || '--:--'}</p>
+              <div className="bg-gray-50 dark:bg-white/5 rounded-xl p-4">
+                <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide font-semibold mb-1">First Clock In</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{firstCheckIn || '--:--'}</p>
                 {firstCheckIn && (
                   <p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
                     <FaMapMarkerAlt size={10} /> Office
                   </p>
                 )}
               </div>
-              <div className="bg-gray-50 rounded-xl p-4">
-                <p className="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Last Clock Out</p>
-                <p className="text-2xl font-bold text-gray-900">
+              <div className="bg-gray-50 dark:bg-white/5 rounded-xl p-4">
+                <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide font-semibold mb-1">Last Clock Out</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                   {lastCheckOut || (isPresent ? <span className="text-green-500 text-base italic">Ongoing</span> : '--:--')}
                 </p>
                 {lastCheckOut && (
@@ -576,25 +575,25 @@ function AttendanceDetailModal({ record, onClose }) {
           {/* Sessions timeline */}
           {sessions.length > 0 && (
             <div>
-              <h4 className="text-sm font-bold text-gray-700 uppercase tracking-wide mb-3">
+              <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
                 Sessions ({sessions.length})
               </h4>
               <div className="space-y-2">
                 {sessions.map((s, i) => (
-                  <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 text-sm">
+                  <div key={i} className="flex items-center gap-3 bg-gray-50 dark:bg-white/5 rounded-xl px-4 py-3 text-sm">
                     <div className="w-7 h-7 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0">
                       <span className="text-white text-xs font-bold">{i + 1}</span>
                     </div>
                     <div className="flex-1 flex items-center gap-2">
-                      <AiOutlineClockCircle size={13} className="text-[#2C5284] flex-shrink-0" />
-                      <span className="font-semibold text-[#2C5284]">{s.checkIn}</span>
+                      <AiOutlineClockCircle size={13} className="text-[#2C5284] dark:text-[#365f8d] flex-shrink-0" />
+                      <span className="font-semibold text-[#2C5284] dark:text-[#365f8d]">{s.checkIn}</span>
                       <span className="text-gray-400">→</span>
                       {s.checkOut
-                        ? <span className="font-semibold text-gray-700">{s.checkOut}</span>
+                        ? <span className="font-semibold text-gray-700 dark:text-gray-200">{s.checkOut}</span>
                         : <span className="text-green-500 italic text-xs font-semibold">Ongoing</span>
                       }
                     </div>
-                    <span className="text-gray-600 font-semibold text-xs flex-shrink-0 bg-white border border-gray-200 px-2 py-1 rounded-lg">
+                    <span className="text-gray-600 dark:text-gray-400 font-semibold text-xs flex-shrink-0 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 px-2 py-1 rounded-lg">
                       {s.workHours || '...'}
                     </span>
                   </div>
@@ -619,13 +618,13 @@ function AttendanceDetailModal({ record, onClose }) {
 
 // ── Main Component ────────────────────────────────────────────────────────────
 function UserAttendance({ setTitle }) {
-  const [records, setRecords]               = useState([])
+  const [records, setRecords] = useState([])
   const [selectedRecord, setSelectedRecord] = useState(null)
-  const [showModal, setShowModal]           = useState(false)
-  const [currentPage, setCurrentPage]       = useState(1)
-  const [selectedDate, setSelectedDate]     = useState('')
-  const [loading, setLoading]               = useState(true)
-  const [error, setError]                   = useState('')
+  const [showModal, setShowModal] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [selectedDate, setSelectedDate] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const itemsPerPage = 8
 
   const fetchRecords = useCallback(async () => {
@@ -655,80 +654,80 @@ function UserAttendance({ setTitle }) {
   // Summary from all records (unfiltered)
   const [allRecords, setAllRecords] = useState([])
   useEffect(() => {
-    apiGetMyAttendance({}).then(data => setAllRecords(data.records || [])).catch(() => {})
+    apiGetMyAttendance({}).then(data => setAllRecords(data.records || [])).catch(() => { })
   }, [])
 
   const summary = {
     present: allRecords.filter(r => r.status === 'Present').length,
-    absent:  allRecords.filter(r => r.status === 'Absent').length,
-    leave:   allRecords.filter(r => r.status === 'Leave').length,
+    absent: allRecords.filter(r => r.status === 'Absent').length,
+    leave: allRecords.filter(r => r.status === 'Leave').length,
   }
 
-  const totalPages       = Math.ceil(records.length / itemsPerPage)
+  const totalPages = Math.ceil(records.length / itemsPerPage)
   const paginatedRecords = records.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
   const getStatusColor = (status) => {
     if (status === 'Present') return 'bg-green-100 text-green-800'
-    if (status === 'Absent')  return 'bg-red-100 text-red-800'
+    if (status === 'Absent') return 'bg-red-100 text-red-800'
     return 'bg-yellow-100 text-yellow-800'
   }
 
   return (
-    <div className="min-h-screen p-5 sm:p-6 lg:p-8 bg-gray-50/50">
-      <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] mb-6">My Attendance</h1>
+    <div className="min-h-screen p-5 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
+      <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] dark:text-blue-300 mb-6">My Attendance</h1>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow hover:shadow-xl transition duration-300 min-h-28">
+        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300 min-h-28">
           <div>
-            <p className="text-sm text-[#2C5284]">Present Days</p>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{summary.present}</h1>
-            <p className="text-xs text-gray-400 mt-1">This period</p>
+            <p className="text-sm text-[#2C5284] dark:text-gray-300">Present Days</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{summary.present}</h1>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">This period</p>
           </div>
-          <div className="bg-[#365F8D] w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-12 h-12 rounded-full flex items-center justify-center shadow-md">
             <FaRegCheckCircle size={24} className="text-white" />
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow hover:shadow-xl transition duration-300 min-h-28">
+        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300 min-h-28">
           <div>
-            <p className="text-sm text-[#2C5284]">Absent Days</p>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{summary.absent}</h1>
-            <p className="text-xs text-gray-400 mt-1">This period</p>
+            <p className="text-sm text-[#2C5284] dark:text-gray-300">Absent Days</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{summary.absent}</h1>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">This period</p>
           </div>
-          <div className="bg-[#365F8D] w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-12 h-12 rounded-full flex items-center justify-center shadow-md">
             <RxCrossCircled size={24} className="text-white" />
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow hover:shadow-xl transition duration-300 min-h-28">
+        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300 min-h-28">
           <div>
-            <p className="text-sm text-[#2C5284]">Leave Days</p>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{summary.leave}</h1>
-            <p className="text-xs text-gray-400 mt-1">This period</p>
+            <p className="text-sm text-[#2C5284] dark:text-gray-300">Leave Days</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{summary.leave}</h1>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">This period</p>
           </div>
-          <div className="bg-[#365F8D] w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-12 h-12 rounded-full flex items-center justify-center shadow-md">
             <CalendarDays size={24} className="text-white" />
           </div>
         </div>
       </div>
 
       {/* Date Filter */}
-      <div className="bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-100">
+      <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-4 mb-6 border border-gray-100 dark:border-white/5">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
           <div className="flex items-center gap-2 flex-1">
-            <CalendarDays size={18} className="text-[#2C5284] flex-shrink-0" />
+            <CalendarDays size={18} className="text-[#2C5284] dark:text-blue-300 flex-shrink-0" />
             <input
               type="date"
               value={selectedDate}
               onChange={(e) => { setSelectedDate(e.target.value); setCurrentPage(1) }}
-              className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-sm"
+              className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-sm"
             />
           </div>
           {selectedDate && (
             <button
               onClick={() => { setSelectedDate(''); setCurrentPage(1) }}
-              className="px-4 py-2.5 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-1"
+              className="px-4 py-2.5 text-sm text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-white/10 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex items-center gap-1"
             >
               <FaTimes size={12} /> Clear
             </button>
@@ -750,96 +749,78 @@ function UserAttendance({ setTitle }) {
       ) : (
         <>
           {/* ── Desktop Table ── */}
-          <div className="hidden lg:block bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-[#2C5284]">
+          <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
+              <thead className="bg-[#2C5284] dark:bg-white/10">
                 <tr>
-                  <th className="px-5 py-4 text-left text-sm font-semibold text-white">Date</th>
-                  <th className="px-5 py-4 text-left text-sm font-semibold text-white">Shift</th>
-                  <th className="px-5 py-4 text-left text-sm font-semibold text-white">First Clock In</th>
-                  <th className="px-5 py-4 text-left text-sm font-semibold text-white">Last Clock Out</th>
-                  <th className="px-5 py-4 text-left text-sm font-semibold text-white">Sessions</th>
-                  <th className="px-5 py-4 text-left text-sm font-semibold text-white">Total Hours</th>
-                  <th className="px-5 py-4 text-left text-sm font-semibold text-white">Status</th>
+                  <th className="px-5 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Date</th>
+                  <th className="px-5 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Shift</th>
+                  <th className="px-5 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">First Clock In</th>
+                  <th className="px-5 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Last Clock Out</th>
+                  <th className="px-5 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Sessions</th>
+                  <th className="px-5 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Total Hours</th>
+                  <th className="px-5 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Status</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/5">
                 {paginatedRecords.map((record) => {
-                  const sessions     = record.sessions || []
+                  const sessions = record.sessions || []
                   const firstCheckIn = getFirstCheckIn(sessions)
                   const lastCheckOut = getLastCheckOut(sessions)
-                  const openSession  = sessions.find(s => s.checkIn && !s.checkOut)
+                  const openSession = sessions.find(s => s.checkIn && !s.checkOut)
 
                   return (
                     <tr
                       key={record._id}
                       onClick={() => { setSelectedRecord(record); setShowModal(true) }}
-                      className="hover:bg-blue-50 cursor-pointer transition-colors"
+                      className="hover:bg-blue-50 dark:hover:bg-white/5 cursor-pointer transition-colors"
                     >
                       {/* Date */}
-                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 font-medium">
                         {record.date}
                       </td>
 
                       {/* Shift */}
                       <td className="px-5 py-4 whitespace-nowrap">
                         {record.shift ? (
-                          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
-                            record.shift === 'Morning'
-                              ? 'bg-amber-100 text-amber-700'
-                              : 'bg-indigo-100 text-indigo-700'
-                          }`}>
+                          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${record.shift === 'Morning'
+                            ? 'bg-amber-100 text-amber-700'
+                            : 'bg-indigo-100 text-indigo-700'
+                            }`}>
                             {getShiftIcon(record.shift)}
                             {record.shift}
                           </span>
                         ) : (
-                          <span className="text-gray-300 text-sm">—</span>
+                          <span className="text-gray-300 dark:text-gray-600 text-sm">—</span>
                         )}
                       </td>
 
                       {/* First Clock In */}
-                      <td className="px-5 py-4 whitespace-nowrap">
-                        <span className={`text-sm font-semibold ${firstCheckIn ? 'text-[#2C5284]' : 'text-gray-300'}`}>
-                          {firstCheckIn || '——'}
-                        </span>
+                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                        {firstCheckIn || <span className="text-gray-400 dark:text-gray-600">--:--</span>}
                       </td>
 
                       {/* Last Clock Out */}
-                      <td className="px-5 py-4 whitespace-nowrap">
-                        {lastCheckOut ? (
-                          <span className="text-sm font-semibold text-gray-700">{lastCheckOut}</span>
-                        ) : openSession ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full border border-green-200">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                            Ongoing
-                          </span>
-                        ) : (
-                          <span className="text-gray-300 text-sm">——</span>
+                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                        {lastCheckOut || (
+                          record.status === 'Present' && openSession ? (
+                            <span className="text-green-500 italic">Ongoing</span>
+                          ) : (
+                            <span className="text-gray-400 dark:text-gray-600">--:--</span>
+                          )
                         )}
                       </td>
 
-                      {/* Sessions count */}
+                      {/* Sessions */}
                       <td className="px-5 py-4 whitespace-nowrap">
-                        {sessions.length > 0 ? (
-                          <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">
-                            {sessions.length} session{sessions.length !== 1 ? 's' : ''}
-                          </span>
-                        ) : (
-                          <span className="text-gray-300 text-sm">—</span>
-                        )}
+                        <span className="px-2.5 py-1 bg-blue-50 dark:bg-white/5 text-blue-700 dark:text-blue-300 rounded-full text-[10px] font-bold uppercase">
+                          {sessions.length} Session{sessions.length !== 1 ? 's' : ''}
+                        </span>
                       </td>
 
                       {/* Total Hours */}
-                      <td className="px-5 py-4 whitespace-nowrap">
-                        {record.totalWorkHours ? (
-                          <span className="text-sm font-bold text-[#2C5284] bg-blue-50 px-2.5 py-1 rounded-lg">
-                            {record.totalWorkHours}
-                          </span>
-                        ) : openSession ? (
-                          <span className="text-xs text-gray-400 italic">In progress...</span>
-                        ) : (
-                          <span className="text-gray-300 text-sm">——</span>
-                        )}
+                      <td className="px-5 py-4 whitespace-nowrap text-sm font-bold text-[#2C5284] dark:text-blue-300">
+                        {record.totalWorkHours || <span className="text-gray-400 font-normal">--:--</span>}
                       </td>
 
                       {/* Status */}
@@ -865,25 +846,24 @@ function UserAttendance({ setTitle }) {
           {/* ── Mobile Cards ── */}
           <div className="lg:hidden space-y-3">
             {paginatedRecords.map((record) => {
-              const sessions     = record.sessions || []
+              const sessions = record.sessions || []
               const firstCheckIn = getFirstCheckIn(sessions)
               const lastCheckOut = getLastCheckOut(sessions)
-              const openSession  = sessions.find(s => s.checkIn && !s.checkOut)
+              const openSession = sessions.find(s => s.checkIn && !s.checkOut)
 
               return (
                 <div
                   key={record._id}
                   onClick={() => { setSelectedRecord(record); setShowModal(true) }}
-                  className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 cursor-pointer active:scale-[0.98] transition-all"
+                  className="bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/10 cursor-pointer active:scale-[0.98] transition-all"
                 >
                   {/* Card header */}
-                  <div className="p-4 flex items-center justify-between border-b border-gray-100 bg-gray-50/50">
+                  <div className="p-4 flex items-center justify-between border-b border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-white/10">
                     <div>
-                      <span className="font-semibold text-gray-900 text-sm">{record.date}</span>
+                      <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{record.date}</span>
                       {record.shift && (
-                        <span className={`ml-2 inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                          record.shift === 'Morning' ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'
-                        }`}>
+                        <span className={`ml-2 inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ${record.shift === 'Morning' ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'
+                          }`}>
                           {getShiftIcon(record.shift)} {record.shift}
                         </span>
                       )}
@@ -896,13 +876,13 @@ function UserAttendance({ setTitle }) {
                   {/* Card body */}
                   <div className="p-4 grid grid-cols-2 gap-3">
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">First Clock In</p>
-                      <p className="text-sm text-[#2C5284] font-semibold">{firstCheckIn || '——'}</p>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold mb-1">First Clock In</p>
+                      <p className="text-sm text-[#2C5284] dark:text-blue-300 font-semibold">{firstCheckIn || '——'}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Last Clock Out</p>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold mb-1">Last Clock Out</p>
                       {lastCheckOut ? (
-                        <p className="text-sm text-gray-700 font-semibold">{lastCheckOut}</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 font-semibold">{lastCheckOut}</p>
                       ) : openSession ? (
                         <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-600">
                           <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> Ongoing
@@ -916,9 +896,9 @@ function UserAttendance({ setTitle }) {
                       <p className="text-sm text-gray-700 font-medium">{sessions.length || '—'}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Total Hours</p>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold mb-1">Total Hours</p>
                       {record.totalWorkHours ? (
-                        <p className="text-sm font-bold text-[#2C5284]">{record.totalWorkHours}</p>
+                        <p className="text-sm font-bold text-[#2C5284] dark:text-blue-300">{record.totalWorkHours}</p>
                       ) : openSession ? (
                         <p className="text-xs text-gray-400 italic">In progress...</p>
                       ) : (
@@ -938,8 +918,8 @@ function UserAttendance({ setTitle }) {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-              <p className="text-sm text-gray-600">
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-white/5 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/10">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Showing <span className="font-semibold">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
                 <span className="font-semibold">{Math.min(currentPage * itemsPerPage, records.length)}</span> of{' '}
                 <span className="font-semibold">{records.length}</span> records
@@ -951,9 +931,8 @@ function UserAttendance({ setTitle }) {
                 </button>
                 {[...Array(totalPages)].map((_, i) => (
                   <button key={i + 1} onClick={() => setCurrentPage(i + 1)}
-                    className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
-                      currentPage === i + 1 ? 'bg-[#2C5284] text-white' : 'text-gray-600 hover:bg-gray-50 border border-gray-200'
-                    }`}>
+                    className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${currentPage === i + 1 ? 'bg-[#2C5284] text-white' : 'text-gray-600 hover:bg-gray-50 border border-gray-200'
+                      }`}>
                     {i + 1}
                   </button>
                 ))}

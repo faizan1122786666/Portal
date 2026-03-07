@@ -13,7 +13,6 @@ const router = express.Router();
 const adminController = require('../controllers/admin.controller');
 const attendanceController = require('../controllers/attendance.controller');
 const leaveController = require('../controllers/leave.controller');
-const taskController = require('../controllers/task.controller');  // ← NEW
 const { verifyAdmin } = require('../middleware/auth.middleware');
 
 // ── Employee CRUD ─────────────────────────────────────────────────────────────
@@ -53,17 +52,5 @@ router.put('/leave/:id/review', verifyAdmin, leaveController.reviewLeave);
 router.put('/leave/:id', verifyAdmin, leaveController.adminUpdateLeave);
 // DELETE /api/admin/leave/:id                  → Delete a leave record
 router.delete('/leave/:id', verifyAdmin, leaveController.adminDeleteLeave);
-
-// ── Task Management ────────────────────────────────────────────────
-// GET    /api/admin/tasks                      → All tasks (?employeeId ?status ?priority)
-router.get('/tasks', verifyAdmin, taskController.getAllTasks);
-// GET    /api/admin/tasks/employee/:id         → One employee’s tasks (BEFORE :id route)
-router.get('/tasks/employee/:id', verifyAdmin, taskController.getEmployeeTasks);
-// POST   /api/admin/tasks                      → Create / assign a task
-router.post('/tasks', verifyAdmin, taskController.createTask);
-// PUT    /api/admin/tasks/:id                  → Edit a task
-router.put('/tasks/:id', verifyAdmin, taskController.updateTask);
-// DELETE /api/admin/tasks/:id                  → Delete a task
-router.delete('/tasks/:id', verifyAdmin, taskController.deleteTask);
 
 module.exports = router;

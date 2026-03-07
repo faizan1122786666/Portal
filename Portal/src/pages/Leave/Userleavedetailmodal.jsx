@@ -23,9 +23,9 @@ function UserLeaveDetailModal({ leave, onClose }) {
   return (
     <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center 
       justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full 
-        max-h-[95vh] overflow-y-auto">
-        
+      <div className="bg-white dark:bg-[#292c35] rounded-xl shadow-2xl max-w-2xl w-full 
+        max-h-[95vh] overflow-y-auto border dark:border-white/5">
+
         {/* Header */}
         <div className="bg-[#2C5284] p-6 flex justify-between items-center 
           rounded-t-xl">
@@ -51,17 +51,17 @@ function UserLeaveDetailModal({ leave, onClose }) {
           </div>
 
           {/* Leave Type & Days */}
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-gray-50 dark:bg-white/5 rounded-lg p-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center">
-                <p className="text-sm text-gray-600 mb-1">Leave Type</p>
-                <p className="text-lg font-semibold text-gray-900">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Leave Type</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                   {leave.leaveType}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-sm text-gray-600 mb-1">Total Days</p>
-                <p className="text-lg font-semibold text-gray-900">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Days</p>
+                <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                   {leave.days} day(s)
                 </p>
               </div>
@@ -69,64 +69,61 @@ function UserLeaveDetailModal({ leave, onClose }) {
           </div>
 
           {/* Date Information */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-lg font-semibold text-[#2C5284] mb-3">
+          <div className="bg-gray-50 dark:bg-white/5 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-[#2C5284] dark:text-blue-300 mb-3">
               Date Information
             </h3>
             <div className="space-y-2">
               <div className="flex justify-between">
-                <span className="text-gray-600">Start Date:</span>
-                <span className="font-medium text-gray-900">{leave.startDate}</span>
+                <span className="text-gray-600 dark:text-gray-400">Start Date:</span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">{leave.startDate}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">End Date:</span>
-                <span className="font-medium text-gray-900">{leave.endDate}</span>
+                <span className="text-gray-600 dark:text-gray-400">End Date:</span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">{leave.endDate}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Applied Date:</span>
-                <span className="font-medium text-gray-900">{leave.appliedDate}</span>
+                <span className="text-gray-600 dark:text-gray-400">Applied Date:</span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">{leave.appliedDate}</span>
               </div>
             </div>
           </div>
 
           {/* Reason */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-lg font-semibold text-[#2C5284] mb-3">
+          <div className="bg-gray-50 dark:bg-white/5 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-[#2C5284] dark:text-blue-300 mb-3">
               Reason for Leave
             </h3>
-            <p className="text-gray-900 leading-relaxed">{leave.reason}</p>
+            <p className="text-gray-900 dark:text-gray-200 leading-relaxed">{leave.reason}</p>
           </div>
 
           {/* Admin Comment */}
           {leave.adminComment && (
             <div
-              className={`rounded-lg p-4 border-l-4 ${
-                leave.status === 'Approved'
-                  ? 'bg-green-50 border-green-500'
-                  : leave.status === 'Rejected'
-                  ? 'bg-red-50 border-red-500'
-                  : 'bg-blue-50 border-blue-500'
-              }`}
+              className={`rounded-lg p-4 border-l-4 ${leave.status === 'Approved'
+                ? 'bg-green-50 dark:bg-green-500/10 border-green-500'
+                : leave.status === 'Rejected'
+                  ? 'bg-red-50 dark:bg-red-500/10 border-red-500'
+                  : 'bg-blue-50 dark:bg-blue-500/10 border-blue-500'
+                }`}
             >
               <h3
-                className={`text-sm font-semibold mb-2 ${
-                  leave.status === 'Approved'
-                    ? 'text-green-900'
-                    : leave.status === 'Rejected'
-                    ? 'text-red-900'
-                    : 'text-blue-900'
-                }`}
+                className={`text-sm font-semibold mb-2 ${leave.status === 'Approved'
+                  ? 'text-green-900 dark:text-green-300'
+                  : leave.status === 'Rejected'
+                    ? 'text-red-900 dark:text-red-300'
+                    : 'text-blue-900 dark:text-blue-300'
+                  }`}
               >
                 Admin Comment
               </h3>
               <p
-                className={`text-sm ${
-                  leave.status === 'Approved'
-                    ? 'text-green-800'
-                    : leave.status === 'Rejected'
-                    ? 'text-red-800'
-                    : 'text-blue-800'
-                }`}
+                className={`text-sm ${leave.status === 'Approved'
+                  ? 'text-green-800 dark:text-green-400'
+                  : leave.status === 'Rejected'
+                    ? 'text-red-800 dark:text-red-400'
+                    : 'text-blue-800 dark:text-blue-400'
+                  }`}
               >
                 {leave.adminComment}
               </p>

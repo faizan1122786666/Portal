@@ -17,7 +17,6 @@ import { AuthContextProvider } from './context/index.js'
 import { AdminDashboard, UserDashboard } from './pages/Dashboard/index'
 import { AdminAttendance, UserAttendance } from './pages/Attendance/index'
 import { AdminLeave, UserLeave } from './pages/Leave/index'
-import { AdminTasks, UserTasks } from './pages/Tasks/index'
 import ManageEmployees from './components/layout/ManageEmployees'
 import Profile from './components/layout/Profile'
 
@@ -105,78 +104,70 @@ function App() {
                 toggleDarkMode={toggleDarkMode}
               />
 
-              <main className="pt-16 px-4 sm:px-6 bg-gray-50 dark:bg-gray-900 flex-1 overflow-y-auto">
-                <Routes>
-                  {/* Dashboard */}
-                  <Route
-                    path="/"
-                    element={
-                      user.role === 'admin'
-                        ? <AdminDashboard setTitle={setTitle} darkMode={darkMode} />
-                        : <UserDashboard setTitle={setTitle} darkMode={darkMode} />
-                    }
-                  />
-
-                  {/* Attendance */}
-                  <Route
-                    path="/attendance"
-                    element={
-                      user.role === 'admin'
-                        ? <AdminAttendance setTitle={setTitle} />
-                        : <UserAttendance setTitle={setTitle} />
-                    }
-                  />
-
-                  {/* Leave */}
-                  <Route
-                    path="/leave"
-                    element={
-                      user.role === 'admin'
-                        ? <AdminLeave setTitle={setTitle} />
-                        : <UserLeave setTitle={setTitle} />
-                    }
-                  />
-
-                  {/* Manage Employees — admin only */}
-                  {user.role === 'admin' && (
+              <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#292c35] pt-16 transition-colors duration-300">
+                <div className="max-w-7xl mx-auto min-h-full">
+                  <Routes>
+                    {/* Dashboard */}
                     <Route
-                      path="/employees"
-                      element={<ManageEmployees setTitle={setTitle} />}
+                      path="/"
+                      element={
+                        user.role === 'admin'
+                          ? <AdminDashboard setTitle={setTitle} darkMode={darkMode} />
+                          : <UserDashboard setTitle={setTitle} darkMode={darkMode} />
+                      }
                     />
-                  )}
 
-                  {/* Tasks */}
-                  <Route
-                    path="/tasks"
-                    element={
-                      user.role === 'admin'
-                        ? <AdminTasks setTitle={setTitle} />
-                        : <UserTasks setTitle={setTitle} />
-                    }
-                  />
+                    {/* Attendance */}
+                    <Route
+                      path="/attendance"
+                      element={
+                        user.role === 'admin'
+                          ? <AdminAttendance setTitle={setTitle} />
+                          : <UserAttendance setTitle={setTitle} />
+                      }
+                    />
 
-                  {/* Profile */}
-                  <Route
-                    path="/profile"
-                    element={
-                      <Profile
-                        setTitle={setTitle}
-                        userName={user.name || ''}
-                        userEmail={user.email || ''}
-                        userRole={user.role}
-                        userShift={user.shift || ''}
-                        userDesignation={user.designation || ''}
-                        userProfileImage={user.profileImage || ''}
-                        onNameUpdate={handleNameUpdate}
-                        onProfileUpdate={handleLogin}
+                    {/* Leave */}
+                    <Route
+                      path="/leave"
+                      element={
+                        user.role === 'admin'
+                          ? <AdminLeave setTitle={setTitle} />
+                          : <UserLeave setTitle={setTitle} />
+                      }
+                    />
+
+                    {/* Manage Employees — admin only */}
+                    {user.role === 'admin' && (
+                      <Route
+                        path="/employees"
+                        element={<ManageEmployees setTitle={setTitle} />}
                       />
-                    }
-                  />
+                    )}
 
-                  {/* Auth redirects */}
-                  <Route path="/login" element={<Navigate to="/" replace />} />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
+                    {/* Profile */}
+                    <Route
+                      path="/profile"
+                      element={
+                        <Profile
+                          setTitle={setTitle}
+                          userName={user.name || ''}
+                          userEmail={user.email || ''}
+                          userRole={user.role}
+                          userShift={user.shift || ''}
+                          userDesignation={user.designation || ''}
+                          userProfileImage={user.profileImage || ''}
+                          onNameUpdate={handleNameUpdate}
+                          onProfileUpdate={handleLogin}
+                        />
+                      }
+                    />
+
+                    {/* Auth redirects */}
+                    <Route path="/login" element={<Navigate to="/" replace />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Routes>
+                </div>
               </main>
             </div>
           </>

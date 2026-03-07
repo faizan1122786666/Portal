@@ -54,7 +54,6 @@ export default function Slidebar({
     { name: 'Dashboard', icon: AiOutlineDashboard, path: '/' },
     { name: 'Attendance', icon: AiOutlineClockCircle, path: '/attendance' },
     { name: 'Leave', icon: AiOutlineCalendar, path: '/leave' },
-    { name: 'Tasks', icon: AiOutlineCheckSquare, path: '/tasks' },
   ];
   const adminMenuItems = [
     ...baseMenuItems,
@@ -86,25 +85,25 @@ export default function Slidebar({
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={handleSlidebar} />
+        <div className="fixed inset-0 bg-gray-900/20 backdrop-blur-[2px] z-40 lg:hidden" onClick={handleSlidebar} />
       )}
 
       <div
-        className={`h-screen w-64 bg-[#2C5282] dark:bg-gray-900 text-white fixed top-0 left-0 transform
+        className={`h-screen w-64 bg-[#2C5282] dark:bg-[#292c35] text-white fixed top-0 left-0 transform
           transition-all duration-300 ease-in-out z-50 flex flex-col
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static`}
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static border-r border-transparent dark:border-gray-800/20`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-[#1e3a5f] dark:border-gray-700">
-          <AiOutlineTeam size={28} className="text-white flex-shrink-0" />
-          <h1 className="font-bold text-xl mx-3 flex-1">Employee Portal</h1>
-          <button onClick={handleSlidebar} className="lg:hidden flex-shrink-0 text-white">
-            <AiOutlineClose size={22} />
+        <div className="h-16 flex items-center px-5 border-b border-[#1e3a5f] dark:border-gray-800/40 bg-[#2C5282] dark:bg-[#292c35] transition-colors duration-300">
+          <AiOutlineTeam size={26} className="text-white flex-shrink-0" />
+          <h1 className="font-bold text-lg ml-3 flex-1 tracking-tight">Employee Portal</h1>
+          <button onClick={handleSlidebar} className="lg:hidden flex-shrink-0 text-white hover:bg-white/10 p-1 rounded-md transition-colors">
+            <AiOutlineClose size={20} />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="mt-3 flex-1 overflow-y-auto">
+        <nav className="mt-3 flex-1 overflow-y-auto space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -114,9 +113,10 @@ export default function Slidebar({
                 end={item.path === '/'}
                 onClick={handleMenuItemClick}
                 className={({ isActive }) =>
-                  isActive
-                    ? 'w-full flex items-center px-6 py-3.5 transition-colors bg-[#1e3a5f] dark:bg-gray-700 text-white border-l-4 border-white'
-                    : 'w-full flex items-center px-6 py-3.5 transition-colors text-white hover:bg-[#1e3a5f] dark:hover:bg-gray-700 border-l-4 border-transparent'
+                  `w-full flex items-center px-6 py-3 transition-all duration-200 border-l-4 ${isActive
+                    ? 'bg-[#1e3a5f]/80 dark:bg-white/5 text-white border-white'
+                    : 'text-gray-300 hover:bg-[#1e3a5f]/40 dark:hover:bg-white/5 hover:text-white border-transparent'
+                  }`
                 }
               >
                 <Icon size={20} className="mr-3 flex-shrink-0" />
@@ -127,14 +127,14 @@ export default function Slidebar({
         </nav>
 
         {/* User Profile Section — clickable → goes to /profile */}
-        <div className="border-t border-[#1e3a5f] dark:border-gray-700 p-4 space-y-1">
+        <div className="border-t border-[#1e3a5f] dark:border-gray-800/40 p-4 space-y-1">
           <button
             onClick={handleProfileClick}
             title="Edit your profile"
-            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#1e3a5f] dark:hover:bg-gray-700 transition-colors text-left cursor-pointer"
+            className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-[#1e3a5f] dark:hover:bg-white/5 transition-colors text-left cursor-pointer"
           >
             {/* Avatar */}
-            <div className="w-10 h-10 rounded-full bg-[#1e3a5f] dark:bg-gray-700 flex items-center justify-center flex-shrink-0 overflow-hidden border border-white/10">
+            <div className="w-10 h-10 rounded-full bg-[#1e3a5f] dark:bg-gray-800 flex items-center justify-center flex-shrink-0 overflow-hidden border border-white/10">
               {userProfileImage ? (
                 <img
                   src={userProfileImage && userProfileImage.startsWith('http') ? userProfileImage : `http://localhost:3000/uploads/profile/${userProfileImage}`}
@@ -156,26 +156,26 @@ export default function Slidebar({
             </div>
 
             {/* Name + email + shift + designation */}
-            <div className="flex-1 overflow-hidden min-w-0">
+            <div className="flex-1 overflow-hidden min-w-0 text-white">
               {userName && (
                 <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
-                  <p className="text-sm font-bold text-white truncate" title={userName}>{userName}</p>
+                  <p className="text-sm font-bold truncate" title={userName}>{userName}</p>
                   {userShift && <ShiftBadge shift={userShift} />}
                 </div>
               )}
               {userDesignation && (
-                <div className="flex items-center gap-1 text-[10px] text-blue-200 mt-0.5 mb-1 px-1.5 py-0.5 bg-white/10 rounded-full w-fit max-w-full">
+                <div className="flex items-center gap-1 text-[10px] text-blue-200 dark:text-blue-100 mt-0.5 mb-1 px-1.5 py-0.5 bg-white/10 dark:bg-white/5 rounded-full w-fit max-w-full">
                   <MdBadge size={10} className="flex-shrink-0" />
                   <span className="truncate">{userDesignation}</span>
                 </div>
               )}
-              <p className="text-xs text-gray-300 truncate">{userEmail}</p>
+              <p className="text-xs text-blue-50/70 dark:text-gray-400 truncate">{userEmail}</p>
             </div>
           </button>
 
           <button
             onClick={handleLogoutClick}
-            className="mt-2 w-full flex items-center justify-center gap-2 p-2 rounded-lg hover:bg-gray-700 bg-[#365F8D] dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors text-sm cursor-pointer"
+            className="mt-2 w-full flex items-center justify-center gap-2 p-2 rounded-lg hover:bg-white/10 bg-[#365F8D] dark:bg-white/5 transition-colors text-sm cursor-pointer"
           >
             <AiOutlineLogout size={18} />
             <span className="font-medium">Logout</span>

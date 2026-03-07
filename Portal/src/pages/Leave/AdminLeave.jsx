@@ -123,8 +123,8 @@ function AdminLeave({ setTitle }) {
     switch (status) {
       case 'Approved': return 'bg-green-100 text-green-700';
       case 'Rejected': return 'bg-red-100 text-red-700';
-      case 'Pending':  return 'bg-yellow-100 text-yellow-700';
-      default:         return 'bg-gray-100 text-gray-600';
+      case 'Pending': return 'bg-yellow-100 text-yellow-700';
+      default: return 'bg-gray-100 text-gray-600';
     }
   };
 
@@ -141,13 +141,13 @@ function AdminLeave({ setTitle }) {
   };
 
   // Helper to get employee name/email from populated employeeId
-  const getEmpName  = (leave) => leave.employeeId?.name  || leave.employeeId?.email || 'N/A';
+  const getEmpName = (leave) => leave.employeeId?.name || leave.employeeId?.email || 'N/A';
   const getEmpEmail = (leave) => leave.employeeId?.email || '';
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
 
-      <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] mb-6">
+      <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] dark:text-blue-300 mb-6">
         Leave Management
       </h1>
 
@@ -161,46 +161,46 @@ function AdminLeave({ setTitle }) {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
           <div>
-            <p className="text-sm sm:text-base text-[#2C5284]">Total Requests</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.total}</p>
+            <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">Total Requests</p>
+            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{stats.total}</p>
           </div>
-          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
             <CgProfile size={24} className="text-white" />
           </div>
         </div>
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
           <div>
-            <p className="text-sm sm:text-base text-[#2C5284]">Pending</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.pending}</p>
+            <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">Pending</p>
+            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{stats.pending}</p>
           </div>
-          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
             <SlCalender size={24} className="text-white" />
           </div>
         </div>
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
           <div>
-            <p className="text-sm sm:text-base text-[#2C5284]">Approved</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.approved}</p>
+            <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">Approved</p>
+            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{stats.approved}</p>
           </div>
-          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
             <FaRegCheckCircle size={24} className="text-white" />
           </div>
         </div>
-        <div className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
           <div>
-            <p className="text-sm sm:text-base text-[#2C5284]">Rejected</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{stats.rejected}</p>
+            <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">Rejected</p>
+            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{stats.rejected}</p>
           </div>
-          <div className="bg-[#365F8D] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
             <RxCrossCircled size={24} className="text-white" />
           </div>
         </div>
       </div>
 
       {/* Filters Section */}
-      <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 border border-gray-100">
+      <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-4 sm:p-6 mb-6 border border-gray-100 dark:border-white/5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
@@ -213,7 +213,7 @@ function AdminLeave({ setTitle }) {
                 placeholder="Search by name or email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg 
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg 
                   focus:ring-2 focus:ring-[#2C5284] focus:border-transparent 
                   outline-none transition-all text-sm"
               />
@@ -231,18 +231,31 @@ function AdminLeave({ setTitle }) {
               placeholder="All Statuses"
               className="react-select-container text-sm"
               classNamePrefix="react-select"
+              menuPortalTarget={document.body}
               styles={{
                 control: (base) => ({
                   ...base,
-                  borderColor: '#d1d5db',
+                  borderColor: 'var(--select-border)',
+                  backgroundColor: 'transparent',
                   borderRadius: '0.5rem',
                   padding: '2px',
                   '&:hover': { borderColor: '#2C5284' },
                 }),
+                singleValue: (base) => ({
+                  ...base,
+                  color: 'inherit',
+                }),
                 option: (base, state) => ({
                   ...base,
-                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? '#f3f4f6' : 'white',
-                  color: state.isSelected ? 'white' : '#1f2937',
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'var(--select-hover)' : 'transparent',
+                  color: state.isSelected ? 'white' : 'inherit',
+                  cursor: 'pointer',
+                }),
+                menu: (base) => ({
+                  ...base,
+                  backgroundColor: 'var(--select-bg)',
+                  border: '1px solid var(--select-border)',
+                  zIndex: 50,
                 }),
               }}
             />
@@ -259,33 +272,33 @@ function AdminLeave({ setTitle }) {
 
       {/* Desktop Table */}
       {!loading && (
-        <div className="hidden lg:block bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+        <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-[#2C5284]">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
+              <thead className="bg-[#2C5284] dark:bg-white/10">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Employee</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Leave Type</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Duration</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Applied Date</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Employee</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Leave Type</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Duration</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Applied Date</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/5">
                 {paginatedLeaves.length > 0 ? (
                   paginatedLeaves.map((leave) => (
-                    <tr key={leave._id} className="hover:bg-blue-50/30 transition-colors">
+                    <tr key={leave._id} className="hover:bg-blue-50 dark:hover:bg-white/5 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{getEmpName(leave)}</div>
-                        <div className="text-xs text-gray-500">{getEmpEmail(leave)}</div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{getEmpName(leave)}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{getEmpEmail(leave)}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{leave.leaveType}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{leave.leaveType}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{leave.startDate} to {leave.endDate}</div>
-                        <div className="text-xs text-gray-500">{leave.days} day(s)</div>
+                        <div className="text-sm text-gray-900 dark:text-gray-100">{leave.startDate} to {leave.endDate}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{leave.days} day(s)</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{leave.appliedDate}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">{leave.appliedDate}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-3 py-1 inline-flex text-[10px] leading-5 font-bold uppercase tracking-wider rounded-full ${getStatusColor(leave.status)}`}>
                           {leave.status}
@@ -294,7 +307,7 @@ function AdminLeave({ setTitle }) {
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <div className="flex items-center gap-2">
                           <button onClick={() => viewDetails(leave)}
-                            className="p-2 text-[#2C5284] hover:bg-blue-50 rounded-lg transition-colors" title="View Details">
+                            className="p-2 text-[#2C5284] dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-white/10 rounded-lg transition-colors" title="View Details">
                             <FaEye size={18} />
                           </button>
                           {leave.status === 'Pending' && (
@@ -331,11 +344,11 @@ function AdminLeave({ setTitle }) {
         <div className="lg:hidden space-y-4">
           {paginatedLeaves.length > 0 ? (
             paginatedLeaves.map((leave) => (
-              <div key={leave._id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-                <div className="p-4 flex items-center justify-between border-b border-gray-100 bg-gray-50/50">
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{getEmpName(leave)}</p>
-                    <p className="text-xs text-gray-500">{getEmpEmail(leave)}</p>
+              <div key={leave._id} className="bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
+                <div className="p-4 flex items-center justify-between border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5">
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{getEmpName(leave)}</span>
+                    <span className="text-[10px] text-gray-400 dark:text-gray-500">{getEmpEmail(leave)}</span>
                   </div>
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${getStatusColor(leave.status)}`}>
                     {leave.status}
@@ -344,21 +357,21 @@ function AdminLeave({ setTitle }) {
                 <div className="p-4 space-y-3">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Leave Type</p>
-                      <p className="text-sm text-gray-700 font-medium">{leave.leaveType}</p>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold mb-1">Leave Type</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{leave.leaveType}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Duration</p>
-                      <p className="text-sm text-gray-700 font-medium">{leave.days} day(s)</p>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold mb-1">Duration</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{leave.days} day(s)</p>
                     </div>
                   </div>
                   <div>
-                    <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Dates</p>
-                    <p className="text-sm text-gray-700 font-medium">{leave.startDate} to {leave.endDate}</p>
+                    <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold mb-1">Dates</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{leave.startDate} to {leave.endDate}</p>
                   </div>
-                  <div className="pt-3 flex items-center justify-between border-t border-gray-50">
+                  <div className="pt-3 flex items-center justify-between border-t border-gray-50 dark:border-white/5">
                     <button onClick={() => viewDetails(leave)}
-                      className="flex items-center gap-2 text-xs font-bold text-[#2C5284] uppercase tracking-wider">
+                      className="flex items-center gap-2 text-xs font-bold text-[#2C5284] dark:text-blue-300 uppercase tracking-wider">
                       <FaEye size={14} /> View Details
                     </button>
                     {leave.status === 'Pending' && (
@@ -378,7 +391,7 @@ function AdminLeave({ setTitle }) {
               </div>
             ))
           ) : (
-            <div className="bg-white p-10 rounded-xl text-center text-gray-500 italic border border-gray-100">
+            <div className="bg-white dark:bg-white/5 p-10 rounded-xl text-center text-gray-500 dark:text-gray-400 italic border border-gray-100 dark:border-white/5">
               No leave requests found.
             </div>
           )}
@@ -387,30 +400,29 @@ function AdminLeave({ setTitle }) {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-          <p className="text-sm text-gray-600">
-            Showing <span className="font-semibold text-gray-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
-            <span className="font-semibold text-gray-900">{Math.min(currentPage * itemsPerPage, filteredLeaves.length)}</span> of{' '}
-            <span className="font-semibold text-gray-900">{filteredLeaves.length}</span> entries
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-white/5 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Showing <span className="font-semibold text-gray-900 dark:text-gray-100">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+            <span className="font-semibold text-gray-900 dark:text-gray-100">{Math.min(currentPage * itemsPerPage, filteredLeaves.length)}</span> of{' '}
+            <span className="font-semibold text-gray-900 dark:text-gray-100">{filteredLeaves.length}</span> entries
           </p>
           <div className="flex items-center gap-2">
             <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}
-              className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors">
-              <FaChevronLeft size={14} className="text-gray-600" />
+              className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+              <FaChevronLeft size={14} className="text-gray-600 dark:text-gray-400" />
             </button>
             <div className="flex items-center gap-1">
               {[...Array(totalPages)].map((_, i) => (
                 <button key={i + 1} onClick={() => setCurrentPage(i + 1)}
-                  className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
-                    currentPage === i + 1 ? 'bg-[#2C5284] text-white' : 'text-gray-600 hover:bg-gray-50'
-                  }`}>
+                  className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${currentPage === i + 1 ? 'bg-[#2C5284] text-white' : 'text-gray-600 hover:bg-gray-50'
+                    }`}>
                   {i + 1}
                 </button>
               ))}
             </div>
             <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}
-              className="p-2 rounded-lg border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors">
-              <FaChevronRight size={14} className="text-gray-600" />
+              className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+              <FaChevronRight size={14} className="text-gray-600 dark:text-gray-400" />
             </button>
           </div>
         </div>

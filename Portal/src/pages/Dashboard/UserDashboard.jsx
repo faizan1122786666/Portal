@@ -144,11 +144,11 @@
 //   const doughnutData = buildDoughnut(summary.present, summary.absent, summary.leave);
 
 //   return (
-//     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
+//     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
 
 //       {/* ── Welcome Banner ── */}
 //       {displayName && (
-//         <div className="bg-white rounded-xl shadow-sm px-5 py-4 mb-5 border-l-4 border-[#2C5284] flex items-center gap-3">
+//         <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm px-5 py-4 mb-5 border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center gap-3">
 //           <div>
 //             <h2 className="text-lg font-bold text-[#2C5284]">
 //               Welcome back, {displayName} 👋
@@ -482,15 +482,6 @@
 //   const doughnutData = buildDoughnut(summary.present, summary.absent, summary.leave);
 
 //   return (
-//     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
-
-//       {displayName && (
-//         <div className="bg-white rounded-xl shadow-sm px-5 py-4 mb-5 border-l-4 border-[#2C5284] flex items-center gap-3">
-//           <div>
-//             <h2 className="text-lg font-bold text-[#2C5284]">Welcome back, {displayName} 👋</h2>
-//             <p className="text-xs text-gray-500 mt-0.5">{format(currentTime, 'EEEE, MMMM d, yyyy')}</p>
-//           </div>
-//         </div>
 //       )}
 
 //       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-3">
@@ -735,15 +726,15 @@ function UserDashboard({ setTitle }) {
   // Read user directly from context — single source of truth
   const { user } = useAuthContext();
 
-  const [currentTime, setCurrentTime]   = useState(new Date());
-  const [todayStatus, setTodayStatus]   = useState(null);
-  const [summary, setSummary]           = useState({ present: 0, absent: 0, leave: 0 });
-  const [loading, setLoading]           = useState(false);
-  const [actionMsg, setActionMsg]       = useState('');
-  const [msgType, setMsgType]           = useState('success');
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [todayStatus, setTodayStatus] = useState(null);
+  const [summary, setSummary] = useState({ present: 0, absent: 0, leave: 0 });
+  const [loading, setLoading] = useState(false);
+  const [actionMsg, setActionMsg] = useState('');
+  const [msgType, setMsgType] = useState('success');
 
-  const displayName = user?.name  || '';
-  const userShift   = user?.shift || '';   // set by admin
+  const displayName = user?.name || '';
+  const userShift = user?.shift || '';   // set by admin
   const hasValidShift = userShift === 'Morning' || userShift === 'Evening';
 
   useEffect(() => {
@@ -813,22 +804,22 @@ function UserDashboard({ setTitle }) {
     }
   };
 
-  const canCheckIn  = todayStatus?.canCheckIn  ?? true;
+  const canCheckIn = todayStatus?.canCheckIn ?? true;
   const canCheckOut = todayStatus?.canCheckOut ?? false;
-  const sessions    = todayStatus?.sessions    || [];
-  const totalHours  = todayStatus?.totalWorkHours || null;
+  const sessions = todayStatus?.sessions || [];
+  const totalHours = todayStatus?.totalWorkHours || null;
   // Prefer shift stored on today's attendance record, fall back to profile
   const activeShift = todayStatus?.shift || userShift || null;
 
-  const statusLabel = !todayStatus         ? 'Loading...'
-    : canCheckOut                          ? `Checked in at ${todayStatus.currentCheckIn}`
-    : sessions.length > 0                  ? `Done — Total: ${totalHours || '0h 0m'}`
-    :                                        'Not yet checked in';
+  const statusLabel = !todayStatus ? 'Loading...'
+    : canCheckOut ? `Checked in at ${todayStatus.currentCheckIn}`
+      : sessions.length > 0 ? `Done — Total: ${totalHours || '0h 0m'}`
+        : 'Not yet checked in';
 
   const doughnutData = buildDoughnut(summary.present, summary.absent, summary.leave);
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
 
       {/* Welcome Banner */}
       {/* {displayName && (
@@ -841,17 +832,17 @@ function UserDashboard({ setTitle }) {
       {/* Quick Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-3">
         {[
-          { label: 'This Month', value: summary.present, sub: 'Present Days',      icon: <FaRegCheckCircle size={24} className="text-white" />, bg: 'bg-[#365F8D]' },
-          { label: 'This Month', value: summary.absent,  sub: 'Absent Days',       icon: <RxCrossCircled   size={24} className="text-white" />, bg: 'bg-[#2C5284]' },
-          { label: 'Leave Days', value: summary.leave,   sub: 'This Month',        icon: <FaCalendarAlt    size={24} className="text-white" />, bg: 'bg-[#2C5284]' },
-          { label: 'Today',      value: totalHours||'--',sub: 'Total Work Hours',  icon: <FaClock          size={24} className="text-white" />, bg: 'bg-[#2C5284]' },
+          { label: 'This Month', value: summary.present, sub: 'Present Days', icon: <FaRegCheckCircle size={24} className="text-white" />, bg: 'bg-[#365F8D]' },
+          { label: 'This Month', value: summary.absent, sub: 'Absent Days', icon: <RxCrossCircled size={24} className="text-white" />, bg: 'bg-[#2C5284]' },
+          { label: 'Leave Days', value: summary.leave, sub: 'This Month', icon: <FaCalendarAlt size={24} className="text-white" />, bg: 'bg-[#2C5284]' },
+          { label: 'Today', value: totalHours || '--', sub: 'Total Work Hours', icon: <FaClock size={24} className="text-white" />, bg: 'bg-[#2C5284]' },
         ].map((c, i) => (
-          <div key={i} className="bg-white p-5 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
+          <div key={i} className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs sm:text-sm text-gray-600 mb-1">{c.label}</p>
-                <p className="text-2xl sm:text-3xl font-bold text-[#365F8D]">{c.value}</p>
-                <p className="text-xs text-gray-500">{c.sub}</p>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">{c.label}</p>
+                <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-gray-100">{c.value}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{c.sub}</p>
               </div>
               <div className={`${c.bg} w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center`}>
                 {c.icon}
@@ -863,18 +854,18 @@ function UserDashboard({ setTitle }) {
 
       {/* Clock In/Out + Doughnut */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <div className="lg:col-span-2 bg-white p-6 rounded-xl border-l-4 border-[#2C5284] shadow-sm hover:shadow-md transition-shadow">
+        <div className="lg:col-span-2 bg-white dark:bg-white/5 p-6 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] shadow-sm hover:shadow-md transition-shadow">
           <div className="flex flex-col items-center">
 
             <div className="bg-[#365F8D] w-16 h-16 rounded-full flex items-center justify-center mb-4">
               <FaClock size={32} className="text-white" />
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-bold text-[#2C5284] mb-1">
+            <h1 className="text-3xl sm:text-4xl font-bold text-[#2C5284] dark:text-white mb-1">
               {format(currentTime, 'hh:mm:ss a')}
             </h1>
-            <p className="text-gray-500 text-sm mb-4">{format(currentTime, 'EEEE, MMMM d, yyyy')}</p>
-            <h2 className="text-xl font-bold text-[#2C5284] mb-3">Today's Attendance</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">{format(currentTime, 'EEEE, MMMM d, yyyy')}</p>
+            <h2 className="text-xl font-bold text-[#2C5284] dark:text-blue-200 mb-3">Today's Attendance</h2>
 
             {/* Shift info badge */}
             <ShiftInfoCard shift={activeShift} />
@@ -886,12 +877,12 @@ function UserDashboard({ setTitle }) {
               </div>
             )}
 
-            <p className="text-base font-semibold mb-4 text-center">
+            <p className="text-base font-semibold mb-4 text-center dark:text-gray-200">
               Status:{' '}
               <span className={
-                canCheckOut        ? 'text-green-600'
-                : sessions.length  ? 'text-blue-600'
-                :                    'text-gray-500'
+                canCheckOut ? 'text-green-600 dark:text-green-400'
+                  : sessions.length ? 'text-blue-600 dark:text-blue-400'
+                    : 'text-gray-500 dark:text-gray-400'
               }>
                 {statusLabel}
               </span>
@@ -904,12 +895,12 @@ function UserDashboard({ setTitle }) {
                   Today's Sessions
                 </p>
                 {sessions.map((s, i) => (
-                  <div key={i} className="flex items-center justify-between bg-gray-50 rounded-lg px-4 py-2 text-sm">
-                    <span className="text-gray-500 font-medium">Session {i + 1}</span>
-                    <span className="text-[#365F8D] font-semibold">
+                  <div key={i} className="flex items-center justify-between bg-gray-50 dark:bg-white/5 rounded-lg px-4 py-2 text-sm">
+                    <span className="text-gray-500 dark:text-gray-400 font-medium">Session {i + 1}</span>
+                    <span className="text-[#365F8D] dark:text-blue-300 font-semibold">
                       {s.checkIn}{s.checkOut ? ` → ${s.checkOut}` : ' → ongoing'}
                     </span>
-                    <span className="text-gray-700 font-medium">{s.workHours || '...'}</span>
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">{s.workHours || '...'}</span>
                   </div>
                 ))}
                 {totalHours && (
@@ -925,8 +916,8 @@ function UserDashboard({ setTitle }) {
             {actionMsg && (
               <p className={`text-sm px-4 py-2.5 rounded-lg mb-4 text-center w-full
                 ${msgType === 'success'
-                  ? 'text-green-700 bg-green-50 border border-green-200'
-                  : 'text-red-700 bg-red-50 border border-red-200'}`}>
+                  ? 'text-green-700 bg-green-50 dark:bg-green-500/10 dark:text-green-300 border border-green-200 dark:border-green-500/20'
+                  : 'text-red-700 bg-red-50 dark:bg-red-500/10 dark:text-red-300 border border-red-200 dark:border-red-500/20'}`}>
                 {actionMsg}
               </p>
             )}
@@ -956,8 +947,8 @@ function UserDashboard({ setTitle }) {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-          <h3 className="text-lg font-bold text-[#2C5284] mb-4 flex items-center gap-2">
+        <div className="bg-white dark:bg-white/5 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-transparent dark:border-white/5">
+          <h3 className="text-lg font-bold text-[#2C5284] dark:text-blue-300 mb-4 flex items-center gap-2">
             <FaChartLine /> This Month
           </h3>
           <div className="flex justify-center">
@@ -972,8 +963,8 @@ function UserDashboard({ setTitle }) {
       </div>
 
       {/* Weekly Work Hours */}
-      <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow mb-6">
-        <h2 className="text-lg font-bold text-[#2C5284] flex items-center gap-2 mb-6">
+      <div className="bg-white dark:bg-white/5 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow mb-6 border border-transparent dark:border-white/5">
+        <h2 className="text-lg font-bold text-[#2C5284] dark:text-blue-300 flex items-center gap-2 mb-6">
           <FaChartLine /> Weekly Work Hours
         </h2>
         <div className="h-64 sm:h-80">
