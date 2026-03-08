@@ -625,11 +625,12 @@
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import Select from 'react-select'
 import { toast } from 'react-toastify'
-import { FaPlus, FaEdit, FaTrash, FaTimes, FaSun, FaMoon } from 'react-icons/fa'
+import { FaPlus, FaEdit, FaTrash, FaTimes, FaSun, FaMoon, FaUserTie, FaRegCheckCircle, FaBuilding } from 'react-icons/fa'
 import { CgProfile } from 'react-icons/cg'
-import { FaUserTie, FaRegCheckCircle, FaBuilding } from 'react-icons/fa'
 import { MdBadge } from 'react-icons/md'
+import Loader from '../common/Loader'
 
 // ── Axios instance
 const api = axios.create({
@@ -765,7 +766,7 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
       <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-transparent dark:border-white/10">
 
         {/* Header */}
-        <div className="flex items-center justify-between p-5 bg-[#2C5284] dark:bg-white/10 rounded-t-2xl">
+        <div className="flex items-center justify-between p-5 bg-[#2C5294] dark:bg-white/10 rounded-t-2xl">
           <h2 className="text-lg font-bold text-white">
             {editingEmployee ? 'Edit Employee' : 'Add New Employee'}
           </h2>
@@ -1055,12 +1056,22 @@ function ManageEmployees({ setTitle }) {
 
   const openEdit = (emp) => { setEditingEmp(emp); setShowModal(true) }
 
+  const roleOptions = [
+    { value: 'employee', label: 'Employee' },
+    { value: 'admin', label: 'Admin' },
+  ];
+
+  const shiftOptions = SHIFTS.map(s => ({
+    value: s.value,
+    label: `${s.label} (${s.time})`
+  }));
+
   const filtered = employees.filter(e => {
     const q = search.toLowerCase()
     const matchSearch = e.email?.toLowerCase().includes(q) || e.name?.toLowerCase().includes(q) || e.designation?.toLowerCase().includes(q)
-    const matchDept = filterDept ? e.department === filterDept : true
-    const matchRole = filterRole ? e.role === filterRole : true
-    const matchShift = filterShift ? e.shift === filterShift : true
+    const matchDept = !filterDept ? true : e.department === filterDept.value
+    const matchRole = !filterRole ? true : e.role === filterRole.value
+    const matchShift = !filterShift ? true : e.shift === filterShift.value
     return matchSearch && matchDept && matchRole && matchShift
   })
 
@@ -1076,71 +1087,178 @@ function ManageEmployees({ setTitle }) {
     <div className="p-4 sm:p-6 lg:p-8 space-y-6">
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] dark:text-blue-300">Manage Employees</h1>
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#2C5284] dark:text-blue-300">Manage Employees</h1>
         <button
           onClick={() => { setEditingEmp(null); setShowModal(true) }}
-          className="flex items-center gap-2 px-6 py-4 bg-[#2C5284] text-white rounded-lg font-medium hover:bg-[#365F8D] transition-colors text-sm shadow"
+          className="flex items-center gap-2 px-6 py-4 bg-[#2C5284] text-white rounded-xl font-semibold hover:bg-[#1e3a5f] transition-all hover:shadow-md active:scale-[0.97] text-sm shadow"
         >
-          <FaPlus size={16} />
+          <FaPlus size={12} />
           Add Employee
         </button>
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
           <div>
-            <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">Total Users</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-white">{stats.total}</p>
+            <p className="text-xs text-[#2C5284] dark:text-gray-300">Total Users</p>
+            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-white">{stats.total}</p>
           </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-            <CgProfile size={24} className="text-white" />
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+            <CgProfile size={20} className="text-white" />
           </div>
         </div>
-        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
+        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
           <div>
-            <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">Admins</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-white">{stats.admins}</p>
+            <p className="text-xs text-[#2C5284] dark:text-gray-300">Admins</p>
+            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-white">{stats.admins}</p>
           </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-            <FaUserTie size={24} className="text-white" />
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+            <FaUserTie size={20} className="text-white" />
           </div>
         </div>
-        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
+        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
           <div>
-            <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">Employees</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-white">{stats.staff}</p>
+            <p className="text-xs text-[#2C5284] dark:text-gray-300">Employees</p>
+            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-white">{stats.staff}</p>
           </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-            <FaRegCheckCircle size={24} className="text-white" />
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+            <FaRegCheckCircle size={20} className="text-white" />
           </div>
         </div>
       </div>
 
       {/* Search + Filter bar */}
-      <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-4 mb-4 border border-gray-100 dark:border-white/5 flex flex-col sm:flex-row gap-3 flex-wrap">
-        <input
-          type="text" placeholder="Search by name, email or designation..."
-          value={search} onChange={e => setSearch(e.target.value)}
-          className="flex-1 min-w-[160px] px-4 py-2.5 border border-gray-300 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-[#2C5284] dark:focus:ring-blue-500/50 focus:border-transparent outline-none text-sm dark:bg-white/5 dark:text-white"
-        />
-        <select value={filterDept} onChange={e => setFilterDept(e.target.value)}
-          className="px-4 py-2.5 border border-gray-300 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-[#2C5284] dark:focus:ring-blue-500/50 outline-none text-sm bg-white dark:bg-white/5 text-gray-700 dark:text-gray-200 min-w-[150px]">
-          <option value="" className="dark:bg-[#292c35]">All Departments</option>
-          {activeDepts.map(d => <option key={d} value={d} className="dark:bg-[#292c35]">{d}</option>)}
-        </select>
-        <select value={filterRole} onChange={e => setFilterRole(e.target.value)}
-          className="px-4 py-2.5 border border-gray-300 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-[#2C5284] dark:focus:ring-blue-500/50 outline-none text-sm bg-white dark:bg-white/5 text-gray-700 dark:text-gray-200 min-w-[120px]">
-          <option value="" className="dark:bg-[#292c35]">All Roles</option>
-          <option value="employee" className="dark:bg-[#292c35]">Employee</option>
-          <option value="admin" className="dark:bg-[#292c35]">Admin</option>
-        </select>
-        <select value={filterShift} onChange={e => setFilterShift(e.target.value)}
-          className="px-4 py-2.5 border border-gray-300 dark:border-white/10 rounded-lg focus:ring-2 focus:ring-[#2C5284] dark:focus:ring-blue-500/50 outline-none text-sm bg-white dark:bg-white/5 text-gray-700 dark:text-gray-200 min-w-[130px]">
-          <option value="" className="dark:bg-[#292c35]">All Shifts</option>
-          {SHIFTS.map(s => <option key={s.value} value={s.value} className="dark:bg-[#292c35]">{s.label} ({s.time})</option>)}
-        </select>
+      <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-4 mb-6 border border-gray-100 dark:border-white/5">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div>
+            <label className="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
+              Search Employee
+            </label>
+            <div className="relative">
+              <input
+                type="text" placeholder="Name, email, designation..."
+                value={search} onChange={e => setSearch(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-xs"
+              />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2C5284]">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
+              Department
+            </label>
+            <Select
+              value={filterDept}
+              onChange={setFilterDept}
+              options={activeDepts.map(d => ({ value: d, label: d }))}
+              isClearable
+              placeholder="All Departments"
+              className="react-select-container text-xs"
+              classNamePrefix="react-select"
+              styles={{
+                control: (base, state) => ({
+                  ...base,
+                  backgroundColor: 'transparent',
+                  borderColor: state.isFocused ? '#2C5284' : '#d1d5db',
+                  borderRadius: '0.5rem',
+                  minHeight: '38px',
+                  boxShadow: state.isFocused ? '0 0 0 1px #2C5284' : 'none',
+                  '&:hover': { borderColor: '#2C5284' },
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.1)' : 'transparent',
+                  color: state.isSelected ? 'white' : 'inherit',
+                  '&:active': { backgroundColor: '#2C5284' }
+                })
+              }}
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
+              Role
+            </label>
+            <Select
+              value={filterRole}
+              onChange={setFilterRole}
+              options={roleOptions}
+              isClearable
+              placeholder="All Roles"
+              className="react-select-container text-xs"
+              classNamePrefix="react-select"
+              styles={{
+                control: (base, state) => ({
+                  ...base,
+                  backgroundColor: 'transparent',
+                  borderColor: state.isFocused ? '#2C5284' : '#d1d5db',
+                  borderRadius: '0.5rem',
+                  minHeight: '38px',
+                  boxShadow: state.isFocused ? '0 0 0 1px #2C5284' : 'none',
+                  '&:hover': { borderColor: '#2C5284' },
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.1)' : 'transparent',
+                  color: state.isSelected ? 'white' : 'inherit',
+                  '&:active': { backgroundColor: '#2C5284' }
+                })
+              }}
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
+              Shift
+            </label>
+            <div className="flex items-center gap-2">
+              <div className="flex-1">
+                <Select
+                  value={filterShift}
+                  onChange={setFilterShift}
+                  options={shiftOptions}
+                  isClearable
+                  placeholder="All Shifts"
+                  className="react-select-container text-xs"
+                  classNamePrefix="react-select"
+                  styles={{
+                    control: (base, state) => ({
+                      ...base,
+                      backgroundColor: 'transparent',
+                      borderColor: state.isFocused ? '#2C5284' : '#d1d5db',
+                      borderRadius: '0.5rem',
+                      minHeight: '38px',
+                      boxShadow: state.isFocused ? '0 0 0 1px #2C5284' : 'none',
+                      '&:hover': { borderColor: '#2C5284' },
+                    }),
+                    option: (base, state) => ({
+                      ...base,
+                      backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.1)' : 'transparent',
+                      color: state.isSelected ? 'white' : 'inherit',
+                      '&:active': { backgroundColor: '#2C5284' }
+                    })
+                  }}
+                />
+              </div>
+              {(search || filterDept || filterRole || filterShift) && (
+                <button
+                  onClick={() => { setSearch(''); setFilterDept(null); setFilterRole(null); setFilterShift(null); }}
+                  className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-white/10 rounded-lg hover:bg-gray-50 dark:hover:bg-white/5 flex items-center gap-1 transition-colors"
+                  title="Clear Filters"
+                >
+                  <FaPlus className="rotate-45" size={12} />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       <p className="text-xs text-gray-400 mb-3 px-1">
@@ -1149,14 +1267,14 @@ function ManageEmployees({ setTitle }) {
 
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2C5284]" />
+          <Loader size="large" />
         </div>
       ) : (
         <>
           {/* Desktop Table */}
           <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
-              <thead className="bg-[#2C5284] dark:bg-white/10">
+              <thead className="bg-[#2C5294] dark:bg-white/10">
                 <tr>
                   {['Employee', 'Designation', 'Department', 'Shift', 'Salary', 'Role', 'Actions'].map(h => (
                     <th key={h} className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">{h}</th>
@@ -1192,8 +1310,8 @@ function ManageEmployees({ setTitle }) {
                           )}
                         </div>
                         <div>
-                          {emp.name && <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{emp.name}</p>}
-                          <p className={`text-xs ${emp.name ? 'text-gray-400 dark:text-gray-500' : 'text-sm font-semibold text-gray-900 dark:text-gray-100'}`}>{emp.email}</p>
+                          {emp.name && <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{emp.name}</p>}
+                          <p className={`text-xs ${emp.name ? 'text-gray-500 dark:text-gray-400' : 'text-sm font-medium text-gray-900 dark:text-gray-100'}`}>{emp.email}</p>
                         </div>
                       </div>
                     </td>

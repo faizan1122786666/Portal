@@ -7,11 +7,12 @@
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { FaPlus, FaEdit, FaTrash, FaEye, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaPlus, FaRegEdit, FaTrash, FaEye, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import { RxCrossCircled } from 'react-icons/rx';
 import { CalendarDays } from 'lucide-react';
 import { CgProfile } from 'react-icons/cg';
+import Loader from '../../components/common/Loader';
 import UserLeaveDetailModal from './UserLeaveDetailModal';
 import { apiApplyLeave, apiGetMyLeaves, apiUpdateMyLeave, apiDeleteMyLeave } from '../../api/leaveAPI';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -342,13 +343,13 @@ function UserLeave({ setTitle }) {
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] dark:text-blue-300">My Leave Requests</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#2C5284] dark:text-blue-300">My Leave Requests</h1>
         <button
           onClick={() => { setEditingLeave(null); setShowApplyModal(true); }}
-          className="flex items-center gap-2 px-6 py-4 bg-[#2C5284] text-white rounded-lg font-medium hover:bg-[#365F8D] transition-colors text-sm shadow"
+          className="flex items-center gap-2 px-6 py-4 bg-[#2C5284] text-white rounded-xl font-semibold hover:bg-[#365F8D] transition-colors text-sm shadow"
         >
-          <FaPlus size={16} />
+          <FaPlus size={12} />
           <span className="hidden sm:inline">Apply Leave</span>
           <span className="sm:hidden">Apply</span>
         </button>
@@ -371,11 +372,11 @@ function UserLeave({ setTitle }) {
           { label: 'Rejected', value: stats.rejected, sub: 'Declined', icon: <RxCrossCircled size={22} className="text-white" /> },
         ].map(({ label, value, sub, icon }) => (
           <div key={label}
-            className="bg-white dark:bg-white/5 p-4 sm:p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-shadow duration-300 min-h-24">
+            className="bg-white dark:bg-white/5 p-5 flex items-center justify-between shadow hover:shadow-xl transition-all duration-300 min-h-[110px] sm:min-h-28 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D]">
             <div>
               <p className="text-xs sm:text-sm text-[#2C5284] dark:text-gray-300">{label}</p>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{value}</h2>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{sub}</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-gray-100">{value}</h1>
+              <p className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 mt-1">{sub}</p>
             </div>
             <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
               {icon}
@@ -400,7 +401,7 @@ function UserLeave({ setTitle }) {
             <Select
               value={filterStatus === 'All' ? { value: 'All', label: 'All Statuses' } : { value: filterStatus, label: filterStatus }}
               onChange={opt => setFilterStatus(opt ? opt.value : 'All')}
-              options={statusOptions.map(s => ({ value: s, label: s, label: s === 'All' ? 'All Statuses' : s }))}
+              options={statusOptions.map(s => ({ value: s, label: s === 'All' ? 'All Statuses' : s }))}
               placeholder="Filter by status..."
               className="react-select-container"
               classNamePrefix="react-select"
@@ -460,8 +461,9 @@ function UserLeave({ setTitle }) {
 
       {/* Loading */}
       {loading && (
-        <div className="bg-white rounded-xl shadow-sm p-12 text-center text-gray-500">
-          Loading your leave requests...
+        <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-12 text-center text-gray-500 flex flex-col items-center justify-center">
+          <Loader size="medium" />
+          <p className="mt-4 text-xs font-bold uppercase tracking-widest">Loading your leave requests...</p>
         </div>
       )}
 
@@ -469,7 +471,7 @@ function UserLeave({ setTitle }) {
       {!loading && (
         <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
-            <thead className="bg-[#2C5284] dark:bg-white/10">
+            <thead className="bg-[#2C5294] dark:bg-white/10">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Leave Type</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Duration</th>
@@ -501,8 +503,8 @@ function UserLeave({ setTitle }) {
                       {leave.status === 'Pending' && (
                         <>
                           <button onClick={() => handleEdit(leave)}
-                            className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Edit">
-                            <FaEdit size={16} />
+                            className="p-2 text-[#2C5284] hover:bg-[#2C5284]/10 rounded-lg transition-colors" title="Edit">
+                            <FaRegEdit size={16} />
                           </button>
                           <button onClick={() => handleDelete(leave)}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
@@ -563,8 +565,8 @@ function UserLeave({ setTitle }) {
                   </button>
                   {leave.status === 'Pending' && (
                     <div className="flex items-center gap-2">
-                      <button onClick={() => handleEdit(leave)} className="p-2 text-green-600 bg-green-50 rounded-lg">
-                        <FaEdit size={14} />
+                      <button onClick={() => handleEdit(leave)} className="p-2 text-[#2C5284] bg-[#2C5284]/10 rounded-lg">
+                        <FaRegEdit size={14} />
                       </button>
                       <button onClick={() => handleDelete(leave)} className="p-2 text-red-600 bg-red-50 rounded-lg">
                         <FaTrash size={14} />

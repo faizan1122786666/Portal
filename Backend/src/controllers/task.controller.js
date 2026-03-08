@@ -4,7 +4,7 @@ const User = require('../models/user.model');
 //  ADMIN: Create a new task (assign task)
 exports.createTask = async (req, res) => {
   try {
-    const { title, description, assignedEmployees, deadline } = req.body;
+    const { title, description, assignedEmployees, deadline, priority } = req.body;
 
     if (!assignedEmployees || !Array.isArray(assignedEmployees) || assignedEmployees.length === 0) {
       return res.status(400).json({ success: false, message: 'At least one employee must be assigned' });
@@ -20,7 +20,8 @@ exports.createTask = async (req, res) => {
       title,
       description,
       assignedEmployees,
-      deadline
+      deadline,
+      priority
     });
 
     await task.save();
@@ -110,7 +111,7 @@ exports.deleteTask = async (req, res) => {
 exports.editTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, assignedEmployees, deadline } = req.body;
+    const { title, description, assignedEmployees, deadline, priority, status } = req.body;
 
     if (!assignedEmployees || !Array.isArray(assignedEmployees) || assignedEmployees.length === 0) {
       return res.status(400).json({ success: false, message: 'At least one employee must be assigned' });
@@ -123,7 +124,7 @@ exports.editTask = async (req, res) => {
 
     const task = await Task.findByIdAndUpdate(
       id,
-      { title, description, assignedEmployees, deadline },
+      { title, description, assignedEmployees, deadline, priority, status },
       { new: true, runValidators: true }
     );
 

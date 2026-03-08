@@ -22,20 +22,21 @@ import {
   Legend,
 } from 'chart.js'
 import { apiGetTodaySummary, apiGetAllAttendance } from '../../api/attendanceAPI'
+import Loader from '../../components/common/Loader'
 
 ChartJS.register(ArcElement, LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend)
 
 // ── Stat Card ─────────────────────────────────────────────────────────────────
 function StatCard({ icon: Icon, label, value, loading }) {
   return (
-    <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
+    <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300 min-h-[110px] sm:min-h-28">
       <div>
-        <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">{label}</p>
-        <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-gray-100">
+        <p className="text-xs sm:text-sm text-[#2C5284] dark:text-gray-300">{label}</p>
+        <h1 className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-gray-100">
           {loading ? <span className="text-gray-300 animate-pulse">--</span> : value}
         </h1>
       </div>
-      <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
+      <div className="bg-[#2C5284] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
         <Icon size={24} className="text-white" />
       </div>
     </div>
@@ -166,10 +167,10 @@ function AdminDashboard({ setTitle }) {
   }
 
   return (
-    <div className="p-4 sm:p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-4">
 
       {/* ── Stat Cards ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
         <StatCard icon={CgProfile} label="Total Employees" value={todayStats.totalEmployees} loading={statsLoading} />
         <StatCard icon={FaRegCheckCircle} label="Today Present" value={todayStats.present} loading={statsLoading} />
         <StatCard icon={RxCrossCircled} label="Today Absent" value={todayStats.absent} loading={statsLoading} />
@@ -178,11 +179,11 @@ function AdminDashboard({ setTitle }) {
 
       {/* ── Attendance Rate Banner ── */}
       {!statsLoading && todayStats.totalEmployees > 0 && (
-        <div className="mt-6 bg-white dark:bg-white/5 rounded-xl shadow p-5 flex items-center justify-between border-l-4 border-[#2C5284] dark:border-[#365F8D] border-opacity-80 transition-colors duration-300">
+        <div className="mt-4 bg-white dark:bg-white/5 rounded-xl shadow p-4 flex items-center justify-between border-l-4 border-[#2C5294] dark:border-[#365F8D] border-opacity-80 transition-colors duration-300">
           <div>
-            <p className="text-sm text-[#2C5284] dark:text-gray-300 font-medium">Today's Attendance Rate</p>
-            <h2 className="text-3xl font-bold text-[#365F8D] dark:text-white">{attendanceRate}%</h2>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-xs text-[#2C5284] dark:text-gray-300 font-medium">Today's Attendance Rate</p>
+            <h2 className="text-2xl font-bold text-[#365F8D] dark:text-white">{attendanceRate}%</h2>
+            <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">
               {todayStats.present} out of {todayStats.totalEmployees} employees present
             </p>
           </div>
@@ -205,10 +206,12 @@ function AdminDashboard({ setTitle }) {
       )}
 
       {/* ── Doughnut Charts ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         <ChartCard title="Today Attendance Overview">
           {statsLoading ? (
-            <div className="flex justify-center items-center h-48 text-gray-400">Loading...</div>
+            <div className="flex flex-col justify-center items-center h-48 text-gray-400">
+              <Loader size="medium" />
+            </div>
           ) : (
             <div className="w-full flex justify-center">
               <div className="w-64">
@@ -220,7 +223,9 @@ function AdminDashboard({ setTitle }) {
 
         <ChartCard title="Today Attendance Rate">
           {statsLoading ? (
-            <div className="flex justify-center items-center h-48 text-gray-400">Loading...</div>
+            <div className="flex flex-col justify-center items-center h-48 text-gray-400">
+              <Loader size="medium" />
+            </div>
           ) : (
             <div className="w-full flex flex-col items-center">
               <div className="w-64">
@@ -236,7 +241,9 @@ function AdminDashboard({ setTitle }) {
       <div className="mt-6">
         <ChartCard title="Last 7 Days — Present Employees">
           {chartLoading ? (
-            <div className="flex justify-center items-center h-48 text-gray-400">Loading chart...</div>
+            <div className="flex flex-col justify-center items-center h-48 text-gray-400">
+              <Loader size="medium" />
+            </div>
           ) : (
             <div className="h-72 sm:h-80 md:h-96 w-full">
               <Line data={weeklyAttendanceData} options={lineOptions} />

@@ -16,6 +16,8 @@ export default function EditTaskModal({ task, onClose, onUpdated }) {
     description: task?.description || '',
     assignedEmployees: task?.assignedEmployees?.map(e => typeof e === 'object' ? e._id : e) || [],
     deadline: task?.deadline ? new Date(task.deadline).toISOString().split('T')[0] : '',
+    priority: task?.priority || 'Medium',
+    status: task?.status || 'Pending',
   });
   const [loading, setLoading] = useState(false);
   const [fetchingEmp, setFetchingEmp] = useState(true);
@@ -73,7 +75,7 @@ export default function EditTaskModal({ task, onClose, onUpdated }) {
       <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-transparent dark:border-zinc-800">
 
         {/* Header */}
-        <div className="flex items-center justify-between p-5 bg-emerald-600 dark:bg-emerald-700/80 rounded-t-2xl">
+        <div className="flex items-center justify-between p-5 bg-[#2C5284] dark:bg-[#365f8d]/80 rounded-t-2xl">
           <h2 className="text-lg font-bold text-white">Edit Task</h2>
           <button
             type="button"
@@ -88,8 +90,9 @@ export default function EditTaskModal({ task, onClose, onUpdated }) {
 
           {/* Task Title */}
           <div>
-            <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
-              Task Title <span className="text-red-500">*</span>
+            <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5 flex justify-between">
+              <span>Task Title <span className="text-red-500">*</span></span>
+              <span className="text-[10px] text-zinc-400 font-normal">(Max 15 characters)</span>
             </label>
             <input
               type="text"
@@ -97,7 +100,8 @@ export default function EditTaskModal({ task, onClose, onUpdated }) {
               value={form.title}
               onChange={handle}
               required
-              className="w-full px-4 py-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-lg focus:ring-2 focus:ring-emerald-500/50 outline-none text-sm transition-colors"
+              maxLength={15}
+              className="w-full px-4 py-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-lg focus:ring-2 focus:ring-[#2C5284]/50 outline-none text-sm transition-colors"
             />
           </div>
 
@@ -111,7 +115,7 @@ export default function EditTaskModal({ task, onClose, onUpdated }) {
               value={form.description}
               onChange={handle}
               rows="3"
-              className="w-full px-4 py-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-lg focus:ring-2 focus:ring-emerald-500/50 outline-none text-sm transition-colors resize-none"
+              className="w-full px-4 py-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-lg focus:ring-2 focus:ring-[#2C5284]/50 outline-none text-sm transition-colors resize-none"
             />
           </div>
 
@@ -123,7 +127,7 @@ export default function EditTaskModal({ task, onClose, onUpdated }) {
             
             <div 
               onClick={() => !fetchingEmp && setIsDropdownOpen(!isDropdownOpen)}
-              className={`w-full px-4 py-2.5 border ${isDropdownOpen ? 'border-emerald-500 ring-2 ring-emerald-500/50' : 'border-zinc-300 dark:border-zinc-700'} bg-white dark:bg-zinc-800 rounded-lg outline-none text-sm transition-colors cursor-pointer flex justify-between items-center`}
+              className={`w-full px-4 py-2.5 border ${isDropdownOpen ? 'border-[#2C5284] ring-2 ring-[#2C5284]/50' : 'border-zinc-300 dark:border-zinc-700'} bg-white dark:bg-zinc-800 rounded-lg outline-none text-sm transition-colors cursor-pointer flex justify-between items-center`}
             >
               <span className={form.assignedEmployees.length > 0 ? "text-zinc-800 dark:text-zinc-200 font-medium" : "text-zinc-400"}>
                 {fetchingEmp ? 'Loading employees...' : 
@@ -142,7 +146,7 @@ export default function EditTaskModal({ task, onClose, onUpdated }) {
                       <label key={emp._id} className="flex items-center gap-3 p-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 rounded-md cursor-pointer transition-colors">
                         <input
                           type="checkbox"
-                          className="w-4 h-4 text-emerald-600 bg-zinc-100 border-zinc-300 rounded focus:ring-emerald-500 dark:focus:ring-emerald-600 dark:ring-offset-zinc-800 focus:ring-2 dark:bg-zinc-700 dark:border-zinc-600 cursor-pointer"
+                          className="w-4 h-4 text-[#2C5284] bg-zinc-100 border-zinc-300 rounded focus:ring-[#2C5284] dark:focus:ring-[#2C5284] dark:ring-offset-zinc-800 focus:ring-2 dark:bg-zinc-700 dark:border-zinc-600 cursor-pointer"
                           checked={form.assignedEmployees.includes(emp._id)}
                           onChange={(e) => {
                             const checked = e.target.checked;
@@ -156,7 +160,7 @@ export default function EditTaskModal({ task, onClose, onUpdated }) {
                           }}
                         />
                         <div className="flex items-center gap-3">
-                          <div className="w-7 h-7 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex flex-shrink-0 items-center justify-center font-bold text-xs overflow-hidden">
+                          <div className="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900/30 text-[#2C5284] dark:text-blue-300 flex flex-shrink-0 items-center justify-center font-bold text-xs overflow-hidden">
                             {emp.profileImage ? (
                               <img
                                 src={emp.profileImage.startsWith('http') ? emp.profileImage : `http://localhost:3000/uploads/profile/${emp.profileImage}`}
@@ -191,8 +195,39 @@ export default function EditTaskModal({ task, onClose, onUpdated }) {
               value={form.deadline}
               onChange={handle}
               required
-              className="w-full px-4 py-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-lg focus:ring-2 focus:ring-emerald-500/50 outline-none text-sm transition-colors"
+              className="w-full px-4 py-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-lg focus:ring-2 focus:ring-[#2C5284]/50 outline-none text-sm transition-colors"
             />
+          </div>
+
+          {/* Priority & Status */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Priority</label>
+              <select
+                name="priority"
+                value={form.priority}
+                onChange={handle}
+                className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-lg focus:ring-2 focus:ring-[#2C5284]/50 outline-none text-sm cursor-pointer"
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Urgent">Urgent</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">Status</label>
+              <select
+                name="status"
+                value={form.status}
+                onChange={handle}
+                className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-lg focus:ring-2 focus:ring-[#2C5284]/50 outline-none text-sm cursor-pointer"
+              >
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
           </div>
 
           {/* Action Buttons */}
@@ -207,7 +242,7 @@ export default function EditTaskModal({ task, onClose, onUpdated }) {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-600/50 text-white rounded-lg font-medium transition-colors text-sm shadow cursor-pointer"
+              className="flex-1 px-4 py-3 bg-[#2C5284] hover:bg-[#1e3a5f] disabled:bg-[#2C5284]/50 text-white rounded-lg font-medium transition-colors text-sm shadow cursor-pointer"
             >
               {loading ? 'Saving...' : 'Save Changes'}
             </button>

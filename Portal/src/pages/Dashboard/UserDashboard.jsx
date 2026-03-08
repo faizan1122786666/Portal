@@ -830,23 +830,21 @@ function UserDashboard({ setTitle }) {
       )} */}
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 mt-3">
         {[
           { label: 'This Month', value: summary.present, sub: 'Present Days', icon: <FaRegCheckCircle size={24} className="text-white" />, bg: 'bg-[#365F8D]' },
           { label: 'This Month', value: summary.absent, sub: 'Absent Days', icon: <RxCrossCircled size={24} className="text-white" />, bg: 'bg-[#2C5284]' },
           { label: 'Leave Days', value: summary.leave, sub: 'This Month', icon: <FaCalendarAlt size={24} className="text-white" />, bg: 'bg-[#2C5284]' },
           { label: 'Today', value: totalHours || '--', sub: 'Total Work Hours', icon: <FaClock size={24} className="text-white" />, bg: 'bg-[#2C5284]' },
         ].map((c, i) => (
-          <div key={i} className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">{c.label}</p>
-                <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-gray-100">{c.value}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">{c.sub}</p>
-              </div>
-              <div className={`${c.bg} w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center`}>
-                {c.icon}
-              </div>
+          <div key={i} className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300 min-h-[110px] sm:min-h-28">
+            <div>
+              <p className="text-xs sm:text-sm text-[#2C5284] dark:text-gray-300">{c.sub}</p>
+              <h1 className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-gray-100">{c.value}</h1>
+              <p className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 mt-1">{c.label}</p>
+            </div>
+            <div className={`${c.bg} w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0`}>
+              {c.icon}
             </div>
           </div>
         ))}

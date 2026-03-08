@@ -90,7 +90,7 @@ export default function Slidebar({
       )}
 
       <div
-        className={`h-screen w-64 bg-[#2C5282] dark:bg-[#292c35] text-white fixed top-0 left-0 transform
+        className={`h-screen w-60 bg-[#2C5282] dark:bg-[#292c35] text-white fixed top-0 left-0 transform
           transition-all duration-300 ease-in-out z-50 flex flex-col
           ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static border-r border-transparent dark:border-gray-800/20`}
       >

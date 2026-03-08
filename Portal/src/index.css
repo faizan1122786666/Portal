@@ -12,7 +12,23 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    /* Prevent body-level scrolling */
+    font-size: 95%;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom Loader Animation */
+  @keyframes spin-custom {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .loader-arc {
+    border: 2px solid transparent;
+    border-top: 2px solid #2C5284 !important;
+    border-radius: 50%;
+    animation: spin-custom 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
   /* Force the custom dark color globally */
@@ -71,11 +87,6 @@
   }
 }
 
-.boldonse-regular {
-  font-family: "Boldonse", system-ui;
-  font-weight: 400;
-  font-style: normal;
-}
 
 /* --- Global React-Select Overrides for Dark Mode --- */
 /* Target elements when .dark is present anywhere above them */

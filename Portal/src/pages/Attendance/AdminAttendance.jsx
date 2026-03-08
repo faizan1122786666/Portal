@@ -19,6 +19,7 @@ import {
   apiMarkAttendance,
   apiGetEmployeeAttendance,
 } from '../../api/attendanceAPI'
+import Loader from '../../components/common/Loader'
 
 // ── React Select custom styles ────────────────────────────────────────────────
 const selectStyles = {
@@ -224,7 +225,7 @@ function EmployeeHistoryModal({ employee, onClose }) {
             {/* Calendar cells */}
             {loading ? (
               <div className="h-48 flex items-center justify-center text-gray-400 text-sm">
-                Loading...
+                <Loader size="small" />
               </div>
             ) : (
               <div className="grid grid-cols-7 gap-1">
@@ -372,7 +373,9 @@ function EmployeeHistoryModal({ employee, onClose }) {
                   {MONTHS[month]} {year} — All Records
                 </h3>
                 {loading ? (
-                  <div className="py-8 text-center text-gray-400 text-sm">Loading...</div>
+                  <div className="py-8 text-center text-gray-400 text-sm">
+                    <Loader size="small" />
+                  </div>
                 ) : records.length === 0 ? (
                   <div className="py-8 text-center text-gray-400 text-sm">
                     No records for this month.
@@ -601,10 +604,7 @@ function MarkAttendanceModal({ employees, onClose, onSuccess }) {
           <button onClick={handleSubmit} disabled={loading}
             className="flex items-center gap-2 px-6 py-2.5 bg-[#2C5284] text-white text-sm font-semibold rounded-lg hover:bg-[#1e3a5f] transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
             {loading ? (
-              <><svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>Saving...</>
+              <><Loader size="small" className="!p-0 border-white/30 border-t-white" />Saving...</>
             ) : (
               <><FaRegCheckCircle size={15} />Mark Attendance</>
             )}
@@ -692,31 +692,31 @@ function AdminAttendance({ setTitle }) {
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] dark:text-blue-300">Attendance Management</h1>
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#2C5284] dark:text-blue-300">Attendance Management</h1>
         <button
           onClick={() => setShowMarkModal(true)}
           className="flex items-center gap-2 px-6 py-4 bg-[#2C5284] text-white text-sm font-semibold rounded-xl shadow hover:bg-[#1e3a5f] transition-all hover:shadow-md active:scale-[0.97]"
         >
-          <FaPlus size={13} />
+          <FaPlus size={12} />
           Mark Attendance
         </button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
-          { label: 'Total Employees', value: todayStats.totalEmployees, icon: <CgProfile size={24} className="text-white" /> },
-          { label: 'Today Present', value: todayStats.present, icon: <FaRegCheckCircle size={24} className="text-white" /> },
-          { label: 'Today Absent', value: todayStats.absent, icon: <RxCrossCircled size={24} className="text-white" /> },
-          { label: 'Today Leave', value: todayStats.onLeave, icon: <CalendarDays size={24} className="text-white" /> },
+          { label: 'Total Employees', value: todayStats.totalEmployees, icon: <CgProfile size={20} className="text-white" /> },
+          { label: 'Today Present', value: todayStats.present, icon: <FaRegCheckCircle size={20} className="text-white" /> },
+          { label: 'Today Absent', value: todayStats.absent, icon: <RxCrossCircled size={20} className="text-white" /> },
+          { label: 'Today Leave', value: todayStats.onLeave, icon: <CalendarDays size={20} className="text-white" /> },
         ].map((card, i) => (
-          <div key={i} className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
+          <div key={i} className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
             <div>
-              <p className="text-sm text-[#2C5284] dark:text-gray-300">{card.label}</p>
-              <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{card.value}</h1>
+              <p className="text-xs text-[#2C5284] dark:text-gray-300">{card.label}</p>
+              <h1 className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{card.value}</h1>
             </div>
-            <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+            <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
               {card.icon}
             </div>
           </div>
@@ -725,10 +725,17 @@ function AdminAttendance({ setTitle }) {
 
       {/* Filters */}
       <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-4 mb-6 border border-gray-100 dark:border-white/5">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <input type="text" placeholder="Search by email or department..."
-            value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1) }}
-            className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none" />
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex-1 relative">
+            <input type="text" placeholder="Search by email or department..."
+              value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1) }}
+              className="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-xs" />
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2C5284]">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+          </div>
           <div className="flex items-center gap-2">
             <input type="date" value={selectedDate}
               onChange={(e) => { setSelectedDate(e.target.value); setCurrentPage(1) }}
@@ -746,13 +753,16 @@ function AdminAttendance({ setTitle }) {
       {error && <div className="bg-red-50 text-red-700 px-4 py-3 rounded-xl mb-4 border border-red-200">{error}</div>}
 
       {loading ? (
-        <div className="bg-white rounded-xl p-10 text-center text-gray-400 border border-gray-100">Loading attendance records...</div>
+        <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-12 text-center text-gray-500 flex flex-col items-center justify-center border border-gray-100 dark:border-white/5">
+          <Loader size="medium" />
+          <p className="mt-4 text-xs font-bold uppercase tracking-widest">Loading attendance records...</p>
+        </div>
       ) : (
         <>
           {/* Desktop Table */}
           <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
-              <thead className="bg-[#2C5284] dark:bg-white/10">
+              <thead className="bg-[#2C5294] dark:bg-white/10">
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Employee</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Date</th>

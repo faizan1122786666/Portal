@@ -433,6 +433,7 @@ import { FaRegCheckCircle } from 'react-icons/fa'
 import { RxCrossCircled } from 'react-icons/rx'
 import { CalendarDays } from 'lucide-react'
 import { apiGetMyAttendance } from '../../api/attendanceAPI'
+import Loader from '../../components/common/Loader'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function getFirstCheckIn(sessions = []) {
@@ -678,35 +679,35 @@ function UserAttendance({ setTitle }) {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300 min-h-28">
+        <div className="bg-white dark:bg-white/5 p-5 flex items-center justify-between shadow hover:shadow-xl transition-all duration-300 min-h-[110px] sm:min-h-28 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D]">
           <div>
-            <p className="text-sm text-[#2C5284] dark:text-gray-300">Present Days</p>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{summary.present}</h1>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">This period</p>
+            <p className="text-xs sm:text-sm text-[#2C5284] dark:text-gray-300">Present Days</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-gray-100">{summary.present}</h1>
+            <p className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 mt-1">This period</p>
           </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
             <FaRegCheckCircle size={24} className="text-white" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300 min-h-28">
+        <div className="bg-white dark:bg-white/5 p-5 flex items-center justify-between shadow hover:shadow-xl transition-all duration-300 min-h-[110px] sm:min-h-28 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D]">
           <div>
-            <p className="text-sm text-[#2C5284] dark:text-gray-300">Absent Days</p>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{summary.absent}</h1>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">This period</p>
+            <p className="text-xs sm:text-sm text-[#2C5284] dark:text-gray-300">Absent Days</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-gray-100">{summary.absent}</h1>
+            <p className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 mt-1">This period</p>
           </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+          <div className="bg-[#2C5284] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
             <RxCrossCircled size={24} className="text-white" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300 min-h-28">
+        <div className="bg-white dark:bg-white/5 p-5 flex items-center justify-between shadow hover:shadow-xl transition-all duration-300 min-h-[110px] sm:min-h-28 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D]">
           <div>
-            <p className="text-sm text-[#2C5284] dark:text-gray-300">Leave Days</p>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{summary.leave}</h1>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">This period</p>
+            <p className="text-xs sm:text-sm text-[#2C5284] dark:text-gray-300">Leave Days</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-gray-100">{summary.leave}</h1>
+            <p className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 mt-1">This period</p>
           </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+          <div className="bg-[#2C5284] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
             <CalendarDays size={24} className="text-white" />
           </div>
         </div>
@@ -715,15 +716,17 @@ function UserAttendance({ setTitle }) {
       {/* Date Filter */}
       <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-4 mb-6 border border-gray-100 dark:border-white/5">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <div className="flex items-center gap-2 flex-1">
-            <CalendarDays size={18} className="text-[#2C5284] dark:text-blue-300 flex-shrink-0" />
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => { setSelectedDate(e.target.value); setCurrentPage(1) }}
-              className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-sm"
-            />
-          </div>
+            <div className="flex items-center gap-2 flex-1 relative">
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => { setSelectedDate(e.target.value); setCurrentPage(1) }}
+                className="flex-1 pl-10 pr-4 py-2.5 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-sm"
+              />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2C5284] dark:text-blue-300">
+                <CalendarDays size={18} />
+              </div>
+            </div>
           {selectedDate && (
             <button
               onClick={() => { setSelectedDate(''); setCurrentPage(1) }}
@@ -743,15 +746,16 @@ function UserAttendance({ setTitle }) {
       )}
 
       {loading ? (
-        <div className="bg-white rounded-xl p-10 text-center text-gray-400 border border-gray-100">
-          Loading attendance records...
+        <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-12 text-center text-gray-500 flex flex-col items-center justify-center border border-gray-100 dark:border-white/5">
+          <Loader size="medium" />
+          <p className="mt-4 text-xs font-bold uppercase tracking-widest">Loading attendance records...</p>
         </div>
       ) : (
         <>
           {/* ── Desktop Table ── */}
           <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
-              <thead className="bg-[#2C5284] dark:bg-white/10">
+              <thead className="bg-[#2C5294] dark:bg-white/10">
                 <tr>
                   <th className="px-5 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Date</th>
                   <th className="px-5 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Shift</th>

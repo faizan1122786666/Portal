@@ -10,6 +10,7 @@ import { RxCrossCircled } from 'react-icons/rx';
 import { SlCalender } from 'react-icons/sl';
 import LeaveDetailModal from './LeaveDetailModal';
 import { apiGetAllLeaves, apiGetLeaveSummary, apiReviewLeave } from '../../api/leaveAPI';
+import Loader from '../../components/common/Loader';
 
 function AdminLeave({ setTitle }) {
   const [leaves, setLeaves] = useState([]);
@@ -147,7 +148,7 @@ function AdminLeave({ setTitle }) {
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
 
-      <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] dark:text-blue-300 mb-6">
+      <h1 className="text-xl sm:text-2xl font-bold text-[#2C5284] dark:text-blue-300 mb-4">
         Leave Management
       </h1>
 
@@ -160,62 +161,63 @@ function AdminLeave({ setTitle }) {
       )}
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
           <div>
-            <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">Total Requests</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{stats.total}</p>
+            <p className="text-xs text-[#2C5284] dark:text-gray-300">Total Requests</p>
+            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.total}</p>
           </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-            <CgProfile size={24} className="text-white" />
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+            <CgProfile size={20} className="text-white" />
           </div>
         </div>
-        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
           <div>
-            <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">Pending</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{stats.pending}</p>
+            <p className="text-xs text-[#2C5284] dark:text-gray-300">Pending</p>
+            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.pending}</p>
           </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-            <SlCalender size={24} className="text-white" />
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+            <SlCalender size={20} className="text-white" />
           </div>
         </div>
-        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
           <div>
-            <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">Approved</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{stats.approved}</p>
+            <p className="text-xs text-[#2C5284] dark:text-gray-300">Approved</p>
+            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.approved}</p>
           </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-            <FaRegCheckCircle size={24} className="text-white" />
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+            <FaRegCheckCircle size={20} className="text-white" />
           </div>
         </div>
-        <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow w-full min-h-30 hover:shadow-xl transform transition duration-300 ease-in-out">
+        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
           <div>
-            <p className="text-sm sm:text-base text-[#2C5284] dark:text-gray-300">Rejected</p>
-            <p className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-blue-300">{stats.rejected}</p>
+            <p className="text-xs text-[#2C5284] dark:text-gray-300">Rejected</p>
+            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.rejected}</p>
           </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-            <RxCrossCircled size={24} className="text-white" />
+          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+            <RxCrossCircled size={20} className="text-white" />
           </div>
         </div>
       </div>
 
       {/* Filters Section */}
-      <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-4 sm:p-6 mb-6 border border-gray-100 dark:border-white/5">
+      <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-4 mb-6 border border-gray-100 dark:border-white/5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
               Search Employee
             </label>
             <div className="relative">
-              <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2C5284]">
+                <FaSearch size={14} />
+              </div>
               <input
                 type="text"
                 placeholder="Search by name or email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg 
-                  focus:ring-2 focus:ring-[#2C5284] focus:border-transparent 
-                  outline-none transition-all text-sm"
+                className="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg 
+                  focus:ring-2 focus:ring-[#2C5284] outline-none text-xs"
               />
             </div>
           </div>
@@ -265,8 +267,9 @@ function AdminLeave({ setTitle }) {
 
       {/* Loading */}
       {loading && (
-        <div className="bg-white rounded-xl shadow-sm p-12 text-center text-gray-500">
-          Loading leave requests...
+        <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-12 text-center text-gray-500 flex flex-col items-center justify-center border border-gray-100 dark:border-white/5">
+          <Loader size="medium" />
+          <p className="mt-4 text-xs font-bold uppercase tracking-widest">Loading leave requests...</p>
         </div>
       )}
 
@@ -275,7 +278,7 @@ function AdminLeave({ setTitle }) {
         <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
-              <thead className="bg-[#2C5284] dark:bg-white/10">
+              <thead className="bg-[#2C5294] dark:bg-white/10">
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Employee</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Leave Type</th>
@@ -307,8 +310,9 @@ function AdminLeave({ setTitle }) {
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <div className="flex items-center gap-2">
                           <button onClick={() => viewDetails(leave)}
-                            className="p-2 text-[#2C5284] dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-white/10 rounded-lg transition-colors" title="View Details">
-                            <FaEye size={18} />
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2C5284]/10 dark:bg-white/5 hover:bg-[#2C5284] text-[#2C5284] dark:text-blue-300 hover:text-white rounded-lg text-xs font-semibold transition-all group" title="View Details">
+                            <FaEye size={12} />
+                            <span>Details</span>
                           </button>
                           {leave.status === 'Pending' && (
                             <>
