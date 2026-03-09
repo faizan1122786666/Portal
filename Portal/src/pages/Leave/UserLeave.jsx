@@ -366,17 +366,17 @@ function UserLeave({ setTitle }) {
       {/* Stat Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         {[
-          { label: 'Total', value: stats.total, sub: 'Requests', icon: <CgProfile size={22} className="text-white" /> },
-          { label: 'Pending', value: stats.pending, sub: 'Awaiting', icon: <CalendarDays size={22} className="text-white" /> },
-          { label: 'Approved', value: stats.approved, sub: 'Accepted', icon: <FaRegCheckCircle size={22} className="text-white" /> },
-          { label: 'Rejected', value: stats.rejected, sub: 'Declined', icon: <RxCrossCircled size={22} className="text-white" /> },
+          { label: 'Total', value: stats.total, icon: <CgProfile size={22} className="text-white" /> },
+          { label: 'Pending', value: stats.pending, icon: <CalendarDays size={22} className="text-white" /> },
+          { label: 'Approved', value: stats.approved, icon: <FaRegCheckCircle size={22} className="text-white" /> },
+          { label: 'Rejected', value: stats.rejected, icon: <RxCrossCircled size={22} className="text-white" /> },
         ].map(({ label, value, sub, icon }) => (
           <div key={label}
             className="bg-white dark:bg-white/5 p-5 flex items-center justify-between shadow hover:shadow-xl transition-all duration-300 min-h-[110px] sm:min-h-28 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D]">
             <div>
               <p className="text-xs sm:text-sm text-[#2C5284] dark:text-gray-300">{label}</p>
               <h1 className="text-2xl sm:text-3xl font-bold text-[#365F8D] dark:text-gray-100">{value}</h1>
-              <p className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 mt-1">{sub}</p>
+             
             </div>
             <div className="bg-[#365F8D] dark:bg-[#2C5282] w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
               {icon}
@@ -463,7 +463,7 @@ function UserLeave({ setTitle }) {
       {loading && (
         <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-12 text-center text-gray-500 flex flex-col items-center justify-center">
           <Loader size="medium" />
-          <p className="mt-4 text-xs font-bold uppercase tracking-widest">Loading your leave requests...</p>
+          {/* <p className="mt-4 text-xs font-bold uppercase tracking-widest">Loading your leave requests...</p> */}
         </div>
       )}
 
@@ -517,7 +517,7 @@ function UserLeave({ setTitle }) {
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-400 italic">
+                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                     {hasActiveFilter ? 'No records match the selected filters.' : 'No leave requests yet. Click "Apply Leave" to get started.'}
                   </td>
                 </tr>
