@@ -269,7 +269,7 @@ function AdminLeave({ setTitle }) {
       {loading && (
         <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-12 text-center text-gray-500 flex flex-col items-center justify-center border border-gray-100 dark:border-white/5">
           <Loader size="medium" />
-          <p className="mt-4 text-xs font-bold uppercase tracking-widest">Loading leave requests...</p>
+        
         </div>
       )}
 
@@ -332,7 +332,7 @@ function AdminLeave({ setTitle }) {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="px-6 py-10 text-center text-gray-500 italic">
+                    <td colSpan="6" className="px-6 py-10 text-center text-gray-500 ">
                       No leave requests found matching your criteria.
                     </td>
                   </tr>

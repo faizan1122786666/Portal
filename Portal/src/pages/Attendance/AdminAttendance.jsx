@@ -755,7 +755,6 @@ function AdminAttendance({ setTitle }) {
       {loading ? (
         <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-12 text-center text-gray-500 flex flex-col items-center justify-center border border-gray-100 dark:border-white/5">
           <Loader size="medium" />
-          <p className="mt-4 text-xs font-bold uppercase tracking-widest">Loading attendance records...</p>
         </div>
       ) : (
         <>
@@ -821,7 +820,7 @@ function AdminAttendance({ setTitle }) {
                   )
                 })}
                 {paginatedRecords.length === 0 && (
-                  <tr><td colSpan={8} className="px-6 py-10 text-center text-gray-400 italic">No records found.</td></tr>
+                  <tr><td colSpan={8} className="px-6 py-10 text-center text-gray-500">No records found.</td></tr>
                 )}
               </tbody>
             </table>

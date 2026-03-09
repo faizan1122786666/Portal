@@ -1358,7 +1358,7 @@ function ManageEmployees({ setTitle }) {
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan={7} className="px-6 py-14 text-center text-gray-400 italic">No employees found.</td>
+                    <td colSpan={7} className="px-6 py-14 text-center text-gray-500">No employees found.</td>
                   </tr>
                 )}
               </tbody>
