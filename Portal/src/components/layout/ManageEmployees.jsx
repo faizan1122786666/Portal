@@ -627,10 +627,12 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Select from 'react-select'
 import { toast } from 'react-toastify'
-import { FaPlus, FaEdit, FaTrash, FaTimes, FaSun, FaMoon, FaUserTie, FaRegCheckCircle, FaBuilding } from 'react-icons/fa'
+import { FaPlus, FaEdit, FaTrash, FaTimes, FaSun, FaMoon, FaUserTie, FaRegCheckCircle, FaBuilding, FaRegEdit } from 'react-icons/fa'
 import { CgProfile } from 'react-icons/cg'
 import { MdBadge } from 'react-icons/md'
 import Loader from '../common/Loader'
+import React from 'react'
+import { AiOutlineDelete } from 'react-icons/ai'
 
 // ── Axios instance
 const api = axios.create({
@@ -1347,11 +1349,13 @@ function ManageEmployees({ setTitle }) {
                       <div className="flex items-center gap-1">
                         <button onClick={() => openEdit(emp)}
                           className="p-2 text-[#2C5284] hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
-                          <FaEdit size={15} />
+                          {/* <FaEdit size={15} /> */}
+                           <FaRegEdit size={16} />
                         </button>
                         <button onClick={() => handleDelete(emp._id)}
-                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
-                          <FaTrash size={15} />
+                          className="p-1.5 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer" title="Delete">
+                          {/* <FaTrash size={15} /> */}
+                          <AiOutlineDelete size={16} />
                         </button>
                       </div>
                     </td>

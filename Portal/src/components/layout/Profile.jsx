@@ -11,7 +11,7 @@ import ChangePassword from '../../pages/Auth/ChangePassword';
 
 // ── Shift badge ───────────────────────────────────────────────────────────────
 function ShiftBadge({ shift }) {
-  if (!shift) return <span className="text-gray-400 text-sm">Not assigned</span>;
+  if (!shift) return <span className="text-gray-700">Not assigned</span>;
   const isMorning = shift === 'Morning';
   return (
     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold
@@ -26,7 +26,7 @@ function ShiftBadge({ shift }) {
 function InfoRow({ icon: Icon, label, value, iconColor = 'text-[#2C5284]' }) {
   return (
     <div className="flex items-start gap-4 py-4 border-b border-gray-100 dark:border-white/5 last:border-0">
-      <div className={`w-9 h-9 rounded-lg bg-blue-50 dark:bg-white/5 flex items-center justify-center flex-shrink-0 ${iconColor}`}>
+      <div className={`w-9 h-9 rounded-lg bg-blue-50 dark:bg-white/5 flex items-center justify-center shrink-0 ${iconColor}`}>
         <Icon size={17} />
       </div>
       <div className="flex-1 min-w-0">
@@ -252,14 +252,14 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
             value={
               (userDesignation || user?.designation)
                 ? <span className="font-semibold text-[#2C5284]">{userDesignation || user.designation}</span>
-                : <span className="text-gray-400 italic">Not assigned</span>
+                : <span className="text-gray-700">Not assigned</span>
             }
           />
 
           <InfoRow
             icon={FaBuilding}
             label="Department"
-            value={user?.department || <span className="text-gray-400 italic">Not assigned</span>}
+            value={user?.department || <span className="text-gray-700">Not assigned</span>}
           />
 
           <InfoRow
@@ -275,7 +275,7 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
               value={
                 user?.salary
                   ? <span className="font-semibold text-green-700">${Number(user.salary).toLocaleString()}</span>
-                  : <span className="text-gray-400 italic">Not set</span>
+                  : <span className="text-gray-700">Not set</span>
               }
             />
           )}
@@ -300,7 +300,7 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
               onClick={() => setShowEditName(true)}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:border-[#2C5284] dark:hover:border-blue-500/50 hover:bg-blue-50/50 dark:hover:bg-white/5 transition-all group text-left cursor-pointer"
             >
-              <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-white/10 group-hover:bg-[#2C5284] dark:group-hover:bg-blue-600 flex items-center justify-center transition-colors flex-shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-white/10 group-hover:bg-[#2C5284] dark:group-hover:bg-blue-600 flex items-center justify-center transition-colors shrink-0">
                 <FaRegEdit size={15} className="text-[#2C5284] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
               <div>
@@ -313,7 +313,7 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
               onClick={() => setShowChangePass(true)}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:border-[#2C5284] dark:hover:border-blue-500/50 hover:bg-blue-50/50 dark:hover:bg-white/5 transition-all group text-left cursor-pointer"
             >
-              <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-white/10 group-hover:bg-[#2C5284] dark:group-hover:bg-blue-600 flex items-center justify-center transition-colors flex-shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-white/10 group-hover:bg-[#2C5284] dark:group-hover:bg-blue-600 flex items-center justify-center transition-colors shrink-0">
                 <CgProfile size={17} className="text-[#2C5284] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
               <div>
@@ -325,9 +325,7 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
         </div>
 
         {/* ── Read-only notice ── */}
-        <p className="text-xs text-center text-gray-400 pb-4">
-          Fields like designation, department, salary, and shift are managed by your administrator and cannot be changed here.
-        </p>
+        
       </div>
 
       {showEditName && (
