@@ -24,7 +24,7 @@ function UserLeaveDetailModal({ leave, onClose }) {
     <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center 
       justify-center z-50 p-4">
       <div className="bg-white dark:bg-[#292c35] rounded-xl shadow-2xl max-w-2xl w-full 
-        max-h-[95vh] overflow-y-auto border dark:border-white/5">
+        max-h-[95vh] overflow-y-auto dark:border-white/5">
 
         {/* Header */}
         <div className="bg-[#2C5284] p-6 flex justify-between items-center 

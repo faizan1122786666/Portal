@@ -765,7 +765,7 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-transparent dark:border-white/10">
+      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto  dark:border-white/10">
 
         {/* Header */}
         <div className="flex items-center justify-between p-5 bg-[#2C5294] dark:bg-white/10 rounded-t-2xl">

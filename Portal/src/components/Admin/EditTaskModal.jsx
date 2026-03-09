@@ -72,7 +72,7 @@ export default function EditTaskModal({ task, onClose, onUpdated }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-transparent dark:border-zinc-800">
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto  dark:border-zinc-800">
 
         {/* Header */}
         <div className="flex items-center justify-between p-5 bg-[#2C5284] dark:bg-[#365f8d]/80 rounded-t-2xl">

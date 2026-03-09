@@ -71,36 +71,72 @@ function getTodayYMD() {
 }
 
 // ── Circular Progress ─────────────────────────────────────────────────────────
-function CircularProgress({ workHours }) {
-  if (!workHours) return (
-    <div className="flex justify-center items-center">
-      <div className="w-28 h-28 rounded-full border-8 border-gray-200 flex items-center justify-center">
-        <span className="text-gray-400 text-xs">No Data</span>
-      </div>
-    </div>
-  )
-  const parts = workHours.split('h')
-  const hours = parseInt(parts[0].trim()) || 0
-  const minutes = parts[1] ? parseInt(parts[1].trim()) || 0 : 0
-  const total = hours * 60 + minutes
-  const pct = Math.min((total / 540) * 100, 100)
-  const DA = 2 * Math.PI * 54
-  const DO = DA - (DA * pct) / 100
+
+
+
+function CircularProgress({ workHours = "0h 0m" }) {
+  const parts = workHours?.split('h') || ["0", "0"];
+  const hours = parseInt(parts[0]) || 0;
+  const minutes = parts[1] ? parseInt(parts[1]) || 0 : 0;
+  const totalMinutes = hours * 60 + minutes;
+
+  // Progress logic: 9 hours (540m) as 100%
+  const pct = Math.min((totalMinutes / 540) * 100, 100);
+  const radius = 54;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (pct / 100) * circumference;
+
   return (
     <div className="relative flex items-center justify-center">
-      <svg className="w-28 h-28 -rotate-90">
-        <circle cx="56" cy="56" r="54" stroke="#e5e7eb" strokeWidth="8" fill="transparent" className="opacity-10" />
-        <circle cx="56" cy="56" r="54" stroke="#2C5284" strokeWidth="8"
-          strokeDasharray={DA} strokeDashoffset={DO}
-          strokeLinecap="round" fill="transparent" />
+      <svg className="w-32 h-32 -rotate-90">
+        <circle cx="64" cy="64" r={radius} stroke="#e5e7eb" strokeWidth="8" fill="transparent" className="opacity-40" />
+        <circle
+          cx="64" cy="64" r={radius} stroke="#2C5284" strokeWidth="8"
+          strokeDasharray={circumference} strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round" fill="transparent" className="transition-all duration-700 ease-in-out"
+        />
       </svg>
       <div className="absolute flex flex-col items-center">
-        <span className="text-base font-bold text-gray-800 dark:text-gray-100">{workHours}</span>
-        <span className="text-[10px] text-gray-500 dark:text-gray-400">Total Hrs</span>
+        <span className="text-xl font-black text-gray-800 dark:text-gray-100">{workHours}</span>
+        <span className="text-[11px] text-gray-400 font-bold uppercase tracking-tighter">Total Hrs</span>
       </div>
     </div>
-  )
+  );
 }
+
+
+
+
+// function CircularProgress({ workHours }) {
+//   if (!workHours) return (
+//     <div className="flex justify-center items-center">
+//       <div className="w-28 h-28 rounded-full border-8 border-gray-200 flex items-center justify-center">
+//         <span className="text-gray-400 text-xs">No Data</span>
+//       </div>
+//     </div>
+//   )
+//   const parts = workHours.split('h')
+//   const hours = parseInt(parts[0].trim()) || 0
+//   const minutes = parts[1] ? parseInt(parts[1].trim()) || 0 : 0
+//   const total = hours * 60 + minutes
+//   const pct = Math.min((total / 540) * 100, 100)
+//   const DA = 2 * Math.PI * 54
+//   const DO = DA - (DA * pct) / 100
+//   return (
+//     <div className="relative flex items-center justify-center">
+//       <svg className="w-28 h-28 -rotate-90">
+//         <circle cx="56" cy="56" r="54" stroke="#e5e7eb" strokeWidth="8" fill="transparent" className="opacity-10" />
+//         <circle cx="56" cy="56" r="54" stroke="#2C5284" strokeWidth="8"
+//           strokeDasharray={DA} strokeDashoffset={DO}
+//           strokeLinecap="round" fill="transparent" />
+//       </svg>
+//       <div className="absolute flex flex-col items-center">
+//         <span className="text-base font-bold text-gray-800 dark:text-gray-100">{workHours}</span>
+//         <span className="text-[10px] text-gray-500 dark:text-gray-400">Total Hrs</span>
+//       </div>
+//     </div>
+//   )
+// }
 
 // ── Employee History Modal ────────────────────────────────────────────────────
 function EmployeeHistoryModal({ employee, onClose }) {
@@ -167,7 +203,7 @@ function EmployeeHistoryModal({ employee, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
-      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-4xl max-h-[92vh] overflow-y-auto border dark:border-white/5">
+      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-4xl max-h-[92vh] overflow-y-auto  dark:border-white/5">
 
         {/* Header */}
         <div className="bg-[#2C5284] rounded-t-2xl p-5 flex items-center justify-between">
@@ -302,13 +338,13 @@ function EmployeeHistoryModal({ employee, onClose }) {
                   <CircularProgress workHours={selectedRecord.totalWorkHours} />
                   <div className="space-y-3">
                     <div>
-                      <p className="text-xs text-gray-400 uppercase font-semibold">First Clock In</p>
+                      <p className="text-xs text-gray-400 font-semibold">First Clock In</p>
                       <p className="text-lg font-bold text-gray-800">
                         {selectedRecord.sessions?.[0]?.checkIn || '--:--'}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-400 uppercase font-semibold">Last Clock Out</p>
+                      <p className="text-xs text-gray-400 font-semibold">Last Clock Out</p>
                       <p className="text-lg font-bold text-gray-800">
                         {[...(selectedRecord.sessions || [])].reverse().find(s => s.checkOut)?.checkOut || '--:--'}
                       </p>
@@ -437,7 +473,7 @@ function AttendanceDetailModal({ record, onClose }) {
   const sessions = record.sessions || []
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border dark:border-white/5">
+      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto dark:border-white/5">
         <div className="bg-[#2C5284] p-5 text-white flex justify-between items-center rounded-t-2xl">
           <div>
             <h2 className="text-xl font-bold">Attendance Details</h2>
@@ -473,13 +509,13 @@ function AttendanceDetailModal({ record, onClose }) {
                       <span className="text-gray-400">→</span>
                       {s.checkOut ? <span>{s.checkOut}</span> : <span className="text-green-600 italic">ongoing</span>}
                     </div>
-                    <span className="text-gray-700 dark:text-gray-300 font-medium w-16 text-right flex-shrink-0">{s.workHours || '...'}</span>
+                    <span className="text-gray-700 dark:text-gray-300 font-medium w-16 text-right shrink-0">{s.workHours || '...'}</span>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <p className="text-gray-400 text-sm italic text-center py-4">No sessions recorded.</p>
+            <p className="text-gray-400 text-sm text-center py-4">No sessions recorded.</p>
           )}
           <div className="flex items-center gap-6 pt-3 border-t border-gray-100">
             <div className="flex-1 flex justify-center">
@@ -487,16 +523,16 @@ function AttendanceDetailModal({ record, onClose }) {
             </div>
             <div className="flex-1 space-y-3">
               <div>
-                <p className="text-xs text-gray-500 uppercase font-semibold mb-1">First Check-in</p>
+                <p className="text-xs text-gray-500 font-semibold mb-1">First Check-in</p>
                 <p className="font-bold text-gray-900">{sessions[0]?.checkIn || '--:--'}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Last Check-out</p>
+                <p className="text-xs text-gray-500 font-semibold mb-1">Last Check-out</p>
                 <p className="font-bold text-gray-900">{[...sessions].reverse().find(s => s.checkOut)?.checkOut || '--:--'}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Total Sessions</p>
-                <p className="font-bold text-[#2C5284]">{sessions.length}</p>
+                <p className="text-xs text-gray-500 font-semibold mb-1">Total Sessions</p>
+                <p className="font-bold text-gray-900">{sessions.length}</p>
               </div>
             </div>
           </div>
@@ -551,7 +587,7 @@ function MarkAttendanceModal({ employees, onClose, onSuccess }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-md border dark:border-white/5">
+      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-md dark:border-white/5">
         <div className="bg-[#2C5284] p-5 text-white flex justify-between items-center rounded-t-2xl">
           <div>
             <h2 className="text-xl font-bold">Mark Attendance</h2>

@@ -265,12 +265,11 @@
 
 
 
-
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { apiGetMyTasks, apiUpdateTaskStatus } from '../../api/taskAPI';
 import { toast } from 'react-toastify';
-import { AiOutlineEye, AiOutlineDelete, AiOutlineClockCircle } from 'react-icons/ai';
+import { AiOutlineEye, AiOutlineClockCircle } from 'react-icons/ai';
 import { FaPlus, FaRegCheckCircle, FaTimes, FaCalendarAlt, FaCheckCircle, FaRegClock } from 'react-icons/fa';
 import { RxCrossCircled } from 'react-icons/rx';
 import { CgProfile } from 'react-icons/cg';
@@ -317,9 +316,62 @@ function TaskDetailsModal({ task, onClose, onStatusChange }) {
     }
   };
 
+  // ── React-Select styles — explicit colours, no CSS vars ──────────────────
+  // This ensures the dropdown menu is always readable in both light and dark mode.
+  const selectStyles = {
+    control: (base, state) => ({
+      ...base,
+      backgroundColor: 'transparent',
+      borderColor: state.isFocused ? '#2C5284' : '#d1d5db',
+      borderRadius: '0.5rem',
+      padding: '2px',
+      boxShadow: state.isFocused ? '0 0 0 2px rgba(44,82,132,0.2)' : 'none',
+      '&:hover': { borderColor: '#2C5284' },
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: '#111827',  // always dark text for the selected value in the control
+    }),
+    input: (base) => ({
+      ...base,
+      color: '#111827',
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: '#9ca3af',
+    }),
+    menu: (base) => ({
+      ...base,
+      // Solid white background — never inherits dark mode transparency
+      backgroundColor: '#ffffff',
+      border: '1px solid #e5e7eb',
+      borderRadius: '0.5rem',
+      boxShadow: '0 4px 24px rgba(0,0,0,0.12)',
+      zIndex: 9999,
+    }),
+    menuList: (base) => ({
+      ...base,
+      padding: '4px',
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isSelected
+        ? '#2C5284'
+        : state.isFocused
+        ? 'rgba(44,82,132,0.08)'
+        : 'transparent',
+      color: state.isSelected ? '#ffffff' : '#111827',
+      borderRadius: '0.375rem',
+      cursor: 'pointer',
+      fontSize: '0.875rem',
+      padding: '8px 12px',
+      '&:active': { backgroundColor: '#2C5284', color: '#ffffff' },
+    }),
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
-      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col border border-transparent dark:border-zinc-800">
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col  dark:border-zinc-800">
 
         {/* ── Header ── */}
         <div className="flex items-center justify-between gap-3 px-6 py-4 bg-[#2C5284] dark:bg-[#365f8d]/80 rounded-t-2xl">
@@ -423,7 +475,7 @@ function TaskDetailsModal({ task, onClose, onStatusChange }) {
             </div>
           </div>
 
-          {/* ── Update Status ── */}
+          {/* ── Update Status — fixed dropdown ── */}
           <div>
             <label className="block text-sm font-bold text-gray-600 dark:text-gray-500 mb-2">
               Update Status
@@ -432,33 +484,12 @@ function TaskDetailsModal({ task, onClose, onStatusChange }) {
               value={statusOptions.find(o => o.value === status)}
               onChange={(opt) => opt && setStatus(opt.value)}
               options={statusOptions}
+              isSearchable={false}
               className="react-select-container text-sm"
               classNamePrefix="react-select"
-              menuPortalTarget={document.body}
-              styles={{
-                control: (base, state) => ({
-                  ...base,
-                  backgroundColor: 'transparent',
-                  borderColor: state.isFocused ? '#2C5284' : 'var(--select-border, #d1d5db)',
-                  borderRadius: '0.5rem',
-                  padding: '2px',
-                  boxShadow: state.isFocused ? '0 0 0 2px rgba(44,82,132,0.2)' : 'none',
-                  '&:hover': { borderColor: '#2C5284' },
-                }),
-                singleValue: (base) => ({ ...base, color: 'inherit' }),
-                option: (base, state) => ({
-                  ...base,
-                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
-                  color: state.isSelected ? 'white' : 'inherit',
-                  cursor: 'pointer',
-                }),
-                menu: (base) => ({
-                  ...base,
-                  backgroundColor: 'var(--select-bg, white)',
-                  border: '1px solid var(--select-border, #e5e7eb)',
-                  zIndex: 9999,
-                }),
-              }}
+              // NO menuPortalTarget — keeps the menu inside the modal's stacking context
+              // so it receives correct colours without relying on CSS vars
+              styles={selectStyles}
             />
           </div>
 
@@ -551,7 +582,6 @@ export default function EmployeeTasks({ setTitle }) {
       await apiUpdateTaskStatus(id, newStatus);
       toast.success('Task status updated');
       setTasks(prev => prev.map(t => t._id === id ? { ...t, status: newStatus } : t));
-      // also update selectedTask if open
       setSelectedTask(prev => prev && prev._id === id ? { ...prev, status: newStatus } : prev);
     } catch (err) {
       toast.error(err.message || 'Error updating status');
@@ -588,7 +618,6 @@ export default function EmployeeTasks({ setTitle }) {
     completed:  tasks.filter(t => t.status === 'Completed').length,
   };
 
-  // identical stat card spec to AdminTasks
   const statCards = [
     { sub: 'Total Tasks',  value: stats.total,      icon: <CgProfile size={20} className="text-white" /> },
     { sub: 'Pending',      value: stats.pending,    icon: <AiOutlineClockCircle size={20} className="text-white" /> },
@@ -608,7 +637,7 @@ export default function EmployeeTasks({ setTitle }) {
         </h2>
       </div>
 
-      {/* ── Stat Cards — p-4 / text-xl sm:text-2xl / w-9 h-9 sm:w-10 sm:h-10 / size=20 ── */}
+      {/* ── Stat Cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {statCards.map((card, i) => (
           <div
@@ -731,7 +760,6 @@ export default function EmployeeTasks({ setTitle }) {
                     key={task._id}
                     className="group hover:bg-zinc-50/80 dark:hover:bg-white/5 transition-all duration-200 border-b border-zinc-100 dark:border-white/5 last:border-0"
                   >
-                    {/* Task Details */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-col">
                         <span className="text-sm font-medium text-gray-900 dark:text-gray-100 group-hover:text-[#2C5284] dark:group-hover:text-blue-400 transition-colors">
@@ -745,7 +773,6 @@ export default function EmployeeTasks({ setTitle }) {
                       </div>
                     </td>
 
-                    {/* Assignees */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center -space-x-1.5">
                         {task.assignedEmployees && task.assignedEmployees.map((emp, index) => {
@@ -776,39 +803,33 @@ export default function EmployeeTasks({ setTitle }) {
                       </div>
                     </td>
 
-                    {/* Deadline */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-center">
                       <span className={new Date(task.deadline) < new Date() && task.status !== 'Completed' ? 'text-red-500 font-semibold' : ''}>
                         {new Date(task.deadline).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' })}
                       </span>
                     </td>
 
-                    {/* Priority */}
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <span className={`px-2 py-1 rounded-full text-[10px] font-semibold border ${priorityColors[task.priority] || priorityColors['Medium']}`}>
                         {task.priority || 'Medium'}
                       </span>
                     </td>
 
-                    {/* Status */}
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${statusColors[task.status] || statusColors['Pending']}`}>
                         {task.status}
                       </span>
                     </td>
 
-                    {/* Actions */}
                     <td className="px-6 py-4 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => setSelectedTask(task)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2C5284]/10 dark:bg-white/5 hover:bg-[#2C5284] text-[#2C5284] dark:text-blue-300 hover:text-white rounded-lg text-xs font-semibold transition-all"
-                          title="View & Update"
-                        >
-                          <AiOutlineEye size={12} />
-                          <span>Details</span>
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => setSelectedTask(task)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2C5284]/10 dark:bg-white/5 hover:bg-[#2C5284] text-[#2C5284] dark:text-blue-300 hover:text-white rounded-lg text-xs font-semibold transition-all ml-auto"
+                        title="View & Update"
+                      >
+                        <AiOutlineEye size={12} />
+                        <span>Details</span>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -825,7 +846,6 @@ export default function EmployeeTasks({ setTitle }) {
                   key={task._id}
                   className="bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5"
                 >
-                  {/* Card Header */}
                   <div className="p-4 flex items-center justify-between border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5">
                     <div className="min-w-0 flex-1">
                       <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm truncate">{task.title}</p>
@@ -833,14 +853,11 @@ export default function EmployeeTasks({ setTitle }) {
                         <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 line-clamp-1">{task.description}</p>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 flex-shrink-0 ml-3">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${statusColors[task.status] || statusColors['Pending']}`}>
-                        {task.status}
-                      </span>
-                    </div>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ml-3 flex-shrink-0 ${statusColors[task.status] || statusColors['Pending']}`}>
+                      {task.status}
+                    </span>
                   </div>
 
-                  {/* Card Body */}
                   <div className="p-4 space-y-3">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -858,7 +875,6 @@ export default function EmployeeTasks({ setTitle }) {
                       </div>
                     </div>
 
-                    {/* Assignees */}
                     {task.assignedEmployees && task.assignedEmployees.length > 0 && (
                       <div>
                         <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-bold mb-1">Team</p>
@@ -885,7 +901,6 @@ export default function EmployeeTasks({ setTitle }) {
                       </div>
                     )}
 
-                    {/* Action */}
                     <div className="pt-3 border-t border-gray-50 dark:border-white/5">
                       <button
                         onClick={() => setSelectedTask(task)}
