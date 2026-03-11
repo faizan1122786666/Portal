@@ -12,6 +12,8 @@ import { AiOutlineClockCircle } from 'react-icons/ai'
 import { FaRegCheckCircle } from 'react-icons/fa'
 import { RxCrossCircled } from 'react-icons/rx'
 import { CalendarDays } from 'lucide-react'
+import TableSkeleton from '../../components/common/TableSkeleton'
+import Skeleton from '../../components/common/Skeleton'
 import {
   apiGetAllAttendance,
   apiGetTodaySummary,
@@ -741,22 +743,32 @@ function AdminAttendance({ setTitle }) {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {[
-          { label: 'Total Employees', value: todayStats.totalEmployees, icon: <CgProfile size={20} className="text-white" /> },
-          { label: 'Today Present', value: todayStats.present, icon: <FaRegCheckCircle size={20} className="text-white" /> },
-          { label: 'Today Absent', value: todayStats.absent, icon: <RxCrossCircled size={20} className="text-white" /> },
-          { label: 'Today Leave', value: todayStats.onLeave, icon: <CalendarDays size={20} className="text-white" /> },
-        ].map((card, i) => (
-          <div key={i} className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
-            <div>
-              <p className="text-xs text-[#2C5284] dark:text-gray-300">{card.label}</p>
-              <h1 className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{card.value}</h1>
+        {loading
+          ? [...Array(4)].map((_, i) => (
+            <div key={i} className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-gray-100 dark:border-white/5 flex items-center justify-between shadow transition duration-300">
+              <div className="space-y-2 flex-1">
+                <Skeleton height="0.6rem" width="40%" />
+                <Skeleton height="1.5rem" width="20%" />
+              </div>
+              <Skeleton variant="circular" width="2.5rem" height="2.5rem" className="shrink-0" />
             </div>
-            <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
-              {card.icon}
+          ))
+          : [
+            { label: 'Total Employees', value: todayStats.totalEmployees, icon: <CgProfile size={20} className="text-white" /> },
+            { label: 'Today Present', value: todayStats.present, icon: <FaRegCheckCircle size={20} className="text-white" /> },
+            { label: 'Today Absent', value: todayStats.absent, icon: <RxCrossCircled size={20} className="text-white" /> },
+            { label: 'Today Leave', value: todayStats.onLeave, icon: <CalendarDays size={20} className="text-white" /> },
+          ].map((card, i) => (
+            <div key={i} className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
+              <div>
+                <p className="text-xs text-[#2C5284] dark:text-gray-300">{card.label}</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{card.value}</h1>
+              </div>
+              <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+                {card.icon}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
 
       {/* Filters */}
@@ -789,9 +801,7 @@ function AdminAttendance({ setTitle }) {
       {error && <div className="bg-red-50 text-red-700 px-4 py-3 rounded-xl mb-4 border border-red-200">{error}</div>}
 
       {loading ? (
-        <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-12 text-center text-gray-500 flex flex-col items-center justify-center border border-gray-100 dark:border-white/5">
-          <Loader size="medium" />
-        </div>
+        <TableSkeleton rows={8} cols={8} />
       ) : (
         <>
           {/* Desktop Table */}

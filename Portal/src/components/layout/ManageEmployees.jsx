@@ -631,6 +631,8 @@ import { FaPlus, FaEdit, FaTrash, FaTimes, FaSun, FaMoon, FaUserTie, FaRegCheckC
 import { CgProfile } from 'react-icons/cg'
 import { MdBadge } from 'react-icons/md'
 import Loader from '../common/Loader'
+import TableSkeleton from '../common/TableSkeleton'
+import Skeleton from '../common/Skeleton'
 import React from 'react'
 import { AiOutlineDelete } from 'react-icons/ai'
 
@@ -1102,33 +1104,46 @@ function ManageEmployees({ setTitle }) {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
-          <div>
-            <p className="text-xs text-[#2C5284] dark:text-gray-300">Total Users</p>
-            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-white">{stats.total}</p>
-          </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
-            <CgProfile size={20} className="text-white" />
-          </div>
-        </div>
-        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
-          <div>
-            <p className="text-xs text-[#2C5284] dark:text-gray-300">Admins</p>
-            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-white">{stats.admins}</p>
-          </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
-            <FaUserTie size={20} className="text-white" />
-          </div>
-        </div>
-        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
-          <div>
-            <p className="text-xs text-[#2C5284] dark:text-gray-300">Employees</p>
-            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-white">{stats.staff}</p>
-          </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
-            <FaRegCheckCircle size={20} className="text-white" />
-          </div>
-        </div>
+        {loading
+          ? [...Array(3)].map((_, i) => (
+            <div key={i} className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-gray-100 dark:border-white/5 flex items-center justify-between shadow transition duration-300">
+              <div className="space-y-2 flex-1">
+                <Skeleton height="0.6rem" width="40%" />
+                <Skeleton height="1.5rem" width="20%" />
+              </div>
+              <Skeleton variant="circular" width="2.5rem" height="2.5rem" className="shrink-0" />
+            </div>
+          ))
+          : <>
+            <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
+              <div>
+                <p className="text-xs text-[#2C5284] dark:text-gray-300">Total Users</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-white">{stats.total}</p>
+              </div>
+              <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+                <CgProfile size={20} className="text-white" />
+              </div>
+            </div>
+            <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
+              <div>
+                <p className="text-xs text-[#2C5284] dark:text-gray-300">Admins</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-white">{stats.admins}</p>
+              </div>
+              <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+                <FaUserTie size={20} className="text-white" />
+              </div>
+            </div>
+            <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition-all duration-300">
+              <div>
+                <p className="text-xs text-[#2C5284] dark:text-gray-300">Employees</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-white">{stats.staff}</p>
+              </div>
+              <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+                <FaRegCheckCircle size={20} className="text-white" />
+              </div>
+            </div>
+          </>
+        }
       </div>
 
       {/* Search + Filter bar */}
@@ -1268,9 +1283,7 @@ function ManageEmployees({ setTitle }) {
       </p>
 
       {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader size="large" />
-        </div>
+        <TableSkeleton rows={8} cols={7} />
       ) : (
         <>
           {/* Desktop Table */}

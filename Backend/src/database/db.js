@@ -9,9 +9,9 @@ const connectDB = async () => {
 
         await mongoose.connect(url, {
             serverSelectionTimeoutMS: 5000,
-            family: 4 // Force IPv4 to avoid common Atlas DNS/Handshake issues
+            family: 4 
         });
-        console.log('Database Connected Successfully');
+        console.log('Database Connected');
 
     } catch (err) {
         console.error('--- DATABASE CONNECTION ERROR ---');

@@ -145,3 +145,37 @@
 :is(.dark) .react-select__placeholder {
   color: #9ca3af !important;
 }
+/* Custom React Toastify Mobile Styling */
+@media (max-width: 768px) {
+  .Toastify__toast-container {
+    width: 90% !important;
+    max-width: 320px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: 1rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .Toastify__toast {
+    min-height: 50px !important;
+    padding: 12px 16px !important;
+    border-radius: 12px !important;
+    margin-bottom: 0.5rem !important;
+    font-size: 0.85rem !important;
+  }
+  .Toastify__close-button {
+    align-self: center !important;
+  }
+  .Toastify__toast-body {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+
+/* Dark Mode Select Options Fix */
+.dark select option {
+  background-color: #292c35 !important;
+  color: #f3f4f6 !important;
+}
+

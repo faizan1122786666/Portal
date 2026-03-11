@@ -11,6 +11,8 @@ import { SlCalender } from 'react-icons/sl';
 import LeaveDetailModal from './LeaveDetailModal';
 import { apiGetAllLeaves, apiGetLeaveSummary, apiReviewLeave } from '../../api/leaveAPI';
 import Loader from '../../components/common/Loader';
+import TableSkeleton from '../../components/common/TableSkeleton';
+import Skeleton from '../../components/common/Skeleton';
 
 function AdminLeave({ setTitle }) {
   const [leaves, setLeaves] = useState([]);
@@ -162,42 +164,55 @@ function AdminLeave({ setTitle }) {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
-          <div>
-            <p className="text-xs text-[#2C5284] dark:text-gray-300">Total Requests</p>
-            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.total}</p>
-          </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
-            <CgProfile size={20} className="text-white" />
-          </div>
-        </div>
-        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
-          <div>
-            <p className="text-xs text-[#2C5284] dark:text-gray-300">Pending</p>
-            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.pending}</p>
-          </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
-            <SlCalender size={20} className="text-white" />
-          </div>
-        </div>
-        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
-          <div>
-            <p className="text-xs text-[#2C5284] dark:text-gray-300">Approved</p>
-            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.approved}</p>
-          </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
-            <FaRegCheckCircle size={20} className="text-white" />
-          </div>
-        </div>
-        <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
-          <div>
-            <p className="text-xs text-[#2C5284] dark:text-gray-300">Rejected</p>
-            <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.rejected}</p>
-          </div>
-          <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
-            <RxCrossCircled size={20} className="text-white" />
-          </div>
-        </div>
+        {loading
+          ? [...Array(4)].map((_, i) => (
+            <div key={i} className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-gray-100 dark:border-white/5 flex items-center justify-between shadow transition duration-300">
+              <div className="space-y-2 flex-1">
+                <Skeleton height="0.6rem" width="40%" />
+                <Skeleton height="1.5rem" width="20%" />
+              </div>
+              <Skeleton variant="circular" width="2.5rem" height="2.5rem" className="shrink-0" />
+            </div>
+          ))
+          : <>
+            <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
+              <div>
+                <p className="text-xs text-[#2C5284] dark:text-gray-300">Total Requests</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.total}</p>
+              </div>
+              <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+                <CgProfile size={20} className="text-white" />
+              </div>
+            </div>
+            <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
+              <div>
+                <p className="text-xs text-[#2C5284] dark:text-gray-300">Pending</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.pending}</p>
+              </div>
+              <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+                <SlCalender size={20} className="text-white" />
+              </div>
+            </div>
+            <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
+              <div>
+                <p className="text-xs text-[#2C5284] dark:text-gray-300">Approved</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.approved}</p>
+              </div>
+              <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+                <FaRegCheckCircle size={20} className="text-white" />
+              </div>
+            </div>
+            <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
+              <div>
+                <p className="text-xs text-[#2C5284] dark:text-gray-300">Rejected</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.rejected}</p>
+              </div>
+              <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+                <RxCrossCircled size={20} className="text-white" />
+              </div>
+            </div>
+          </>
+        }
       </div>
 
       {/* Filters Section */}
@@ -267,10 +282,7 @@ function AdminLeave({ setTitle }) {
 
       {/* Loading */}
       {loading && (
-        <div className="bg-white dark:bg-white/5 rounded-xl shadow-sm p-12 text-center text-gray-500 flex flex-col items-center justify-center border border-gray-100 dark:border-white/5">
-          <Loader size="medium" />
-        
-        </div>
+        <TableSkeleton rows={8} cols={6} />
       )}
 
       {/* Desktop Table */}

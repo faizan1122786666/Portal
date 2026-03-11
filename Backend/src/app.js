@@ -82,7 +82,9 @@ const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
 const attendanceRoutes = require('./routes/attendance.routes');
 const leaveRoutes = require('./routes/leave.routes');       // ← NEW
-const taskRoutes = require('./routes/task.routes');
+
+const projectRoutes = require('./routes/projectRoutes');
+
 
 const app = express();
 const uploadDir = path.join(__dirname, '../public/uploads/profile');
@@ -111,8 +113,9 @@ app.use('/api/attendance', attendanceRoutes);
 // Employee leave    →  /api/leave/apply, /my, /:id
 app.use('/api/leave', leaveRoutes);
 
-// Tasks             →  /api/tasks/...
-app.use('/api/tasks', taskRoutes);
+
+// Projects 
+app.use('/api/projects', projectRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
