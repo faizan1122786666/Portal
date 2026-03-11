@@ -27,6 +27,7 @@
 
 
 import { AiOutlineMenu } from 'react-icons/ai'
+import { HiUserGroup } from 'react-icons/hi'
 import { Moon, Sun } from 'lucide-react'
 
 export default function Header({ title, handleSlidebar, isAdmin, darkMode, toggleDarkMode }) {
@@ -40,9 +41,11 @@ export default function Header({ title, handleSlidebar, isAdmin, darkMode, toggl
         </button>
 
         {/* Page Title */}
-        <h1 className="text-xl font-semibold text-[#2C5282] dark:text-white">
-          {title}
-        </h1>
+        <div className="flex items-center">
+          <h1 className="text-xl font-semibold text-[#2C5282] dark:text-white">
+            {title}
+          </h1>
+        </div>
       </div>
 
       {/* Dark Mode Toggle — only for admin */}

@@ -109,36 +109,7 @@ function CircularProgress({ workHours = "0h 0m" }) {
 
 
 
-// function CircularProgress({ workHours }) {
-//   if (!workHours) return (
-//     <div className="flex justify-center items-center">
-//       <div className="w-28 h-28 rounded-full border-8 border-gray-200 flex items-center justify-center">
-//         <span className="text-gray-400 text-xs">No Data</span>
-//       </div>
-//     </div>
-//   )
-//   const parts = workHours.split('h')
-//   const hours = parseInt(parts[0].trim()) || 0
-//   const minutes = parts[1] ? parseInt(parts[1].trim()) || 0 : 0
-//   const total = hours * 60 + minutes
-//   const pct = Math.min((total / 540) * 100, 100)
-//   const DA = 2 * Math.PI * 54
-//   const DO = DA - (DA * pct) / 100
-//   return (
-//     <div className="relative flex items-center justify-center">
-//       <svg className="w-28 h-28 -rotate-90">
-//         <circle cx="56" cy="56" r="54" stroke="#e5e7eb" strokeWidth="8" fill="transparent" className="opacity-10" />
-//         <circle cx="56" cy="56" r="54" stroke="#2C5284" strokeWidth="8"
-//           strokeDasharray={DA} strokeDashoffset={DO}
-//           strokeLinecap="round" fill="transparent" />
-//       </svg>
-//       <div className="absolute flex flex-col items-center">
-//         <span className="text-base font-bold text-gray-800 dark:text-gray-100">{workHours}</span>
-//         <span className="text-[10px] text-gray-500 dark:text-gray-400">Total Hrs</span>
-//       </div>
-//     </div>
-//   )
-// }
+// LEGACY: Previous CircularProgress implementation
 
 // ── Employee History Modal ────────────────────────────────────────────────────
 function EmployeeHistoryModal({ employee, onClose }) {

@@ -203,12 +203,12 @@ import {
   AiOutlineDashboard,
   AiOutlineClockCircle,
   AiOutlineCalendar,
-  AiOutlineTeam,
   AiOutlineLogout,
 } from 'react-icons/ai';
 import { CgProfile } from 'react-icons/cg';
 import { FiUser } from "react-icons/fi";
 import { FaSun, FaMoon, FaCloudMoon, FaLayerGroup } from 'react-icons/fa';
+import { HiUserGroup } from 'react-icons/hi';
 import { MdBadge } from 'react-icons/md';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -299,7 +299,7 @@ export default function Slidebar({
       >
         {/* ── Header ── */}
         <div className="h-16 flex items-center px-5 border-b border-[#1e3a5f] dark:border-gray-800/40 bg-[#2C5282] dark:bg-[#292c35] transition-colors duration-300">
-          <AiOutlineTeam size={26} className="text-white flex-shrink-0" />
+          <HiUserGroup size={26} className="text-white flex-shrink-0" />
           <h1 className="font-bold text-lg ml-3 flex-1 tracking-tight">Employee Portal</h1>
           <button
             onClick={handleSlidebar}

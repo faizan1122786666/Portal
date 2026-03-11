@@ -332,7 +332,7 @@ function ProjectDetailView({ project, onBack }) {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold border-l-4 ${statusColors[task.status] || statusColors.Pending}`}>
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${statusColors[task.status] || statusColors.Pending}`}>
                           {task.status}
                         </span>
                       </td>
@@ -649,7 +649,7 @@ export default function EmployeeProjects({ setTitle }) {
                           {isOverdue && <div className="text-[10px] text-red-500 font-bold ml-4">Overdue</div>}
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
-                          <span className={`px-3 py-1 inline-flex text-[10px] leading-5 font-bold uppercase tracking-wider rounded-xl border-l-[3px] border-current ${cfg.bg} ${cfg.color}`}>
+                          <span className={`px-3 py-1 inline-flex text-[10px] leading-5 font-bold uppercase tracking-wider rounded-full ${cfg.bg} ${cfg.color}`}>
                             {project.status}
                           </span>
                         </td>

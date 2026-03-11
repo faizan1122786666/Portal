@@ -128,9 +128,7 @@ export default function AdminProjects({ setTitle }) {
       </div>
     );
   };
-  // Wait, I should use the icons from react-icons if available.
-  // AdminProjects already imports FaChevronRight but not FaChevronLeft.
-  // I'll update the imports instead.
+
 
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
@@ -162,7 +160,7 @@ export default function AdminProjects({ setTitle }) {
             </div>
           ))
           : statCards.map((card, i) => (
-            <div key={i} className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow-sm hover:shadow-md transition-all duration-300 group">
+            <div key={i} className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow-sm hover:shadow-xl transition-all duration-300 group">
               <div>
                 <p className="text-xs text-[#2C5284] dark:text-gray-300 mb-0.5">{card.sub}</p>
                 <h1 className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300 tracking-tight">{card.value}</h1>
@@ -306,7 +304,7 @@ export default function AdminProjects({ setTitle }) {
                           {isOverdue && <div className="text-[10px] text-red-500 font-bold ml-4">Overdue</div>}
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap">
-                          <span className={`px-3 py-1 inline-flex text-[10px] leading-5 font-bold uppercase tracking-wider rounded-xl border-l-[3px] border-current ${cfg.bg} ${cfg.color}`}>
+                          <span className={`px-3 py-1 inline-flex text-[10px] leading-5 font-bold uppercase tracking-wider rounded-full ${cfg.bg} ${cfg.color}`}>
                             {project.status}
                           </span>
                         </td>
