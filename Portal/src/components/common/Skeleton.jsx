@@ -1,5 +1,10 @@
 import React from 'react';
 
+/**
+ * Component: Skeleton
+ * Description: A placeholder component that mimics the shape of content while it's loading.
+ * Why: To improve perceived performance by showing a shimmering layout before the actual data is rendered.
+ */
 const Skeleton = ({ 
   className = '', 
   variant = 'rectangular', 

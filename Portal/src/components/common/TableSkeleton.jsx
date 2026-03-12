@@ -1,6 +1,11 @@
 import React from 'react';
 import Skeleton from './Skeleton';
 
+/**
+ * Component: TableSkeleton
+ * Description: A specialized skeleton component designed specifically for tables.
+ * Why: To maintain the layout of data tables during loading states, preventing layout shifts.
+ */
 const TableSkeleton = ({ rows = 5, cols = 6 }) => {
   return (
     <div className="bg-white dark:bg-white/5 rounded-xl border border-gray-100 dark:border-white/5 overflow-hidden animate-pulse">

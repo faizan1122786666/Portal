@@ -1,3 +1,9 @@
+/**
+ * File: task.model.js
+ * Description: Mongoose schema and model for standalone tasks assigned by admins to one or more employees.
+ * Why: To support task management outside of the project system, with deadline and priority tracking.
+ */
+
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({

@@ -1,7 +1,8 @@
-
-
-
-
+/**
+ * Component: Login
+ * Description: The application's entry point for user authentication.
+ * Why: To secure the portal and ensure only authorized employees and administrators can access their respective dashboards.
+ */
 import React, { useState } from 'react'
 import { CgProfile } from 'react-icons/cg'
 import { useNavigate } from 'react-router-dom'

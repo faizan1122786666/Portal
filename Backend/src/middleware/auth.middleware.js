@@ -1,6 +1,16 @@
+/**
+ * File: auth.middleware.js
+ * Description: JWT verification middleware for protecting routes and enforcing role-based access control.
+ * Why: To centralize authentication and authorization logic, ensuring only valid sessions can reach protected endpoints.
+ */
+
 const jwt = require('jsonwebtoken');
 
-// ── Verify any logged-in user ─────────────────────────────────────────────────
+/**
+ * Function: verifyToken
+ * Description: Verifies the JWT cookie on any request and attaches the decoded user payload to req.user.
+ * Why: To protect routes that require a logged-in user (any role) without repeating verification logic in each controller.
+ */
 const verifyToken = (req, res, next) => {
     try {
         const token = req.cookies.token;
@@ -18,7 +28,11 @@ const verifyToken = (req, res, next) => {
     }
 };
 
-// ── Verify admin only ─────────────────────────────────────────────────────────
+/**
+ * Function: verifyAdmin
+ * Description: Verifies the JWT cookie AND confirms the user has the 'admin' role.
+ * Why: To restrict admin-only routes, ensuring employees cannot access management endpoints.
+ */
 const verifyAdmin = (req, res, next) => {
     try {
         const token = req.cookies.token;

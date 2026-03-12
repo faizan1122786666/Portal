@@ -4,11 +4,11 @@ import { toast } from 'react-toastify';
 import { FaTimes, FaChevronDown } from 'react-icons/fa';
 import { apiCreateTask } from '../../api/taskAPI';
 
-const adminApi = axios.create({
-  baseURL: 'http://localhost:3000/api/admin',
-  withCredentials: true,
-});
-
+/**
+ * Component: AddTaskModal
+ * Description: A modal for administrators to assign standalone tasks to employees.
+ * Why: To facilitate the assignment of individual work items that are not necessarily tied to a specific project.
+ */
 export default function AddTaskModal({ onClose, onAdded }) {
   const [employees, setEmployees] = useState([]);
   const [form, setForm] = useState({

@@ -1,9 +1,8 @@
-
-
-
-
-
-
+/**
+ * Component: UserLeaveDetailModal
+ * Description: Employee-facing modal for viewing the full details of their own leave request, including admin feedback.
+ * Why: To provide transparency to users regarding their leave applications and any comments provided by the management.
+ */
 import { FaTimes } from 'react-icons/fa';
 
 function UserLeaveDetailModal({ leave, onClose }) {

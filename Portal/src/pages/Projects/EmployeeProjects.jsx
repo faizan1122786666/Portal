@@ -1,3 +1,8 @@
+/**
+ * Component: EmployeeProjects
+ * Description: Personal project dashboard for employees, showing projects they are assigned to and providing task status update capabilities.
+ * Why: To give employees a focused view of their responsibilities across various projects and a streamlined way to report task progress.
+ */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';

@@ -1,23 +1,12 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Select from 'react-select'
 import { toast } from 'react-toastify'
-import { FaPlus, FaEdit, FaTrash, FaTimes, FaSun, FaMoon, FaUserTie, FaRegCheckCircle, FaBuilding, FaRegEdit } from 'react-icons/fa'
+import { 
+  FaPlus, FaEdit, FaTrash, FaTimes, FaSun, FaMoon, 
+  FaUserTie, FaRegCheckCircle, FaBuilding, FaRegEdit,
+  FaChevronLeft, FaChevronRight 
+} from 'react-icons/fa'
 import { CgProfile } from 'react-icons/cg'
 import { MdBadge } from 'react-icons/md'
 import Loader from '../common/Loader'
@@ -25,59 +14,41 @@ import TableSkeleton from '../common/TableSkeleton'
 import Skeleton from '../common/Skeleton'
 import React from 'react'
 import { AiOutlineDelete } from 'react-icons/ai'
+import { 
+  apiGetEmployees, 
+  apiAddEmployee, 
+  apiUpdateEmployee, 
+  apiDeleteEmployee 
+} from '../../api/employeeAPI'
 
-// ── Axios instance
-const api = axios.create({
-  baseURL: 'http://localhost:3000/api/admin',
-  withCredentials: true,
-})
-
-// ── Department options
+// ── Configuration Constants ──────────────────────────────────────────────────
 const DEPARTMENTS = [
-  'Engineering', 'Design', 'Marketing', 'Sales', 'Human Resources',
-  'Finance', 'Operations', 'Customer Support', 'Legal', 'Product',
+  "Development", "Design", "Marketing", "Human Resources", "Management", "Sales", "Operations"
 ]
 
-// ── Designation options
 const DESIGNATIONS = [
-  'Frontend Developer',
-  'Backend Developer',
-  'Full Stack Developer',
-  'Mobile Developer',
-  'UI/UX Designer',
-  'DevOps Engineer',
-  'QA Engineer',
-  'Project Manager',
-  'Product Manager',
-  'Data Analyst',
-  'Data Scientist',
-  'HR Manager',
-  'Marketing Manager',
-  'Sales Manager',
-  'Accountant',
-  'Other',
+  "Senior Developer", "Junior Developer", "UI/UX Designer", "Graphics Designer",
+  "HR Manager", "Project Manager", "Team Lead", "Marketing Head", "Sales Executive"
 ]
 
-// ── Designation badge colors
 const DESIGNATION_COLORS = {
-  'Frontend Developer': 'bg-blue-100 text-blue-700',
-  'Backend Developer': 'bg-purple-100 text-purple-700',
-  'Full Stack Developer': 'bg-indigo-100 text-indigo-700',
-  'Mobile Developer': 'bg-cyan-100 text-cyan-700',
-  'UI/UX Designer': 'bg-pink-100 text-pink-700',
-  'DevOps Engineer': 'bg-orange-100 text-orange-700',
-  'QA Engineer': 'bg-yellow-100 text-yellow-700',
-  'Project Manager': 'bg-green-100 text-green-700',
-  'Product Manager': 'bg-teal-100 text-teal-700',
-  'Data Analyst': 'bg-lime-100 text-lime-700',
-  'Data Scientist': 'bg-emerald-100 text-emerald-700',
-  'HR Manager': 'bg-rose-100 text-rose-700',
-  'Marketing Manager': 'bg-fuchsia-100 text-fuchsia-700',
-  'Sales Manager': 'bg-amber-100 text-amber-700',
-  'Accountant': 'bg-sky-100 text-sky-700',
-  'Other': 'bg-gray-100 text-gray-700',
+  "Senior Developer": "bg-blue-100 text-blue-700",
+  "Junior Developer": "bg-sky-100 text-sky-700",
+  "UI/UX Designer": "bg-purple-100 text-purple-700",
+  "Graphics Designer": "bg-pink-100 text-pink-700",
+  "HR Manager": "bg-emerald-100 text-emerald-700",
+  "Project Manager": "bg-amber-100 text-amber-700",
+  "Team Lead": "bg-orange-100 text-orange-700",
+  "Marketing Head": "bg-indigo-100 text-indigo-700",
+  "Sales Executive": "bg-rose-100 text-rose-700",
+  "Management": "bg-slate-100 text-slate-700"
 }
 
+/**
+ * Component: ManageEmployees
+ * Description: A comprehensive administrative interface for managing employee records, including adding, editing, and deleting users.
+ * Why: To provide administrators with a centralized system for employee lifecycle management and data organization.
+ */
 function DesignationBadge({ designation }) {
   if (!designation) return <span className="text-gray-300 italic text-xs">—</span>
   const color = DESIGNATION_COLORS[designation] || 'bg-gray-100 text-gray-700'
@@ -390,8 +361,8 @@ function ManageEmployees({ setTitle }) {
   const fetchEmployees = async () => {
     setLoading(true)
     try {
-      const res = await api.get('/employees')
-      setEmployees(res.data.employees)
+      const res = await apiGetEmployees()
+      setEmployees(res.employees || [])
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to fetch employees')
     } finally {
@@ -417,10 +388,10 @@ function ManageEmployees({ setTitle }) {
           shift: form.role === 'employee' ? form.shift : '',
         }
         if (form.password) payload.password = form.password
-        await api.put(`/employees/${editingEmp._id}`, payload)
+        await apiUpdateEmployee(editingEmp._id, payload)
         toast.success('Employee updated successfully!')
       } else {
-        await api.post('/employees', {
+        await apiAddEmployee({
           email: form.email,
           password: form.password,
           role: form.role,
@@ -444,7 +415,7 @@ function ManageEmployees({ setTitle }) {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this employee?')) return
     try {
-      await api.delete(`/employees/${id}`)
+      await apiDeleteEmployee(id)
       setEmployees(prev => prev.filter(e => e._id !== id))
       toast.success('Employee deleted.')
     } catch (err) {

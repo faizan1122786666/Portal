@@ -1,3 +1,8 @@
+/**
+ * Component: UserAttendance
+ * Description: A personal attendance tracking page for employees to view their check-in/check-out history.
+ * Why: To provide employees with transparency regarding their work hours, shifts, and attendance status.
+ */
 import { useEffect, useState, useCallback } from 'react'
 import { FaTimes, FaChevronLeft, FaChevronRight, FaSun, FaMoon } from 'react-icons/fa'
 import { AiOutlineClockCircle } from 'react-icons/ai'

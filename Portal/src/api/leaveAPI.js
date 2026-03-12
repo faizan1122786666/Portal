@@ -1,7 +1,11 @@
 // ── Base URL ──────────────────────────────────────────────────────────────────
 const BASE = 'http://localhost:3000/api';
 
-// ── Helper: fetch with credentials ────────────────────────────────────────────
+/**
+ * Function: apiFetch
+ * Description: A helper function to perform fetch requests with credentials and common headers.
+ * Why: To centralize API request logic, handle credentials (cookies), and provide consistent error handling for leave-related operations.
+ */
 async function apiFetch(url, options = {}) {
   const res = await fetch(url, {
     credentials: 'include',
@@ -20,18 +24,15 @@ async function apiFetch(url, options = {}) {
   return data;
 }
 
-
 // ═══════════════════════════════════════════════════════════════════════════════
 //  EMPLOYEE API CALLS
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
- * POST /api/leave/apply
- * Submit a new leave request.
+ * Function: apiApplyLeave
+ * Description: Submits a new leave request for the logged-in employee.
+ * Why: To allow employees to request time off from work.
  * @param {Object} body - { leaveType, startDate, endDate, reason }
- *   leaveType: 'Sick Leave' | 'Annual Leave' | 'Personal Leave' |
- *              'Emergency Leave' | 'Maternity Leave' | 'Paternity Leave' | 'Unpaid Leave'
- *   startDate / endDate: 'YYYY-MM-DD'
  */
 export async function apiApplyLeave(body) {
   return apiFetch(`${BASE}/leave/apply`, {
@@ -41,9 +42,10 @@ export async function apiApplyLeave(body) {
 }
 
 /**
- * GET /api/leave/my
- * Get the logged-in employee's own leave history.
- * @param {Object} filters - optional: { status: 'Pending'|'Approved'|'Rejected', month: 'YYYY-MM' }
+ * Function: apiGetMyLeaves
+ * Description: Retrieves the leave history for the logged-in employee.
+ * Why: To allow employees to track the status of their leave requests.
+ * @param {Object} filters - optional: { status, month }
  */
 export async function apiGetMyLeaves(filters = {}) {
   const params = new URLSearchParams(filters).toString();
@@ -51,10 +53,11 @@ export async function apiGetMyLeaves(filters = {}) {
 }
 
 /**
- * PUT /api/leave/:id
- * Edit a PENDING leave request (employee only).
- * @param {string} id   - leave record _id
- * @param {Object} body - { leaveType?, startDate?, endDate?, reason? }
+ * Function: apiUpdateMyLeave
+ * Description: Updates a pending leave request for the logged-in employee.
+ * Why: To allow employees to modify their leave requests if needed before they are reviewed.
+ * @param {string} id - leave record _id
+ * @param {Object} body - Updated leave details
  */
 export async function apiUpdateMyLeave(id, body) {
   return apiFetch(`${BASE}/leave/${id}`, {
@@ -64,33 +67,33 @@ export async function apiUpdateMyLeave(id, body) {
 }
 
 /**
- * DELETE /api/leave/:id
- * Cancel a PENDING leave request (employee only).
+ * Function: apiDeleteMyLeave
+ * Description: Cancels a pending leave request for the logged-in employee.
+ * Why: To allow employees to withdraw their leave requests.
  * @param {string} id - leave record _id
  */
 export async function apiDeleteMyLeave(id) {
   return apiFetch(`${BASE}/leave/${id}`, { method: 'DELETE' });
 }
 
-
 // ═══════════════════════════════════════════════════════════════════════════════
 //  ADMIN API CALLS
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
- * GET /api/admin/leave/summary
- * Dashboard stats: { total, pending, approved, rejected }
+ * Function: apiGetLeaveSummary
+ * Description: Fetches a summary of leave requests (total, pending, etc.) for admins.
+ * Why: To provide admins with an overview of leave management status.
  */
 export async function apiGetLeaveSummary() {
   return apiFetch(`${BASE}/admin/leave/summary`);
 }
 
 /**
- * GET /api/admin/leave
- * All leave requests across all employees.
- * @param {Object} filters - optional: { status, employeeId, month: 'YYYY-MM' }
- * Returns: { leaves: [...], summary: { total, pending, approved, rejected } }
- * Each leave has employeeId populated with { name, email, department, ... }
+ * Function: apiGetAllLeaves
+ * Description: Retrieves all leave requests across the entire organization.
+ * Why: For admins to review and manage all employee leave requests.
+ * @param {Object} filters - optional: { status, employeeId, month }
  */
 export async function apiGetAllLeaves(filters = {}) {
   const params = new URLSearchParams(filters).toString();
@@ -98,10 +101,11 @@ export async function apiGetAllLeaves(filters = {}) {
 }
 
 /**
- * GET /api/admin/leave/employee/:id
- * Full leave history for one specific employee.
- * @param {string} id       - employee user _id
- * @param {Object} filters  - optional: { month: 'YYYY-MM' }
+ * Function: apiGetEmployeeLeaves
+ * Description: Fetches the full leave history for a specific employee.
+ * Why: To allow admins to view the leave record of a particular individual.
+ * @param {string} id - employee user _id
+ * @param {Object} filters - optional filters
  */
 export async function apiGetEmployeeLeaves(id, filters = {}) {
   const params = new URLSearchParams(filters).toString();
@@ -109,10 +113,11 @@ export async function apiGetEmployeeLeaves(id, filters = {}) {
 }
 
 /**
- * PUT /api/admin/leave/:id/review
- * Approve or reject a leave request.
- * @param {string} id   - leave record _id
- * @param {Object} body - { status: 'Approved'|'Rejected', adminComment?: string }
+ * Function: apiReviewLeave
+ * Description: Approves or rejects a leave request.
+ * Why: The primary mechanism for admins to process leave applications.
+ * @param {string} id - leave record _id
+ * @param {Object} body - { status, adminComment }
  */
 export async function apiReviewLeave(id, body) {
   return apiFetch(`${BASE}/admin/leave/${id}/review`, {
@@ -122,10 +127,11 @@ export async function apiReviewLeave(id, body) {
 }
 
 /**
- * PUT /api/admin/leave/:id
- * Full admin edit of any leave record.
- * @param {string} id   - leave record _id
- * @param {Object} body - { status?, adminComment?, leaveType?, startDate?, endDate?, reason? }
+ * Function: apiAdminUpdateLeave
+ * Description: Allows admins to force-update any leave record.
+ * Why: To provide full administrative control over leave data.
+ * @param {string} id - leave record _id
+ * @param {Object} body - fields to update
  */
 export async function apiAdminUpdateLeave(id, body) {
   return apiFetch(`${BASE}/admin/leave/${id}`, {
@@ -135,8 +141,9 @@ export async function apiAdminUpdateLeave(id, body) {
 }
 
 /**
- * DELETE /api/admin/leave/:id
- * Admin permanently deletes a leave record.
+ * Function: apiAdminDeleteLeave
+ * Description: Permanently deletes a leave record (Admin only).
+ * Why: To remove incorrect or erroneous leave data from the system.
  * @param {string} id - leave record _id
  */
 export async function apiAdminDeleteLeave(id) {

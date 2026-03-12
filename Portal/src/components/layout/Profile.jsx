@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { CgProfile } from 'react-icons/cg';
 import { FaSun, FaMoon, FaEnvelope, FaBriefcase, FaBuilding, FaDollarSign, FaRegEdit, FaTimes, FaCheck } from 'react-icons/fa';
@@ -9,7 +8,11 @@ import Loader from '../common/Loader';
 import { useAuthContext } from '../../context';
 import ChangePassword from '../../pages/Auth/ChangePassword';
 
-// ── Shift badge ───────────────────────────────────────────────────────────────
+/**
+ * Component: UserProfile / Profile
+ * Description: A page component that displays and allows editing of User-specific profile information.
+ * Why: To allow users to view their account details, change passwords, and update their display information.
+ */
 function ShiftBadge({ shift }) {
   if (!shift) return <span className="text-gray-700">Not assigned</span>;
   const isMorning = shift === 'Morning';

@@ -1,9 +1,8 @@
-
-
-
-
-
-
+/**
+ * Component: AdminAttendance
+ * Description: The primary administrative interface for viewing and managing employee attendance records.
+ * Why: To allow administrators to monitor attendance trends, mark records manually, and view summaries for all employees.
+ */
 import { useEffect, useState, useCallback } from 'react'
 import Select from 'react-select'
 import { CgProfile } from 'react-icons/cg'

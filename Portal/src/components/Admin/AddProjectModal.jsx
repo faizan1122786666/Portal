@@ -5,14 +5,11 @@ import { FaTimes } from 'react-icons/fa';
 import Select from 'react-select';
 import { apiCreateProject } from '../../api/projectAPI';
 
-const adminApi = axios.create({
-  baseURL: 'http://localhost:3000/api/admin',
-  withCredentials: true,
-});
-
-const STATUS_OPTIONS = ['Planning', 'Active', 'On Hold', 'Completed'];
-const PRIORITY_OPTIONS = ['Low', 'Medium', 'High', 'Urgent'];
-
+/**
+ * Component: AddProjectModal
+ * Description: A modal component for administrators to create new projects.
+ * Why: To allow managers and admins to initiate and define new project initiatives within the portal.
+ */
 export default function AddProjectModal({ onClose, onAdded }) {
   const [employees, setEmployees] = useState([]);
   const [fetchingEmp, setFetchingEmp] = useState(true);

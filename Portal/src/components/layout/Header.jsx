@@ -1,35 +1,12 @@
-// import React from 'react'
-// import { AiOutlineMenu } from 'react-icons/ai'
-
-// export default function Header({ title, handleSlidebar }) {
-//   return (
-//     <header
-//       className="
-//         fixed top-0 right-0 h-16 bg-white z-40 flex items-center gap-4 px-6 border-b border-gray-200 left-0 lg:left-64">
-
-//        {/* Icon */}
-//       <button onClick={handleSlidebar} className="lg:hidden">
-//         <AiOutlineMenu size={24} />
-//       </button>
-
-//        {/* Title */}
-//       <h1 className="text-xl font-semibold text-[#2C5282]">
-//         {title}
-//       </h1>
-//     </header>
-//   )
-// }
-
-
-
-
-
-
-
 import { AiOutlineMenu } from 'react-icons/ai'
 import { HiUserGroup } from 'react-icons/hi'
 import { Moon, Sun } from 'lucide-react'
 
+/**
+ * Component: Header
+ * Description: The top navigation bar component, displaying the page title and theme toggle.
+ * Why: To provide a consistent header across the application, allowing for mobile menu access and theme switching.
+ */
 export default function Header({ title, handleSlidebar, isAdmin, darkMode, toggleDarkMode }) {
   return (
     <header className="fixed top-0 right-0 h-16 bg-white dark:bg-[#292c35] z-40 flex items-center justify-between gap-4 px-6 border-b border-gray-200 dark:border-gray-800/40 left-0 lg:left-64 transition-all duration-300">

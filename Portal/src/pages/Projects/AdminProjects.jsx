@@ -1,3 +1,8 @@
+/**
+ * Component: AdminProjects
+ * Description: Administrative overview page for project management, displaying all company projects with filtering and key statistics.
+ * Why: To provide administrators with a high-level view of project statuses, priorities, and deadlines, and to serve as a hub for project creation.
+ */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';

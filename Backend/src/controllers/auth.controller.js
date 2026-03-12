@@ -1,7 +1,17 @@
+/**
+ * File: auth.controller.js
+ * Description: Handles user authentication operations including registration, login, password change, and profile management.
+ * Why: To encapsulate all auth business logic, keeping routes clean and testable.
+ */
+
 const userModel = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+/**
+ * Function: registerUser
+ * Why: To allow new employees or admins to register in the system.
+ */
 async function registerUser(req, res) {
     try {
         const { email, password, role = "employee", name = '', shift = '' } = req.body;
@@ -53,6 +63,11 @@ async function registerUser(req, res) {
     }
 }
 
+/**
+ * Function: LoginUser
+ * Description: Validates credentials and issues a JWT cookie for authenticated sessions.
+ * Why: To authenticate users and establish a secure session via HTTP-only cookies.
+ */
 async function LoginUser(req, res) {
     try {
         const { email, password } = req.body;
@@ -105,6 +120,11 @@ async function LoginUser(req, res) {
     }
 }
 
+/**
+ * Function: ChangePassword
+ * Description: Allows an authenticated user to change their password after verifying the old one.
+ * Why: To provide a secure self-service password change flow.
+ */
 async function ChangePassword(req, res) {
     try {
         const { oldPassword, newPassword } = req.body;
@@ -140,6 +160,11 @@ async function ChangePassword(req, res) {
     }
 }
 
+/**
+ * Function: updateProfile
+ * Description: Updates the display name of an authenticated user.
+ * Why: To allow users to personalize their profile information within defined constraints.
+ */
 async function updateProfile(req, res) {
     try {
         const { name } = req.body;
@@ -179,6 +204,11 @@ async function updateProfile(req, res) {
     }
 }
 
+/**
+ * Function: uploadProfileImage
+ * Description: Handles profile image upload and updates the user's profileImage field via Cloudinary.
+ * Why: To give users a visual identity within the portal.
+ */
 async function uploadProfileImage(req, res) {
     try {
         if (!req.file) {

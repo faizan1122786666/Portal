@@ -1,6 +1,10 @@
+/**
+ * File: db.js
+ * Description: Establishes a connection to the MongoDB database using Mongoose.
+ * Why: To initialize the database connection at server startup, with helpful diagnostics for common connection errors.
+ */
+
 const mongoose = require('mongoose');
-
-
 
 const connectDB = async () => {
     try {

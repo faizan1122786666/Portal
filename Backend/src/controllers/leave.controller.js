@@ -1,7 +1,17 @@
+/**
+ * File: leave.controller.js
+ * Description: Handles all leave management operations for both employees (apply/edit/cancel) and admins (review/manage all leaves).
+ * Why: To enforce business rules around leave requests, date validation, and overlap detection while maintaining a clean audit trail.
+ */
+
 const leaveModel = require('../models/leave.model');
 const userModel = require('../models/user.model');
 
-// ── Helper: today as "YYYY-MM-DD" ─────────────────────────────────────────────
+/**
+ * Function: getTodayDate
+ * Description: Returns today's date as a 'YYYY-MM-DD' string.
+ * Why: To provide a consistent date format for leave validation without timezone issues.
+ */
 function getTodayDate() {
   const now = new Date();
   const yyyy = now.getFullYear();
@@ -10,7 +20,11 @@ function getTodayDate() {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-// ── Helper: calculate days between two YYYY-MM-DD strings (inclusive) ─────────
+/**
+ * Function: calcDays
+ * Description: Calculates the number of days between two 'YYYY-MM-DD' strings (inclusive).
+ * Why: To accurately compute leave duration server-side, ensuring data consistency.
+ */
 function calcDays(startDate, endDate) {
   const start = new Date(startDate + 'T00:00:00');
   const end = new Date(endDate + 'T00:00:00');
@@ -29,8 +43,11 @@ const VALID_LEAVE_TYPES = [
 //  EMPLOYEE CONTROLLERS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// ── POST /api/leave/apply ─────────────────────────────────────────────────────
-// Employee submits a new leave request
+/**
+ * Function: applyLeave
+ * Description: Allows an employee to submit a new leave request with date validation and overlap detection.
+ * Why: To prevent invalid or conflicting leave requests from being stored.
+ */
 async function applyLeave(req, res) {
   try {
     const employeeId = req.user.id;
@@ -97,9 +114,11 @@ async function applyLeave(req, res) {
 }
 
 
-// ── GET /api/leave/my ─────────────────────────────────────────────────────────
-// Employee gets their own leave history
-// Optional query: ?status=Pending|Approved|Rejected  ?month=2026-02
+/**
+ * Function: getMyLeaves
+ * Description: Fetches the logged-in employee's own leave records, with optional status/month filtering.
+ * Why: To give employees visibility into their leave history directly from the dashboard.
+ */
 async function getMyLeaves(req, res) {
   try {
     const employeeId = req.user.id;
@@ -133,8 +152,11 @@ async function getMyLeaves(req, res) {
 }
 
 
-// ── PUT /api/leave/:id ────────────────────────────────────────────────────────
-// Employee edits their OWN pending leave request
+/**
+ * Function: updateMyLeave
+ * Description: Allows an employee to edit their own pending leave request.
+ * Why: To enable corrections before the leave is reviewed, while preventing edits to already-decided requests.
+ */
 async function updateMyLeave(req, res) {
   try {
     const employeeId = req.user.id;
@@ -205,8 +227,11 @@ async function updateMyLeave(req, res) {
 }
 
 
-// ── DELETE /api/leave/:id ─────────────────────────────────────────────────────
-// Employee cancels their own pending leave request
+/**
+ * Function: deleteMyLeave
+ * Description: Allows an employee to cancel their own pending leave request.
+ * Why: To let employees self-manage their leave pipeline without requiring admin intervention.
+ */
 async function deleteMyLeave(req, res) {
   try {
     const employeeId = req.user.id;
@@ -241,9 +266,11 @@ async function deleteMyLeave(req, res) {
 //  ADMIN CONTROLLERS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// ── GET /api/admin/leave ──────────────────────────────────────────────────────
-// Admin gets ALL leave requests (with employee info)
-// Optional query: ?status=  ?employeeId=  ?month=2026-02
+/**
+ * Function: getAllLeaves
+ * Description: Fetches all leave requests for admin review, with optional filtering by status, employee, or month.
+ * Why: To give admins full visibility into company-wide leave patterns and pending requests.
+ */
 async function getAllLeaves(req, res) {
   try {
     const { status, employeeId, month } = req.query;
@@ -283,8 +310,11 @@ async function getAllLeaves(req, res) {
 }
 
 
-// ── GET /api/admin/leave/summary ──────────────────────────────────────────────
-// Admin dashboard summary stats
+/**
+ * Function: getLeaveSummary
+ * Description: Returns aggregate leave stats (total, pending, approved, rejected) for active employees.
+ * Why: To power the admin dashboard summary cards without loading all leave records.
+ */
 async function getLeaveSummary(req, res) {
   try {
     // Only count leaves for users that still exist (exclude orphaned leaves from deleted users)
@@ -306,8 +336,11 @@ async function getLeaveSummary(req, res) {
 }
 
 
-// ── GET /api/admin/leave/employee/:id ─────────────────────────────────────────
-// Admin views one employee's full leave history
+/**
+ * Function: getEmployeeLeaves
+ * Description: Fetches the full leave history for a specific employee by their ID.
+ * Why: To allow admins to review individual leave patterns for scheduling or HR purposes.
+ */
 async function getEmployeeLeaves(req, res) {
   try {
     const { id } = req.params;
@@ -330,9 +363,11 @@ async function getEmployeeLeaves(req, res) {
 }
 
 
-// ── PUT /api/admin/leave/:id/review ───────────────────────────────────────────
-// Admin approves or rejects a leave request
-// Body: { status: 'Approved' | 'Rejected', adminComment?: string }
+/**
+ * Function: reviewLeave
+ * Description: Allows an admin to approve or reject a pending leave request, with an optional comment.
+ * Why: To complete the leave workflow, moving requests from Pending to Approved or Rejected state.
+ */
 async function reviewLeave(req, res) {
   try {
     const { id } = req.params;
@@ -370,8 +405,11 @@ async function reviewLeave(req, res) {
 }
 
 
-// ── PUT /api/admin/leave/:id ──────────────────────────────────────────────────
-// Admin edits any leave record (status, dates, type, comment)
+/**
+ * Function: adminUpdateLeave
+ * Description: Allows an admin to fully edit any leave record including dates, type, status, and comments.
+ * Why: To correct data-entry errors or handle edge cases where a leave needs administrative adjustment.
+ */
 async function adminUpdateLeave(req, res) {
   try {
     const { id } = req.params;
@@ -410,8 +448,11 @@ async function adminUpdateLeave(req, res) {
 }
 
 
-// ── DELETE /api/admin/leave/:id ───────────────────────────────────────────────
-// Admin deletes a leave record entirely
+/**
+ * Function: adminDeleteLeave
+ * Description: Permanently removes a leave record from the system.
+ * Why: To allow admins to clean up incorrect or duplicate leave entries.
+ */
 async function adminDeleteLeave(req, res) {
   try {
     const { id } = req.params;

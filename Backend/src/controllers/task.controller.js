@@ -1,7 +1,17 @@
+/**
+ * File: task.controller.js
+ * Description: Handles standalone task operations — creation, retrieval, status updates, editing, and deletion.
+ * Why: To manage tasks that are not embedded in projects, providing a general task assignment system for admins.
+ */
+
 const Task = require('../models/task.model');
 const User = require('../models/user.model');
 
-//  ADMIN: Create a new task (assign task)
+/**
+ * Function: createTask
+ * Description: Creates a new task and assigns it to one or more employees.
+ * Why: To allow admins to assign work items directly to employees outside of a project context.
+ */
 exports.createTask = async (req, res) => {
   try {
     const { title, description, assignedEmployees, deadline, priority } = req.body;
@@ -32,7 +42,11 @@ exports.createTask = async (req, res) => {
   }
 };
 
-//  ADMIN: Get all tasks
+/**
+ * Function: getAllTasks
+ * Description: Retrieves all tasks with populated employee details, sorted by creation date.
+ * Why: To give admins a complete overview of all assigned tasks in the system.
+ */
 exports.getAllTasks = async (req, res) => {
   try {
     const tasks = await Task.find()
@@ -46,7 +60,11 @@ exports.getAllTasks = async (req, res) => {
   }
 };
 
-//  EMPLOYEE: Get own tasks
+/**
+ * Function: getMyTasks
+ * Description: Fetches all tasks assigned to the currently logged-in employee.
+ * Why: To provide employees with a focused view of their own responsibilities, sorted by deadline.
+ */
 exports.getMyTasks = async (req, res) => {
   try {
     const tasks = await Task.find({ assignedEmployees: req.user.id })
@@ -60,7 +78,11 @@ exports.getMyTasks = async (req, res) => {
   }
 };
 
-//  BOTH: Update task status
+/**
+ * Function: updateTaskStatus
+ * Description: Updates the status of a task. Employees can only update their own; admins can update any.
+ * Why: To enable task progress reporting while enforcing ownership constraints.
+ */
 exports.updateTaskStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -90,7 +112,11 @@ exports.updateTaskStatus = async (req, res) => {
   }
 };
 
-//  ADMIN: Delete a task
+/**
+ * Function: deleteTask
+ * Description: Permanently deletes a task by ID (admin only).
+ * Why: To allow admins to remove obsolete or incorrectly assigned tasks.
+ */
 exports.deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
@@ -107,7 +133,11 @@ exports.deleteTask = async (req, res) => {
   }
 };
 
-//  ADMIN: Edit task details & assigned employees
+/**
+ * Function: editTask
+ * Description: Updates all fields of an existing task including title, description, assignees, and deadline.
+ * Why: To allow admins to make corrections or changes to a task after it has been created.
+ */
 exports.editTask = async (req, res) => {
   try {
     const { id } = req.params;

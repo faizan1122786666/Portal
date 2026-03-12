@@ -1,10 +1,20 @@
+/**
+ * File: admin.controller.js
+ * Description: Handles admin-only CRUD operations for employee management.
+ * Why: To let administrators create, read, update, and delete employee accounts from a central point.
+ */
+
 const userModel = require('../models/user.model');
 const leaveModel = require('../models/leave.model');
 const bcrypt = require('bcryptjs');
 
 const VALID_SHIFTS = ['Morning', 'Evening', ''];
 
-// ── GET all employees ─────────────────────────────────────────────────────────
+/**
+ * Function: getEmployees
+ * Description: Fetches all users (employees and admins) from the database, excluding passwords.
+ * Why: To provide the admin panel with a full list of registered employees.
+ */
 async function getEmployees(req, res) {
     try {
         const employees = await userModel.find().select('-password');
@@ -14,7 +24,11 @@ async function getEmployees(req, res) {
     }
 }
 
-// ── POST: Add new employee ────────────────────────────────────────────────────
+/**
+ * Function: addEmployee
+ * Description: Creates a new employee account with validation for shift, name length, and email uniqueness.
+ * Why: To allow admins to onboard new employees directly from the management panel.
+ */
 async function addEmployee(req, res) {
     try {
         const {
@@ -63,7 +77,11 @@ async function addEmployee(req, res) {
     }
 }
 
-// ── PUT: Update employee ──────────────────────────────────────────────────────
+/**
+ * Function: updateEmployee
+ * Description: Updates specified fields of an existing employee record.
+ * Why: To allow admin-side editing of employee details such as salary, role, designation, or password.
+ */
 async function updateEmployee(req, res) {
     try {
         const { id } = req.params;
@@ -136,7 +154,11 @@ async function updateEmployee(req, res) {
     }
 }
 
-// ── DELETE: Remove employee ───────────────────────────────────────────────────
+/**
+ * Function: deleteEmployee
+ * Description: Deletes an employee account and cascades to remove their leave records.
+ * Why: To remove departed employees while keeping data consistent, preventing orphaned leave records.
+ */
 async function deleteEmployee(req, res) {
     try {
         const { id } = req.params;

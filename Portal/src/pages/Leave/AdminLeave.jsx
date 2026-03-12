@@ -1,7 +1,8 @@
-
-
-
-
+/**
+ * Component: AdminLeave
+ * Description: Administrative interface for managing employee leave requests, featuring filtering, statistics, and approval workflows.
+ * Why: To allow administrators to review, approve, or reject leave applications while maintaining an overview of company-wide leave trends.
+ */
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { FaEye, FaCheck, FaTimes, FaRegCheckCircle, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';

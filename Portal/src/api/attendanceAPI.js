@@ -1,297 +1,16 @@
-// // Base URL - change this if your backend runs on a different port
-// const BASE_URL = 'http://localhost:3000/api';
+/**
+ * File: attendanceAPI.js
+ * Description: API client functions for all attendance-related operations, covering both employee self-service and admin management endpoints.
+ * Why: To centralize all attendance HTTP calls, ensure consistent credential handling, and decouple UI components from raw fetch logic.
+ */
 
-// // ── Employee Attendance API ───────────────────────────────────────────────────
-
-// export async function apiCheckIn() {
-//   const res = await fetch(`${BASE_URL}/attendance/checkin`, {
-//     method: 'POST',
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiCheckOut() {
-//   const res = await fetch(`${BASE_URL}/attendance/checkout`, {
-//     method: 'POST',
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiGetTodayStatus() {
-//   const res = await fetch(`${BASE_URL}/attendance/today-status`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiGetMyAttendance(filters = {}) {
-//   const params = new URLSearchParams(filters).toString();
-//   const res = await fetch(`${BASE_URL}/attendance/my${params ? `?${params}` : ''}`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// // ── Admin Attendance API ──────────────────────────────────────────────────────
-
-// export async function apiGetTodaySummary() {
-//   const res = await fetch(`${BASE_URL}/admin/attendance/today-summary`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiGetAllAttendance(filters = {}) {
-//   const params = new URLSearchParams(filters).toString();
-//   const res = await fetch(`${BASE_URL}/admin/attendance${params ? `?${params}` : ''}`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiGetEmployeeAttendance(id, filters = {}) {
-//   const params = new URLSearchParams(filters).toString();
-//   const res = await fetch(`${BASE_URL}/admin/attendance/employee/${id}${params ? `?${params}` : ''}`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiGetEmployees() {
-//   const res = await fetch(`${BASE_URL}/admin/employees`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // Base URL - change this if your backend runs on a different port
-// const BASE_URL = 'http://localhost:3000/api';
-
-// // ── Employee Attendance API ───────────────────────────────────────────────────
-
-// export async function apiCheckIn() {
-//   const res = await fetch(`${BASE_URL}/attendance/checkin`, {
-//     method: 'POST',
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiCheckOut() {
-//   const res = await fetch(`${BASE_URL}/attendance/checkout`, {
-//     method: 'POST',
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiGetTodayStatus() {
-//   const res = await fetch(`${BASE_URL}/attendance/today-status`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiGetMyAttendance(filters = {}) {
-//   const params = new URLSearchParams(filters).toString();
-//   const res = await fetch(`${BASE_URL}/attendance/my${params ? `?${params}` : ''}`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// // ── Admin Attendance API ──────────────────────────────────────────────────────
-
-// export async function apiGetTodaySummary() {
-//   const res = await fetch(`${BASE_URL}/admin/attendance/today-summary`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiGetAllAttendance(filters = {}) {
-//   const params = new URLSearchParams(filters).toString();
-//   const res = await fetch(`${BASE_URL}/admin/attendance${params ? `?${params}` : ''}`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiGetEmployeeAttendance(id, filters = {}) {
-//   const params = new URLSearchParams(filters).toString();
-//   const res = await fetch(`${BASE_URL}/admin/attendance/employee/${id}${params ? `?${params}` : ''}`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// export async function apiGetEmployees() {
-//   const res = await fetch(`${BASE_URL}/admin/employees`, {
-//     credentials: 'include',
-//   });
-//   return res.json();
-// }
-
-// // ── NEW: Admin manually mark attendance ──────────────────────────────────────
-// // Body: { employeeId, date, status, checkIn?, checkOut? }
-// export async function apiMarkAttendance(data) {
-//   const res = await fetch(`${BASE_URL}/admin/attendance/mark`, {
-//     method: 'POST',
-//     credentials: 'include',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(data),
-//   });
-//   return res.json();
-// }
-
-
-
-
-
-
-
-
-
-// // ── Base URL ──────────────────────────────────────────────────────────────────
-// const BASE = 'http://localhost:5000/api';
-
-// // ── Helper: fetch with credentials (sends the JWT cookie) ─────────────────────
-// async function apiFetch(url, options = {}) {
-//   const res = await fetch(url, {
-//     credentials: 'include',
-//     headers: { 'Content-Type': 'application/json', ...options.headers },
-//     ...options,
-//   });
-
-//   const data = await res.json();
-
-//   if (!res.ok) {
-//     const err = new Error(data.message || 'Request failed');
-//     err.response = { data };
-//     throw err;
-//   }
-
-//   return data;
-// }
-
-
-// // ═══════════════════════════════════════════════════════════════════════════════
-// //  EMPLOYEE API CALLS
-// // ═══════════════════════════════════════════════════════════════════════════════
-
-// /**
-//  * POST /api/attendance/checkin
-//  * @param {Object} body  - e.g. { shift: 'AM' | 'PM' | 'Night' }
-//  *                         shift is REQUIRED on the first check-in of the day.
-//  *                         For subsequent sessions (same day), it can be omitted.
-//  */
-// export async function apiCheckIn(body = {}) {
-//   return apiFetch(`${BASE}/attendance/checkin`, {
-//     method: 'POST',
-//     body: JSON.stringify(body),
-//   });
-// }
-
-// /**
-//  * POST /api/attendance/checkout
-//  */
-// export async function apiCheckOut() {
-//   return apiFetch(`${BASE}/attendance/checkout`, { method: 'POST' });
-// }
-
-// /**
-//  * GET /api/attendance/today-status
-//  * Returns: { date, hasRecord, shift, sessions, totalWorkHours, status,
-//  *            currentCheckIn, canCheckIn, canCheckOut }
-//  */
-// export async function apiGetTodayStatus() {
-//   return apiFetch(`${BASE}/attendance/today-status`);
-// }
-
-// /**
-//  * GET /api/attendance/my
-//  * @param {Object} filters  - optional: { date: 'YYYY-MM-DD' } or { month: 'YYYY-MM' }
-//  */
-// export async function apiGetMyAttendance(filters = {}) {
-//   const params = new URLSearchParams(filters).toString();
-//   return apiFetch(`${BASE}/attendance/my${params ? '?' + params : ''}`);
-// }
-
-
-// // ═══════════════════════════════════════════════════════════════════════════════
-// //  ADMIN API CALLS
-// // ═══════════════════════════════════════════════════════════════════════════════
-
-// /**
-//  * GET /api/admin/attendance/today-summary
-//  */
-// export async function apiGetTodaySummary() {
-//   return apiFetch(`${BASE}/admin/attendance/today-summary`);
-// }
-
-// /**
-//  * GET /api/admin/attendance
-//  * @param {Object} filters - optional: { date, month, employeeId }
-//  */
-// export async function apiGetAllAttendance(filters = {}) {
-//   const params = new URLSearchParams(filters).toString();
-//   return apiFetch(`${BASE}/admin/attendance${params ? '?' + params : ''}`);
-// }
-
-// /**
-//  * GET /api/admin/attendance/employee/:id
-//  */
-// export async function apiGetEmployeeAttendance(id, filters = {}) {
-//   const params = new URLSearchParams(filters).toString();
-//   return apiFetch(`${BASE}/admin/attendance/employee/${id}${params ? '?' + params : ''}`);
-// }
-
-// /**
-//  * POST /api/admin/attendance/mark
-//  */
-// export async function apiMarkAttendance(body) {
-//   return apiFetch(`${BASE}/admin/attendance/mark`, {
-//     method: 'POST',
-//     body: JSON.stringify(body),
-//   });
-// }
-
-// /**
-//  * PUT /api/admin/attendance/:id
-//  */
-// export async function apiUpdateAttendance(id, body) {
-//   return apiFetch(`${BASE}/admin/attendance/${id}`, {
-//     method: 'PUT',
-//     body: JSON.stringify(body),
-//   });
-// }
-
-// /**
-//  * DELETE /api/admin/attendance/:id
-//  */
-// export async function apiDeleteAttendance(id) {
-//   return apiFetch(`${BASE}/admin/attendance/${id}`, { method: 'DELETE' });
-// }
-
-
-// ── Base URL ──────────────────────────────────────────────────────────────────
 const BASE = 'http://localhost:3000/api';
 
-// ── Helper: fetch with credentials (sends the JWT cookie) ─────────────────────
+/**
+ * Function: apiFetch
+ * Description: A helper function to perform fetch requests with credentials and common headers.
+ * Why: To centralize API request logic, handle credentials (cookies), and provide consistent error handling.
+ */
 async function apiFetch(url, options = {}) {
   const res = await fetch(url, {
     credentials: 'include',
@@ -310,16 +29,14 @@ async function apiFetch(url, options = {}) {
   return data;
 }
 
-
 // ═══════════════════════════════════════════════════════════════════════════════
 //  EMPLOYEE API CALLS
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
- * POST /api/attendance/checkin
- * @param {Object} body  - e.g. { shift: 'AM' | 'PM' | 'Night' }
- *                         shift is REQUIRED on the first check-in of the day.
- *                         For subsequent sessions (same day), it can be omitted.
+ * Function: apiCheckIn
+ * Description: Sends a POST request to clock in an employee.
+ * Why: To record the start of a work session for an employee.
  */
 export async function apiCheckIn(body = {}) {
   return apiFetch(`${BASE}/attendance/checkin`, {
@@ -329,52 +46,60 @@ export async function apiCheckIn(body = {}) {
 }
 
 /**
- * POST /api/attendance/checkout
+ * Function: apiCheckOut
+ * Description: Sends a POST request to clock out an employee.
+ * Why: To record the end of a work session for an employee.
  */
 export async function apiCheckOut() {
   return apiFetch(`${BASE}/attendance/checkout`, { method: 'POST' });
 }
 
 /**
- * GET /api/attendance/today-status
- * Returns: { date, hasRecord, shift, sessions, totalWorkHours, status,
- *            currentCheckIn, canCheckIn, canCheckOut }
+ * Function: apiGetTodayStatus
+ * Description: Retrieves the current attendance status for the logged-in employee today.
+ * Why: To display real-time clock-in/out status and session info on the dashboard.
  */
 export async function apiGetTodayStatus() {
   return apiFetch(`${BASE}/attendance/today-status`);
 }
 
 /**
- * GET /api/attendance/my
- * @param {Object} filters  - optional: { date: 'YYYY-MM-DD' } or { month: 'YYYY-MM' }
+ * Function: apiGetMyAttendance
+ * Description: Fetches attendance records for the logged-in employee based on filters.
+ * Why: To allow employees to view their own attendance history.
+ * @param {Object} filters - optional: { date: 'YYYY-MM-DD' } or { month: 'YYYY-MM' }
  */
 export async function apiGetMyAttendance(filters = {}) {
   const params = new URLSearchParams(filters).toString();
   return apiFetch(`${BASE}/attendance/my${params ? '?' + params : ''}`);
 }
 
-
 // ═══════════════════════════════════════════════════════════════════════════════
 //  ADMIN API CALLS
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
- * GET /api/admin/employees
+ * Function: apiGetEmployees
+ * Description: Retrieves a list of all employees for administrative use.
+ * Why: To populate employee selection dropdowns and management lists.
  */
 export async function apiGetEmployees() {
   return apiFetch(`${BASE}/admin/employees`);
 }
 
 /**
- * GET /api/admin/attendance/today-summary
+ * Function: apiGetTodaySummary
+ * Description: Fetches a summary of today's attendance stats (present, absent, etc.).
+ * Why: To provide admins with a quick overview of today's workforce status.
  */
 export async function apiGetTodaySummary() {
   return apiFetch(`${BASE}/admin/attendance/today-summary`);
 }
 
 /**
- * GET /api/admin/attendance
- * @param {Object} filters - optional: { date, month, employeeId }
+ * Function: apiGetAllAttendance
+ * Description: Retrieves all attendance records based on filters (date, month, employeeId).
+ * Why: For admins to monitor and manage attendance across the organization.
  */
 export async function apiGetAllAttendance(filters = {}) {
   const params = new URLSearchParams(filters).toString();
@@ -382,7 +107,9 @@ export async function apiGetAllAttendance(filters = {}) {
 }
 
 /**
- * GET /api/admin/attendance/employee/:id
+ * Function: apiGetEmployeeAttendance
+ * Description: Fetches attendance records for a specific employee.
+ * Why: To view detailed attendance history for a single employee.
  */
 export async function apiGetEmployeeAttendance(id, filters = {}) {
   const params = new URLSearchParams(filters).toString();
@@ -390,7 +117,9 @@ export async function apiGetEmployeeAttendance(id, filters = {}) {
 }
 
 /**
- * POST /api/admin/attendance/mark
+ * Function: apiMarkAttendance
+ * Description: Manually marks attendance for an employee (Admin only).
+ * Why: To allow admins to correct or manually enter attendance data.
  */
 export async function apiMarkAttendance(body) {
   return apiFetch(`${BASE}/admin/attendance/mark`, {
@@ -400,7 +129,9 @@ export async function apiMarkAttendance(body) {
 }
 
 /**
- * PUT /api/admin/attendance/:id
+ * Function: apiUpdateAttendance
+ * Description: Updates an existing attendance record.
+ * Why: To modify attendance details if errors were made.
  */
 export async function apiUpdateAttendance(id, body) {
   return apiFetch(`${BASE}/admin/attendance/${id}`, {
@@ -410,7 +141,9 @@ export async function apiUpdateAttendance(id, body) {
 }
 
 /**
- * DELETE /api/admin/attendance/:id
+ * Function: apiDeleteAttendance
+ * Description: Deletes an attendance record.
+ * Why: To remove incorrect or duplicate attendance data.
  */
 export async function apiDeleteAttendance(id) {
   return apiFetch(`${BASE}/admin/attendance/${id}`, { method: 'DELETE' });

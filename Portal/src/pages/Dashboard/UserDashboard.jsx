@@ -1,43 +1,8 @@
-// ── Legacy `UserDashboard` Code References Removed ──
-// Over 500 lines of fully commented-out legacy dashboard versions were excised.
-// Refer to previous commits for historical versions.ex items-center gap-2 mb-6">
-//           <FaChartLine /> Weekly Work Hours
-//         </h2>
-//         <div className="h-64 sm:h-80">
-//           <Line
-//             data={weeklyHours}
-//             options={{ maintainAspectRatio: false, responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 10, ticks: { stepSize: 2 } } } }}
-//           />
-//         </div>
-//       </div>
-
-//     </div>
-//   );
-// }
-
-// export default UserDashboard;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Component: UserDashboard
+ * Description: Personal dashboard for employees featuring clock-in/out functionality, work hour tracking, and attendance summaries.
+ * Why: To centralize daily operational tasks for employees and provide them with real-time feedback on their attendance and shift status.
+ */
 import { useEffect, useState, useCallback } from 'react';
 import { FaClock, FaSignInAlt, FaSignOutAlt, FaCalendarAlt, FaChartLine, FaSun, FaMoon } from 'react-icons/fa';
 import { RxCrossCircled } from 'react-icons/rx';

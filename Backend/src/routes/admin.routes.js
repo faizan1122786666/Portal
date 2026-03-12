@@ -1,12 +1,8 @@
-
-
-
-
-
-
-
-
-
+/**
+ * File: admin.routes.js
+ * Description: Express router for all admin-protected endpoints covering employee CRUD, attendance management, and leave management.
+ * Why: To group all admin-only API endpoints under the /api/admin prefix, protecting each with the verifyAdmin middleware.
+ */
 
 const express = require('express');
 const router = express.Router();

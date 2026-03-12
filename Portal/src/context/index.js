@@ -1,14 +1,6 @@
-// import { AuthContext, useAuthContext, AuthContextProvider } from './AuthContext'
-
-// export default { AuthContext, useAuthContext, AuthContextProvider }
-
-
-
-
-
-
-// Named exports — all import styles work:
-// import { AuthContextProvider } from '../../context'
-// import { useAuthContext } from '../../context'
-// import { AuthContext } from '../../context'
+/**
+ * File: context/index.js
+ * Description: Central export point for all context providers and custom hooks.
+ * Why: To provide a clean and unified interface for accessing application-wide state managers.
+ */
 export { AuthContext, useAuthContext, AuthContextProvider } from './AuthContext'

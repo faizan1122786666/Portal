@@ -1,22 +1,8 @@
-
-
-
-
-
-
-// LEGACY: Old Dashboard implementation with ChartJS (Consolidated)
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Component: AdminDashboard
+ * Description: The main administrative dashboard providing a high-level overview of company-wide attendance and statistics.
+ * Why: To give administrators an immediate, data-driven snapshot of employee presence, absence, and attendance trends via charts and key metrics.
+ */
 import { useEffect, useState } from 'react'
 import { RxCrossCircled } from 'react-icons/rx'
 import { FaRegCheckCircle } from 'react-icons/fa'

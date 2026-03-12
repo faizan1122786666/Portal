@@ -1,3 +1,9 @@
+/**
+ * File: leave.routes.js
+ * Description: Express router for employee self-service leave operations (apply, view, edit, cancel).
+ * Why: To define the employee-facing leave API endpoints, all protected by the verifyToken middleware.
+ */
+
 const express = require('express');
 const router  = express.Router();
 const leaveController = require('../controllers/leave.controller');

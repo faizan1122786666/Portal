@@ -4,6 +4,11 @@ import { toast } from 'react-toastify';
 import { FaTimes, FaChevronDown } from 'react-icons/fa';
 import { apiUpdateTaskInfo } from '../../api/taskAPI';
 
+/**
+ * Component: EditTaskModal
+ * Description: A modal for updating the details of an assigned task.
+ * Why: To provide a way to change task parameters like title, priority, or assigned personnel after the task has been created.
+ */
 const adminApi = axios.create({
   baseURL: 'http://localhost:3000/api/admin',
   withCredentials: true,

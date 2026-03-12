@@ -1,3 +1,9 @@
+/**
+ * File: server.js
+ * Description: Application entry point — loads environment variables, connects to the database, and starts the HTTP server.
+ * Why: To separate the server bootstrap from the Express app configuration for cleaner architecture and easier testing.
+ */
+
 require('dotenv').config();
 console.log('Environment variables loaded successfully.');
 const app = require('./src/app');
@@ -7,4 +13,4 @@ connectDB();
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
-})
+});

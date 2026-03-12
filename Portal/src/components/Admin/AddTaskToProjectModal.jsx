@@ -3,8 +3,11 @@ import { toast } from 'react-toastify';
 import { FaTimes, FaChevronDown } from 'react-icons/fa';
 import { apiCreateProjectTask } from '../../api/projectAPI';
 
-const PRIORITY_OPTIONS = ['Low', 'Medium', 'High', 'Urgent'];
-
+/**
+ * Component: AddTaskToProjectModal
+ * Description: A modal designed for adding tasks specifically within the context of a project.
+ * Why: To enable precise task allocation among project members, maintaining project-centric organization.
+ */
 export default function AddTaskToProjectModal({ projectId, members, onClose, onAdded }) {
   const [loading, setLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

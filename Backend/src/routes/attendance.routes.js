@@ -1,3 +1,9 @@
+/**
+ * File: attendance.routes.js
+ * Description: Express router for employee self-service attendance operations (check-in, check-out, view records).
+ * Why: To provide employees with endpoints to manage their own attendance without exposing admin endpoints.
+ */
+
 const express = require('express');
 const router  = express.Router();
 const attendanceController = require('../controllers/attendance.controller');

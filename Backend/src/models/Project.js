@@ -1,3 +1,9 @@
+/**
+ * File: Project.js
+ * Description: Mongoose schema and model for projects, including embedded task sub-documents and a virtual taskCount summary.
+ * Why: To manage project-level entities with nested tasks, allowing admins to track progress via status and priority fields.
+ */
+
 const mongoose = require('mongoose');
 
 // ── Task Sub-schema ───────────────────────────────────────────────────────────

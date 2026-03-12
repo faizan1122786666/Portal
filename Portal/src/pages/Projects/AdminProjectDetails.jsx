@@ -1,3 +1,8 @@
+/**
+ * Component: AdminProjectDetails
+ * Description: Detailed administrative view of a specific project, including task management, team overview, and project-specific actions.
+ * Why: To allow administrators to drill down into project details, manage individual tasks, and track specific project progress and deadlines.
+ */
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -400,10 +405,10 @@ export default function AdminProjectDetails({ setTitle }) {
           {/* Mini Stats */}
           <div className="flex items-center gap-4 ml-auto flex-wrap">
             {[
-              { label: 'Total', value: taskStats.total, color: 'text-zinc-600 dark:text-zinc-300' },
-              { label: 'Pending', value: taskStats.pending, color: 'text-yellow-600 dark:text-yellow-400' },
-              { label: 'In Progress', value: taskStats.inProgress, color: 'text-blue-600 dark:text-blue-400' },
-              { label: 'Done', value: taskStats.completed, color: 'text-emerald-600 dark:text-emerald-400' },
+              { label: 'Total', value: taskStats.total, color: 'text-[#2C5284] dark:text-[#2C5284]' },
+              { label: 'Pending', value: taskStats.pending, color: 'text-yellow-600 dark:text-[#2C5284]' },
+              { label: 'In Progress', value: taskStats.inProgress, color: 'text-[#2C5284] dark:text-[#2C5284]' },
+              { label: 'Done', value: taskStats.completed, color: 'text-[#2C5284] dark:text-[#2C5284]' },
             ].map(s => (
               <div key={s.label} className="text-center">
                 <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>

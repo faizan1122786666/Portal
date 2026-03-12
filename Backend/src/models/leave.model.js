@@ -1,3 +1,9 @@
+/**
+ * File: leave.model.js
+ * Description: Mongoose schema and model for employee leave requests, tracking status, dates, and admin review details.
+ * Why: To store structured leave request data and enable fast querying by employee, status, and date range.
+ */
+
 const mongoose = require('mongoose');
 
 const leaveSchema = new mongoose.Schema({

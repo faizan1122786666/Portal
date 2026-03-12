@@ -1,6 +1,8 @@
-
-
-
+/**
+ * File: auth.routes.js
+ * Description: Express router for authentication and profile management endpoints.
+ * Why: To define the public and authenticated routes for user registration, login, password change, and profile operations.
+ */
 
 const express = require('express');
 const router = express.Router();

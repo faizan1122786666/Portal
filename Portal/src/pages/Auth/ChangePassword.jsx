@@ -1,11 +1,8 @@
-
-
-
-
-
-
-
-
+/**
+ * Component: ChangePassword
+ * Description: A security component allowing users to update their account password.
+ * Why: To provide a secure mechanism for password rotation and account protection.
+ */
 import React, { useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'

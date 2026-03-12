@@ -5,6 +5,11 @@ import { FaTimes } from 'react-icons/fa';
 import Select from 'react-select';
 import { apiUpdateProject } from '../../api/projectAPI';
 
+/**
+ * Component: EditProjectModal
+ * Description: A modal for administrators to update details of an existing project.
+ * Why: To allow for ongoing project management and adjustment of project scope, timelines, or membership.
+ */
 const adminApi = axios.create({
   baseURL: 'http://localhost:3000/api/admin',
   withCredentials: true,

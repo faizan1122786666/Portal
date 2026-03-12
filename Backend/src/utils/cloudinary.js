@@ -1,3 +1,9 @@
+/**
+ * File: cloudinary.js
+ * Description: Configures Cloudinary and sets up multer-cloudinary storage for profile image uploads.
+ * Why: To provide a reusable upload middleware that streams images directly to Cloudinary, avoiding local disk storage.
+ */
+
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
@@ -7,11 +13,6 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
-
-console.log('--- Cloudinary Diagnostic ---');
-console.log('CLOUD_NAME:', process.env.CLOUDINARY_CLOUD_NAME);
-console.log('API_KEY (First 4):', process.env.CLOUDINARY_API_KEY ? process.env.CLOUDINARY_API_KEY.substring(0, 4) + '...' : 'MISSING');
-console.log('CONFIGURED API_KEY:', cloudinary.config().api_key);
 
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
