@@ -131,7 +131,7 @@ function EmployeeModal({ onClose, onSubmit, editingEmployee }) {
       <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto  dark:border-white/10">
 
         {/* Header */}
-        <div className="flex items-center justify-between p-5 bg-[#2C5294] dark:bg-white/10 rounded-t-2xl">
+        <div className="flex items-center justify-between p-5 bg-[#2C5284] dark:bg-white/10 rounded-t-2xl">
           <h2 className="text-lg font-bold text-white">
             {editingEmployee ? 'Edit Employee' : 'Add New Employee'}
           </h2>
@@ -559,10 +559,17 @@ function ManageEmployees({ setTitle }) {
                 }),
                 option: (base, state) => ({
                   ...base,
-                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.1)' : 'transparent',
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
                   color: state.isSelected ? 'white' : 'inherit',
+                  cursor: 'pointer',
                   '&:active': { backgroundColor: '#2C5284' }
-                })
+                }),
+                menu: (base) => ({
+                  ...base,
+                  backgroundColor: '#ffffff',
+                  border: '1px solid #e5e7eb',
+                  zIndex: 9999,
+                }),
               }}
             />
           </div>
@@ -591,10 +598,17 @@ function ManageEmployees({ setTitle }) {
                 }),
                 option: (base, state) => ({
                   ...base,
-                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.1)' : 'transparent',
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
                   color: state.isSelected ? 'white' : 'inherit',
+                  cursor: 'pointer',
                   '&:active': { backgroundColor: '#2C5284' }
-                })
+                }),
+                menu: (base) => ({
+                  ...base,
+                  backgroundColor: '#ffffff',
+                  border: '1px solid #e5e7eb',
+                  zIndex: 9999,
+                }),
               }}
             />
           </div>
@@ -625,10 +639,17 @@ function ManageEmployees({ setTitle }) {
                     }),
                     option: (base, state) => ({
                       ...base,
-                      backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.1)' : 'transparent',
+                      backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
                       color: state.isSelected ? 'white' : 'inherit',
+                      cursor: 'pointer',
                       '&:active': { backgroundColor: '#2C5284' }
-                    })
+                    }),
+                    menu: (base) => ({
+                      ...base,
+                      backgroundColor: '#ffffff',
+                      border: '1px solid #e5e7eb',
+                      zIndex: 9999,
+                    }),
                   }}
                 />
               </div>
@@ -657,7 +678,7 @@ function ManageEmployees({ setTitle }) {
           {/* Desktop Table */}
           <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
-              <thead className="bg-[#2C5294] dark:bg-white/10">
+              <thead className="bg-[#2C5284] dark:bg-white/10">
                 <tr>
                   {['Employee', 'Designation', 'Department', 'Shift', 'Salary', 'Role', 'Actions'].map(h => (
                     <th key={h} className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">{h}</th>

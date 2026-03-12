@@ -127,7 +127,7 @@ function AdminLeave({ setTitle }) {
     switch (status) {
       case 'Approved': return 'bg-green-100 text-green-700';
       case 'Rejected': return 'bg-red-100 text-red-700';
-      case 'Pending': return 'bg-yellow-100 text-yellow-700';
+      case 'Pending': return 'bg-[#2C5284]/10 text-[#2C5284]';
       default: return 'bg-gray-100 text-gray-600';
     }
   };
@@ -188,7 +188,7 @@ function AdminLeave({ setTitle }) {
             <div className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
               <div>
                 <p className="text-xs text-[#2C5284] dark:text-gray-300">Pending</p>
-                <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{stats.pending}</p>
+                <p className="text-xl sm:text-2xl font-bold text-[#2C5284] dark:text-[#2C5284]">{stats.pending}</p>
               </div>
               <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
                 <SlCalender size={20} className="text-white" />

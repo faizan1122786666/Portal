@@ -79,7 +79,7 @@ export default function AddTaskToProjectModal({ projectId, members, onClose, onA
               required
               maxLength={60}
               placeholder="e.g. Design homepage wireframe"
-              className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284]/40 focus:border-[#2C5284] outline-none text-sm transition-all"
+              className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284] outline-none text-sm transition-all"
             />
           </div>
 
@@ -94,7 +94,7 @@ export default function AddTaskToProjectModal({ projectId, members, onClose, onA
               onChange={handle}
               rows="3"
               placeholder="Describe what needs to be done..."
-              className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284]/40 focus:border-[#2C5284] outline-none text-sm transition-all resize-none"
+              className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284] outline-none text-sm transition-all resize-none"
             />
           </div>
 
@@ -163,7 +163,7 @@ export default function AddTaskToProjectModal({ projectId, members, onClose, onA
                 onChange={handle}
                 required
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-3 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284]/40 outline-none text-sm"
+                className="w-full px-3 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284] outline-none text-sm"
               />
             </div>
             <div>

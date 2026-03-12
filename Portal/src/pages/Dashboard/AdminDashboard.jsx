@@ -25,12 +25,19 @@ import Loader from '../../components/common/Loader'
 
 ChartJS.register(ArcElement, LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend)
 
-// ── Build last 7 days labels ──────────────────────────────────────────────────
-function getLast7Days() {
+// ── Build weekly days (starting Monday) ──────────────────────────────────────
+function getWeeklyDays() {
   const days = []
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date()
-    d.setDate(d.getDate() - i)
+  const today = new Date()
+  const day = today.getDay()
+  const diff = (day + 6) % 7 // Days since Monday (0=Mon, 6=Sun)
+  
+  const monday = new Date(today)
+  monday.setDate(today.getDate() - diff)
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday)
+    d.setDate(monday.getDate() + i)
     days.push({
       label: d.toLocaleDateString('en-US', { weekday: 'short' }),
       date: d.toISOString().split('T')[0],
@@ -45,7 +52,7 @@ function AdminDashboard({ setTitle }) {
   const [chartLoading, setChartLoading] = useState(true)
   const [todayStats, setTodayStats] = useState({ totalEmployees: 0, present: 0, absent: 0, onLeave: 0 })
   const [weeklyPresent, setWeeklyPresent] = useState([0, 0, 0, 0, 0, 0, 0])
-  const [last7Days] = useState(getLast7Days())
+  const [last7Days] = useState(getWeeklyDays())
 
   useEffect(() => { setTitle('Dashboard Page') }, [setTitle])
 
@@ -78,7 +85,7 @@ function AdminDashboard({ setTitle }) {
     datasets: [{
       label: 'Employees',
       data: [todayStats.present, todayStats.absent, todayStats.onLeave],
-      backgroundColor: ['rgb(54, 95, 141)', 'rgb(148, 163, 184)', 'rgb(203, 213, 225)'],
+      backgroundColor: ['rgb(44, 82, 132)', 'rgb(148, 163, 184)', 'rgb(203, 213, 225)'],
       hoverOffset: 4,
     }],
   }
@@ -89,7 +96,7 @@ function AdminDashboard({ setTitle }) {
       label: 'Present Employees',
       data: weeklyPresent,
       fill: false,
-      borderColor: 'rgb(54, 95, 141)',
+      borderColor: 'rgb(44, 82, 132)',
       backgroundColor: 'rgba(71, 85, 105, 0.2)',
       tension: 0.3,
       pointBackgroundColor: 'rgb(71, 85, 105)',
@@ -108,7 +115,7 @@ function AdminDashboard({ setTitle }) {
     labels: ['Present', 'Not Present'],
     datasets: [{
       data: [todayStats.present, todayStats.totalEmployees - todayStats.present],
-      backgroundColor: ['rgb(54, 95, 141)', 'rgb(226, 232, 240)'],
+      backgroundColor: ['rgb(44, 82, 132)', 'rgb(226, 232, 240)'],
       hoverOffset: 4,
       borderWidth: 0,
     }],
@@ -163,7 +170,7 @@ function AdminDashboard({ setTitle }) {
 
       {/* ── Attendance Rate Banner — compact ── */}
       {!statsLoading && todayStats.totalEmployees > 0 && (
-        <div className="bg-white dark:bg-white/5 rounded-xl shadow p-4 flex items-center justify-between border-l-4 border-[#2C5294] dark:border-[#365F8D] transition-colors duration-300">
+        <div className="bg-white dark:bg-white/5 rounded-xl shadow p-4 flex items-center justify-between border-l-4 border-[#2C5284] dark:border-[#365F8D] transition-colors duration-300">
           <div>
             <p className="text-xs text-[#2C5284] dark:text-gray-300 font-medium">Today's Attendance Rate</p>
             <h2 className="text-xl font-bold text-[#365F8D] dark:text-white">{attendanceRate}%</h2>
@@ -226,7 +233,7 @@ function AdminDashboard({ setTitle }) {
 
       {/* ── Weekly Line Chart — compact height ── */}
       <div className="bg-white dark:bg-white/5 p-5 rounded-xl shadow hover:shadow-xl transition-all duration-300 border border-transparent dark:border-white/5">
-        <h2 className="text-base font-bold mb-3 text-[#2C5284] dark:text-blue-300">Last 7 Days — Present Employees</h2>
+        <h2 className="text-base font-bold mb-3 text-[#2C5284] dark:text-blue-300">Weekly Attendance — Present Employees</h2>
         {chartLoading ? (
           <div className="flex justify-center items-center h-48">
             <Loader size="medium" />

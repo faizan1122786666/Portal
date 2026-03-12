@@ -39,14 +39,15 @@ const selectStyles = {
   }),
   option: (base, state) => ({
     ...base,
-    backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(255,255,255,0.05)' : 'transparent',
+    backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
     color: state.isSelected ? 'white' : 'inherit',
     cursor: 'pointer',
   }),
   menu: (base) => ({
     ...base,
-    backgroundColor: '#292c35',
-    border: '1px solid rgba(255,255,255,0.1)',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    zIndex: 9999,
   }),
   placeholder: (base) => ({ ...base, color: '#9ca3af' }),
 }
@@ -777,7 +778,7 @@ function AdminAttendance({ setTitle }) {
           {/* Desktop Table */}
           <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
-              <thead className="bg-[#2C5294] dark:bg-white/10">
+              <thead className="bg-[#2C5284] dark:bg-white/10">
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Employee</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Date</th>

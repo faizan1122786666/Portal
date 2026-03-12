@@ -13,6 +13,7 @@ import {
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { RxCrossCircled } from 'react-icons/rx';
 import { CgProfile } from 'react-icons/cg';
+import Select from 'react-select';
 import { apiGetAllProjects, apiDeleteProject } from '../../api/projectAPI';
 import AddProjectModal from '../../components/Admin/AddProjectModal';
 import EditProjectModal from '../../components/Admin/EditProjectModal';
@@ -170,8 +171,8 @@ export default function AdminProjects({ setTitle }) {
                 <p className="text-xs text-[#2C5284] dark:text-gray-300 mb-0.5">{card.sub}</p>
                 <h1 className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300 tracking-tight">{card.value}</h1>
               </div>
-              <div className="bg-[#2C5284]/10 dark:bg-[#365f8d]/20 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
-                <div className="text-[#2C5284] dark:text-blue-300 opacity-80 group-hover:opacity-100">
+              <div className="bg-[#2C5284] dark:bg-[#365f8d] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                <div className="text-white opacity-90 group-hover:opacity-100">
                   {React.cloneElement(card.icon, { size: 20, className: "" })}
                 </div>
               </div>
@@ -199,15 +200,44 @@ export default function AdminProjects({ setTitle }) {
           </div>
 
           {/* Status Filter */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-white/5 text-zinc-700 dark:text-zinc-200 text-sm rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none cursor-pointer transition-colors"
-          >
-            {['All', 'Planning', 'Active', 'On Hold', 'Completed'].map(s => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
+          <div className="w-44">
+            <Select
+              value={{ value: statusFilter, label: statusFilter }}
+              onChange={(opt) => setStatusFilter(opt.value)}
+              options={['All', 'Planning', 'Active', 'On Hold', 'Completed'].map(s => ({ value: s, label: s }))}
+              placeholder="Filter Status"
+              isSearchable={false}
+              classNamePrefix="react-select"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  backgroundColor: 'transparent',
+                  borderColor: 'rgba(0,0,0,0.1)',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.875rem',
+                  minHeight: '40px',
+                  boxShadow: 'none',
+                  '&:hover': { borderColor: '#2C5284' }
+                }),
+                menu: (base) => ({
+                  ...base,
+                  backgroundColor: 'white',
+                  borderRadius: '0.5rem',
+                  overflow: 'hidden',
+                  zIndex: 50
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
+                  color: state.isSelected ? 'white' : 'inherit',
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                  '&:active': { backgroundColor: '#2C5284' }
+                }),
+              }}
+              className="dark:text-zinc-800"
+            />
+          </div>
         </div>
       </div>
 
@@ -233,7 +263,7 @@ export default function AdminProjects({ setTitle }) {
           <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
-                <thead className="bg-[#2C5294] dark:bg-white/10">
+                <thead className="bg-[#2C5284] dark:bg-white/10">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Project</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Team</th>

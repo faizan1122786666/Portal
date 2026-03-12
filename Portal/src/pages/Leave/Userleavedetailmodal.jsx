@@ -13,7 +13,7 @@ function UserLeaveDetailModal({ leave, onClose }) {
       case 'Rejected':
         return 'bg-red-100 text-red-800 border-red-300';
       case 'Pending':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+        return 'bg-[#2C5284]/10 text-[#2C5284] border-[#2C5284]/20';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-300';
     }
@@ -103,17 +103,10 @@ function UserLeaveDetailModal({ leave, onClose }) {
                 ? 'bg-green-50 dark:bg-green-500/10 border-green-500'
                 : leave.status === 'Rejected'
                   ? 'bg-red-50 dark:bg-red-500/10 border-red-500'
-                  : 'bg-blue-50 dark:bg-blue-500/10 border-blue-500'
+                  : 'bg-[#2C5284]/10 border-[#2C5284]/30 text-[#2C5284] dark:text-blue-300'
                 }`}
             >
-              <h3
-                className={`text-sm font-semibold mb-2 ${leave.status === 'Approved'
-                  ? 'text-green-900 dark:text-green-300'
-                  : leave.status === 'Rejected'
-                    ? 'text-red-900 dark:text-red-300'
-                    : 'text-blue-900 dark:text-blue-300'
-                  }`}
-              >
+              <h3 className="text-sm font-bold mb-2 uppercase tracking-wider opacity-70">
                 Admin Comment
               </h3>
               <p
@@ -121,7 +114,7 @@ function UserLeaveDetailModal({ leave, onClose }) {
                   ? 'text-green-800 dark:text-green-400'
                   : leave.status === 'Rejected'
                     ? 'text-red-800 dark:text-red-400'
-                    : 'text-blue-800 dark:text-blue-400'
+                    : 'text-gray-700 dark:text-gray-300'
                   }`}
               >
                 {leave.adminComment}

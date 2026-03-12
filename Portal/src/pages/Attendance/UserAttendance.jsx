@@ -307,7 +307,7 @@ function UserAttendance({ setTitle }) {
         <>
           <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
             <table className="w-full divide-y divide-gray-200 dark:divide-white/5 table-fixed">
-              <thead className="bg-[#2C5294] dark:bg-white/10">
+              <thead className="bg-[#2C5284] dark:bg-white/10">
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Date</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Shift</th>

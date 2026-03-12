@@ -6,11 +6,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {
-  FaArrowLeft, FaPlus, FaRegEdit, FaCalendarAlt,
-  FaUsers, FaCheckCircle, FaRegClock, FaLayerGroup,
-  FaTrashAlt, FaTimes,
-} from 'react-icons/fa';
+import { FaTimes, FaPlus, FaTrashAlt, FaChevronDown, FaPaperclip, FaPaperPlane } from 'react-icons/fa';
+import Select from 'react-select';
 import { AiOutlineClockCircle, AiOutlineDelete, AiOutlineEye } from 'react-icons/ai';
 import {
   apiGetProjectById,
@@ -23,26 +20,26 @@ import AddTaskToProjectModal from '../../components/Admin/AddTaskToProjectModal'
 import EditProjectModal from '../../components/Admin/EditProjectModal';
 import Loader from '../../components/common/Loader';
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// Helpers
 const statusColors = {
-  Pending:     'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300 border-yellow-200 dark:border-yellow-500/30',
+  Pending: 'bg-[#2C5284]/10 text-[#2C5284] border-[#2C5284]/20',
   'In Progress': 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300 border-blue-200 dark:border-blue-500/30',
-  Completed:   'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30',
+  Completed: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30',
 };
 const priorityColors = {
-  Low:    'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700',
+  Low: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700',
   Medium: 'bg-sky-100 text-sky-800 dark:bg-sky-500/20 dark:text-sky-300 border-sky-200 dark:border-sky-500/30',
-  High:   'bg-orange-100 text-orange-800 dark:bg-orange-500/20 dark:text-orange-300 border-orange-200 dark:border-orange-500/30',
+  High: 'bg-orange-100 text-orange-800 dark:bg-orange-500/20 dark:text-orange-300 border-orange-200 dark:border-orange-500/30',
   Urgent: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300 border-red-200 dark:border-red-500/30',
 };
 const projectStatusColors = {
-  Planning:  'bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-300',
-  Active:    'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300',
+  Planning: 'bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-300',
+  Active: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300',
   'On Hold': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300',
   Completed: 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300',
 };
 
-// ── Task Detail Modal ─────────────────────────────────────────────────────────
+// Task Detail Modal 
 function TaskDetailModal({ task, members, onClose, onUpdated, onDeleted }) {
   const [form, setForm] = useState({
     title: task.title,
@@ -147,30 +144,64 @@ function TaskDetailModal({ task, members, onClose, onUpdated, onDeleted }) {
             <div>
               <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Deadline</label>
               <input type="date" name="deadline" value={form.deadline} onChange={handle}
-                className="w-full px-3 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284]/40 outline-none text-sm" />
+                className="w-full px-3 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284] outline-none text-sm" />
             </div>
             <div>
               <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Priority</label>
-              <select name="priority" value={form.priority} onChange={handle}
-                className="w-full px-3 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl outline-none text-sm cursor-pointer">
-                {['Low', 'Medium', 'High', 'Urgent'].map(p => <option key={p}>{p}</option>)}
-              </select>
+              <Select
+                value={{ value: form.priority, label: form.priority }}
+                onChange={(opt) => setForm({ ...form, priority: opt.value })}
+                options={['Low', 'Medium', 'High', 'Urgent'].map(p => ({ value: p, label: p }))}
+                isSearchable={false}
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgba(0,0,0,0.1)',
+                    borderRadius: '0.75rem',
+                    padding: '2px',
+                    boxShadow: 'none',
+                    '&:hover': { borderColor: '#2C5284' }
+                  }),
+                  option: (base, state) => ({
+                    ...base,
+                    backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
+                    color: state.isSelected ? 'white' : 'inherit',
+                    cursor: 'pointer'
+                  }),
+                }}
+                className="text-sm dark:text-zinc-800"
+              />
             </div>
           </div>
 
           {/* Status */}
           <div>
             <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Status</label>
-            <select
-              name="status"
-              value={form.status}
-              onChange={handle}
-              className="w-full px-4 py-3 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 text-sm rounded-xl focus:ring-2 focus:ring-[#2C5284] outline-none cursor-pointer transition-colors"
-            >
-              {['Pending', 'In Progress', 'Completed'].map(s => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
+            <Select
+              value={{ value: form.status, label: form.status }}
+              onChange={(opt) => setForm({ ...form, status: opt.value })}
+              options={['Pending', 'In Progress', 'Completed'].map(s => ({ value: s, label: s }))}
+              isSearchable={false}
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  backgroundColor: 'transparent',
+                  borderColor: 'rgba(0,0,0,0.1)',
+                  borderRadius: '0.75rem',
+                  padding: '4px',
+                  boxShadow: 'none',
+                  '&:hover': { borderColor: '#2C5284' }
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
+                  color: state.isSelected ? 'white' : 'inherit',
+                  cursor: 'pointer'
+                }),
+              }}
+              className="text-sm dark:text-zinc-800"
+            />
           </div>
         </div>
 
@@ -192,7 +223,7 @@ function TaskDetailModal({ task, members, onClose, onUpdated, onDeleted }) {
   );
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
+// Main Page 
 export default function AdminProjectDetails({ setTitle }) {
   const { projectId } = useParams();
   const navigate = useNavigate();
@@ -405,10 +436,10 @@ export default function AdminProjectDetails({ setTitle }) {
           {/* Mini Stats */}
           <div className="flex items-center gap-4 ml-auto flex-wrap">
             {[
-              { label: 'Total', value: taskStats.total, color: 'text-[#2C5284] dark:text-[#2C5284]' },
-              { label: 'Pending', value: taskStats.pending, color: 'text-yellow-600 dark:text-[#2C5284]' },
-              { label: 'In Progress', value: taskStats.inProgress, color: 'text-[#2C5284] dark:text-[#2C5284]' },
-              { label: 'Done', value: taskStats.completed, color: 'text-[#2C5284] dark:text-[#2C5284]' },
+              { label: 'Total', value: taskStats.total, color: 'text-[#2C5284] dark:text-blue-300' },
+              { label: 'Pending', value: taskStats.pending, color: 'text-[#2C5284] dark:text-blue-300', bg: 'bg-[#2C5284]/10 dark:bg-[#2C5284]/10' },
+              { label: 'In Progress', value: taskStats.inProgress, color: 'text-[#2C5284] dark:text-blue-300' },
+              { label: 'Done', value: taskStats.completed, color: 'text-[#2C5284] dark:text-blue-300' },
             ].map(s => (
               <div key={s.label} className="text-center">
                 <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
@@ -424,15 +455,31 @@ export default function AdminProjectDetails({ setTitle }) {
         <div className="flex items-center gap-3 flex-wrap">
           <h2 className="text-base font-bold text-zinc-800 dark:text-zinc-200">Project Tasks</h2>
           {/* Status Filter Tabs */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border border-zinc-200 dark:border-white/10 bg-white dark:bg-white/5 text-zinc-700 dark:text-zinc-200 text-xs rounded-xl focus:ring-2 focus:ring-[#2C5284] outline-none cursor-pointer shadow-sm"
-          >
-            {['All', 'Pending', 'In Progress', 'Completed'].map(s => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
+          <div className="w-36">
+            <Select
+              value={{ value: statusFilter, label: statusFilter }}
+              onChange={(opt) => setStatusFilter(opt.value)}
+              options={['All', 'Pending', 'In Progress', 'Completed'].map(s => ({ value: s, label: s }))}
+              isSearchable={false}
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  backgroundColor: 'transparent',
+                  borderColor: 'rgba(0,0,0,0.1)',
+                  borderRadius: '0.75rem',
+                  boxShadow: 'none',
+                  '&:hover': { borderColor: '#2C5284' }
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
+                  color: state.isSelected ? 'white' : 'inherit',
+                  cursor: 'pointer'
+                }),
+              }}
+              className="text-xs dark:text-zinc-800"
+            />
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
@@ -443,7 +490,7 @@ export default function AdminProjectDetails({ setTitle }) {
               placeholder="Search tasks..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="pl-8 pr-4 py-2 border border-zinc-200 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-xl text-xs outline-none focus:ring-2 focus:ring-[#2C5284]/30 w-44"
+              className="pl-9 pr-4 py-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2C5284] transition-all w-64"
             />
             <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -480,7 +527,7 @@ export default function AdminProjectDetails({ setTitle }) {
         <div className="bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/5 rounded-xl shadow-sm overflow-hidden overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[#2C5294] dark:bg-white/10 text-white">
+              <tr className="bg-[#2C5284] dark:bg-white/10 text-white">
                 <th className="px-5 py-3.5 text-xs font-semibold whitespace-nowrap">Task</th>
                 <th className="px-5 py-3.5 text-xs font-semibold whitespace-nowrap">Assignees</th>
                 <th className="px-5 py-3.5 text-xs font-semibold whitespace-nowrap text-center">Deadline</th>

@@ -26,12 +26,19 @@ import Loader from '../../components/common/Loader';
 
 ChartJS.register(ArcElement, LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
-// ── Build last 7 days labels (same as AdminDashboard) ────────────────────────
-function getLast7Days() {
+// ── Build weekly days (starting Monday) ──────────────────────────────────────
+function getWeeklyDays() {
   const days = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
+  const today = new Date();
+  const day = today.getDay();
+  const diff = (day + 6) % 7; // Days since Monday (0=Mon, 6=Sun)
+
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - diff);
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
     days.push({
       label: d.toLocaleDateString('en-US', { weekday: 'short' }),
       date: d.toISOString().split('T')[0],
@@ -71,7 +78,7 @@ function UserDashboard({ setTitle }) {
   const [loading, setLoading] = useState(false);
   const [actionMsg, setActionMsg] = useState('');
   const [msgType, setMsgType] = useState('success');
-  const [last7Days] = useState(getLast7Days());
+  const [last7Days] = useState(getWeeklyDays());
   const [weeklyPresent, setWeeklyPresent] = useState([0, 0, 0, 0, 0, 0, 0]);
 
   const displayName = user?.name || '';
@@ -187,7 +194,7 @@ function UserDashboard({ setTitle }) {
     datasets: [{
       label: 'Days',
       data: [presentDays, absentDays, leaveDays],
-      backgroundColor: ['rgb(54, 95, 141)', 'rgb(148, 163, 184)', 'rgb(203, 213, 225)'],
+      backgroundColor: ['rgb(44, 82, 132)', 'rgb(148, 163, 184)', 'rgb(203, 213, 225)'],
       hoverOffset: 4,
     }],
   };
@@ -198,7 +205,7 @@ function UserDashboard({ setTitle }) {
     labels: ['Present', 'Not Present'],
     datasets: [{
       data: [presentDays, totalDays - presentDays],
-      backgroundColor: ['rgb(54, 95, 141)', 'rgb(226, 232, 240)'],
+      backgroundColor: ['rgb(44, 82, 132)', 'rgb(226, 232, 240)'],
       hoverOffset: 4,
       borderWidth: 0,
     }],
@@ -210,7 +217,7 @@ function UserDashboard({ setTitle }) {
       label: 'Present Days',
       data: weeklyPresent,
       fill: false,
-      borderColor: 'rgb(54, 95, 141)',
+      borderColor: 'rgb(44, 82, 132)',
       backgroundColor: 'rgba(71, 85, 105, 0.2)',
       tension: 0.3,
       pointBackgroundColor: 'rgb(71, 85, 105)',
@@ -365,7 +372,7 @@ function UserDashboard({ setTitle }) {
               className={`flex items-center justify-center gap-3 px-8 py-3 rounded-lg font-medium text-base transition w-full sm:w-48
                 ${!canCheckIn || loading || !hasValidShift
                   ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-[#365F8D] text-white hover:bg-[#2C5284]'}`}
+                  : 'bg-[#2C5284] text-white hover:bg-[#365F8D]'}`}
             >
               <FaSignInAlt size={18} />{loading ? 'Wait...' : 'Clock In'}
             </button>
@@ -421,7 +428,7 @@ function UserDashboard({ setTitle }) {
 
       {/* ── Weekly Line Chart — same height/style as AdminDashboard ── */}
       <div className="bg-white dark:bg-white/5 p-5 rounded-xl shadow hover:shadow-xl transition-all duration-300 border border-transparent dark:border-white/5">
-        <h2 className="text-base font-bold mb-3 text-[#2C5284] dark:text-blue-300">Last 7 Days — My Attendance</h2>
+        <h2 className="text-base font-bold mb-3 text-[#2C5284] dark:text-blue-300">Weekly Attendance — My Summary</h2>
         {chartLoading ? (
           <div className="flex justify-center items-center h-48">
             <Loader size="medium" />

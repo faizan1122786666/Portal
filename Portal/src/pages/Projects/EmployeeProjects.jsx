@@ -13,6 +13,7 @@ import {
 import { AiOutlineClockCircle, AiOutlineEye } from 'react-icons/ai';
 import { CgProfile } from 'react-icons/cg';
 import { RxCrossCircled } from 'react-icons/rx';
+import Select from 'react-select';
 import {
   apiGetMyProjects,
   apiGetProjectTasks,
@@ -29,7 +30,7 @@ const priorityColors = {
   Urgent: 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300 border-red-200 dark:border-red-500/30',
 };
 const statusColors = {
-  Pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300 border-yellow-200 dark:border-yellow-500/30',
+  Pending: 'bg-[#2C5284]/10 text-[#2C5284] border-[#2C5284]/20',
   'In Progress': 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300 border-blue-200 dark:border-blue-500/30',
   Completed: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30',
 };
@@ -104,16 +105,31 @@ function TaskUpdateModal({ task, projectId, onClose, onUpdated }) {
 
           {/* Status Picker */}
           <div>
-            <p className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase mb-2">Update Status</p>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 text-sm rounded-xl focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none cursor-pointer transition-colors"
-            >
-              {['Pending', 'In Progress', 'Completed'].map(s => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
+            <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">Update Status</label>
+            <Select
+              value={{ value: status, label: status }}
+              onChange={(opt) => setStatus(opt.value)}
+              options={['Pending', 'In Progress', 'Completed'].map(s => ({ value: s, label: s }))}
+              isSearchable={false}
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  backgroundColor: 'transparent',
+                  borderColor: 'rgba(0,0,0,0.1)',
+                  borderRadius: '0.75rem',
+                  padding: '4px',
+                  boxShadow: 'none',
+                  '&:hover': { borderColor: '#2C5284' }
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
+                  color: state.isSelected ? 'white' : 'inherit',
+                  cursor: 'pointer'
+                }),
+              }}
+              className="text-sm dark:text-zinc-800"
+            />
           </div>
         </div>
 
@@ -248,12 +264,12 @@ function ProjectDetailView({ project, onBack }) {
           <div className="flex items-center gap-8 ml-auto">
             {[
               { label: 'Total Tasks', value: taskStats.total, color: 'text-zinc-700 dark:text-zinc-200', bg: 'bg-zinc-100 dark:bg-white/10' },
-              { label: 'Pending', value: taskStats.pending, color: 'text-yellow-600', bg: 'bg-yellow-50 dark:bg-yellow-500/10' },
+              { label: 'Pending', value: taskStats.pending, color: 'text-[#2C5284]', bg: 'bg-[#2C5284]/10 dark:bg-[#2C5284]/10' },
               { label: 'In Progress', value: taskStats.inProgress, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-500/10' },
               { label: 'Completed', value: taskStats.completed, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-500/10' },
             ].map(s => (
               <div key={s.label} className="text-right">
-                <span className={`text-xl font-black ${s.color} block leading-tight`}>{s.value}</span>
+                <span className="text-xl font-black block leading-tight" style={{ color: s.color.split(' ')[0] }}>{s.value}</span>
                 <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">{s.label}</span>
               </div>
             ))}
@@ -265,20 +281,36 @@ function ProjectDetailView({ project, onBack }) {
       <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <div className="flex items-center gap-2 flex-wrap">
           <h2 className="text-sm font-bold text-zinc-700 dark:text-zinc-300">My Tasks in this Project</h2>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-1.5 border border-zinc-200 dark:border-white/10 bg-white dark:bg-white/5 text-zinc-700 dark:text-zinc-200 text-xs rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none cursor-pointer w-32"
-          >
-            {['All', 'Pending', 'In Progress', 'Completed'].map(s => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
+          <div className="w-36">
+            <Select
+              value={{ value: statusFilter, label: statusFilter }}
+              onChange={(opt) => setStatusFilter(opt.value)}
+              options={['All', 'Pending', 'In Progress', 'Completed'].map(s => ({ value: s, label: s }))}
+              isSearchable={false}
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  backgroundColor: 'transparent',
+                  borderColor: 'rgba(0,0,0,0.1)',
+                  borderRadius: '0.5rem',
+                  boxShadow: 'none',
+                  '&:hover': { borderColor: '#2C5284' }
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
+                  color: state.isSelected ? 'white' : 'inherit',
+                  cursor: 'pointer'
+                }),
+              }}
+              className="text-xs dark:text-zinc-800"
+            />
+          </div>
         </div>
         <div className="relative">
           <input type="text" placeholder="Search tasks..." value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="pl-8 pr-4 py-2 border border-zinc-200 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-xl text-xs outline-none focus:ring-2 focus:ring-[#2C5284]/30 w-44" />
+            className="pl-8 pr-4 py-2 border border-zinc-200 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-xl text-xs outline-none focus:ring-2 focus:ring-[#2C5284] w-44" />
           <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
@@ -300,7 +332,7 @@ function ProjectDetailView({ project, onBack }) {
           <div className="hidden lg:block bg-white dark:bg-white/5 border border-zinc-200 dark:border-white/5 rounded-xl shadow-sm overflow-hidden overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-[#2C5294] dark:bg-white/10 text-white">
+                <tr className="bg-[#2C5284] dark:bg-white/10 text-white">
                   <th className="px-5 py-3.5 text-xs font-semibold">Task</th>
                   <th className="px-5 py-3.5 text-xs font-semibold text-center">Deadline</th>
                   <th className="px-5 py-3.5 text-xs font-semibold text-center">Priority</th>
@@ -315,7 +347,7 @@ function ProjectDetailView({ project, onBack }) {
                     <tr key={task._id} className="group hover:bg-zinc-50 dark:hover:bg-white/5 transition-all duration-200">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg ${task.status === 'Completed' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600' : 'bg-blue-50 dark:bg-blue-500/10 text-[#2C5284]'} shrink-0 group-hover:scale-110 transition-transform`}>
+                          <div className={`p-2 rounded-lg ${task.status === 'Completed' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600' : 'bg-[#2C5284]/10 dark:bg-[#2C5284]/10 text-[#2C5284]'} shrink-0 group-hover:scale-110 transition-transform`}>
                             {task.status === 'Completed' ? <FaCheckCircle size={14} /> : <FaRegClock size={14} />}
                           </div>
                           <div className="min-w-0">
@@ -528,8 +560,8 @@ export default function EmployeeProjects({ setTitle }) {
                 <p className="text-xs text-[#2C5284] dark:text-gray-300 mb-0.5">{card.sub}</p>
                 <h1 className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300 tracking-tight">{card.value}</h1>
               </div>
-              <div className="bg-[#2C5284]/10 dark:bg-[#365f8d]/20 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
-                <div className="text-[#2C5284] dark:text-blue-300 opacity-80 group-hover:opacity-100">
+              <div className="bg-[#2C5284] dark:bg-[#365f8d] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                <div className="text-white opacity-90 group-hover:opacity-100">
                   {React.cloneElement(card.icon, { size: 20, className: "" })}
                 </div>
               </div>
@@ -550,15 +582,31 @@ export default function EmployeeProjects({ setTitle }) {
               </svg>
             </div>
           </div>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-white/10 bg-white dark:bg-white/5 text-zinc-700 dark:text-zinc-200 text-sm rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none cursor-pointer"
-          >
-            {['All', 'Planning', 'Active', 'On Hold', 'Completed'].map(s => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
+          <div className="w-44">
+            <Select
+              value={{ value: statusFilter, label: statusFilter }}
+              onChange={(opt) => setStatusFilter(opt.value)}
+              options={['All', 'Planning', 'Active', 'On Hold', 'Completed'].map(s => ({ value: s, label: s }))}
+              isSearchable={false}
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  backgroundColor: 'transparent',
+                  borderColor: 'rgba(0,0,0,0.1)',
+                  borderRadius: '0.5rem',
+                  boxShadow: 'none',
+                  '&:hover': { borderColor: '#2C5284' }
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
+                  color: state.isSelected ? 'white' : 'inherit',
+                  cursor: 'pointer'
+                }),
+              }}
+              className="text-sm dark:text-zinc-800"
+            />
+          </div>
         </div>
       </div>
 
@@ -578,7 +626,7 @@ export default function EmployeeProjects({ setTitle }) {
           <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
-                <thead className="bg-[#2C5294] dark:bg-white/10">
+                <thead className="bg-[#2C5284] dark:bg-white/10">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Project</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white dark:text-gray-200">Team</th>

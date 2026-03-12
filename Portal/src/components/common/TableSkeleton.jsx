@@ -9,7 +9,7 @@ import Skeleton from './Skeleton';
 const TableSkeleton = ({ rows = 5, cols = 6 }) => {
   return (
     <div className="bg-white dark:bg-white/5 rounded-xl border border-gray-100 dark:border-white/5 overflow-hidden animate-pulse">
-      <div className="bg-[#2C5294] dark:bg-white/10 h-14 w-full flex items-center px-6">
+      <div className="bg-[#2C5284] dark:bg-white/10 h-14 w-full flex items-center px-6">
         {[...Array(cols)].map((_, i) => (
           <div key={i} className="flex-1 pr-4">
             <div className="h-4 bg-white/20 rounded w-2/3" />

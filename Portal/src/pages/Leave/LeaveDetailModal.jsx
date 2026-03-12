@@ -111,10 +111,13 @@ function LeaveDetailModal({ leave, onClose, onStatusChange }) {
                 className="react-select-container"
                 classNamePrefix="react-select"
                 styles={{
-                  control: (base) => ({
+                  control: (base, state) => ({
                     ...base,
                     backgroundColor: 'transparent',
-                    borderColor: '#d1d5db',
+                    borderColor: state.isFocused ? '#2C5284' : '#d1d5db',
+                    borderRadius: '0.5rem',
+                    minHeight: '38px',
+                    boxShadow: state.isFocused ? '0 0 0 1px #2C5284' : 'none',
                     '&:hover': { borderColor: '#2C5284' },
                   }),
                   singleValue: (base) => ({
@@ -123,13 +126,16 @@ function LeaveDetailModal({ leave, onClose, onStatusChange }) {
                   }),
                   option: (base, state) => ({
                     ...base,
-                    backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(255,255,255,0.05)' : 'transparent',
+                    backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
                     color: state.isSelected ? 'white' : 'inherit',
+                    cursor: 'pointer',
+                    '&:active': { backgroundColor: '#2C5284' }
                   }),
                   menu: (base) => ({
                     ...base,
-                    backgroundColor: '#292c35',
-                    border: '1px solid rgba(255,255,255,0.1)',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e5e7eb',
+                    zIndex: 9999,
                   }),
                 }}
               />
@@ -160,9 +166,9 @@ function LeaveDetailModal({ leave, onClose, onStatusChange }) {
 
           {/* Previous Admin Comment */}
           {leave.adminComment && (
-            <div className="mt-6 bg-blue-50 dark:bg-blue-500/10 rounded-lg p-4 border-l-4 border-blue-500">
-              <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-300 mb-2">Previous Admin Comment</h4>
-              <p className="text-sm text-blue-800 dark:text-blue-400">{leave.adminComment}</p>
+            <div className="mt-6 bg-[#2C5284]/10 dark:bg-[#2C5284]/10 rounded-lg p-4 border-l-4 border-[#2C5284]">
+              <h4 className="text-sm font-semibold text-[#2C5284] dark:text-[#2C5284] mb-2">Previous Admin Comment</h4>
+              <p className="text-sm text-[#2C5284] dark:text-blue-300 opacity-90">{leave.adminComment}</p>
             </div>
           )}
         </div>

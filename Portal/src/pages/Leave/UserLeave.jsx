@@ -300,7 +300,7 @@ function UserLeave({ setTitle }) {
   const getStatusColor = (status) => {
     if (status === 'Approved') return 'bg-green-100 text-green-800';
     if (status === 'Rejected')  return 'bg-red-100 text-red-800';
-    return 'bg-yellow-100 text-yellow-800';
+    return 'bg-[#2C5284]/10 text-[#2C5284]';
   };
 
   const stats = {
@@ -379,15 +379,15 @@ function UserLeave({ setTitle }) {
           ))
           : [
             { label: 'Total Requests', value: stats.total,    icon: <CgProfile size={20} className="text-white" /> },
-            { label: 'Pending',        value: stats.pending,  icon: <CalendarDays size={20} className="text-white" /> },
+            { label: 'Pending',        value: stats.pending,  icon: <CalendarDays size={20} className="text-white" />, specialColor: true },
             { label: 'Approved',       value: stats.approved, icon: <FaRegCheckCircle size={20} className="text-white" /> },
             { label: 'Rejected',       value: stats.rejected, icon: <RxCrossCircled size={20} className="text-white" /> },
-          ].map(({ label, value, icon }) => (
+          ].map(({ label, value, icon, specialColor }) => (
             <div key={label}
               className="bg-white dark:bg-white/5 p-4 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] flex items-center justify-between shadow hover:shadow-xl transition duration-300">
               <div>
                 <p className="text-xs text-[#2C5284] dark:text-gray-300">{label}</p>
-                <p className="text-xl sm:text-2xl font-bold text-[#365F8D] dark:text-blue-300">{value}</p>
+                <p className={`text-xl sm:text-2xl font-bold ${specialColor ? 'text-[#2C5284] dark:text-[#2C5284]' : 'text-[#365F8D] dark:text-blue-300'}`}>{value}</p>
               </div>
               <div className="bg-[#365F8D] dark:bg-[#2C5282] w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0">
                 {icon}

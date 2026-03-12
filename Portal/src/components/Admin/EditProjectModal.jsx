@@ -109,7 +109,7 @@ export default function EditProjectModal({ project, onClose, onUpdated }) {
               onChange={handle}
               required
               maxLength={50}
-              className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284]/40 focus:border-[#2C5284] outline-none text-sm transition-all"
+              className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284] outline-none text-sm transition-all"
             />
           </div>
 
@@ -123,7 +123,7 @@ export default function EditProjectModal({ project, onClose, onUpdated }) {
               value={form.description}
               onChange={handle}
               rows="3"
-              className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284]/40 focus:border-[#2C5284] outline-none text-sm transition-all resize-none"
+              className="w-full px-4 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284] outline-none text-sm transition-all resize-none"
             />
           </div>
 
@@ -151,7 +151,7 @@ export default function EditProjectModal({ project, onClose, onUpdated }) {
                     padding: '0.15rem',
                     boxShadow: 'none',
                     '&:hover': {
-                      borderColor: 'inherit'
+                      borderColor: '#2C5284'
                     }
                   }),
                   menu: (base) => ({
@@ -169,7 +169,13 @@ export default function EditProjectModal({ project, onClose, onUpdated }) {
                     ...base,
                     color: '#2C5284',
                     fontWeight: 600,
-                  })
+                  }),
+                  option: (base, state) => ({
+                    ...base,
+                    backgroundColor: state.isSelected ? '#2C5284' : state.isFocused ? 'rgba(44,82,132,0.08)' : 'transparent',
+                    color: state.isSelected ? 'white' : 'inherit',
+                    cursor: 'pointer'
+                  }),
                 }}
                 className="w-full border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-sm transition-all rounded-xl dark:text-black"
               />
@@ -188,7 +194,7 @@ export default function EditProjectModal({ project, onClose, onUpdated }) {
                 value={form.deadline}
                 onChange={handle}
                 required
-                className="w-full px-3 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284]/40 outline-none text-sm"
+                className="w-full px-3 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284] outline-none text-sm"
               />
             </div>
             <div>
