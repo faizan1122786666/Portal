@@ -12,7 +12,7 @@ const { upload } = require('../utils/cloudinary');
 
 router.post('/login', authController.LoginUser);
 router.post('/logout', authController.LogoutUser);
-router.post('/change-password', verifyToken, authController.ChangePassword);
+router.post('/change-password', authController.ChangePassword);
 router.put('/update-profile', verifyToken, authController.updateProfile);
 router.post('/upload-profile-image', verifyToken, upload.single('profileImage'), authController.uploadProfileImage);
 

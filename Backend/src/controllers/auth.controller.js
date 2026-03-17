@@ -87,9 +87,10 @@ async function LogoutUser(req, res) {
  */
 async function ChangePassword(req, res) {
     try {
-        const { oldPassword, newPassword } = req.body;
+        const { email, oldPassword, newPassword } = req.body;
 
-        const user = await userModel.findById(req.user.id);
+        // Verify user exists by email
+        const user = await userModel.findOne({ email });
 
         if (!user) {
             return res.status(404).json({

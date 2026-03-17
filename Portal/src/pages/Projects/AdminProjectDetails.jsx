@@ -22,21 +22,21 @@ import Loader from '../../components/common/Loader';
 
 // Helpers
 const statusColors = {
-  Pending: 'bg-[#2C5284]/10 text-[#2C5284] border-[#2C5284]/20',
-  'In Progress': 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300 border-blue-200 dark:border-blue-500/30',
-  Completed: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30',
+  Pending: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700',
+  'In Progress': 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300 border-blue-100 dark:border-blue-500/20',
+  Completed: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300 border-emerald-100 dark:border-emerald-500/20',
 };
 const priorityColors = {
-  Low: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700',
-  Medium: 'bg-sky-100 text-sky-800 dark:bg-sky-500/20 dark:text-sky-300 border-sky-200 dark:border-sky-500/30',
-  High: 'bg-orange-100 text-orange-800 dark:bg-orange-500/20 dark:text-orange-300 border-orange-200 dark:border-orange-500/30',
-  Urgent: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300 border-red-200 dark:border-red-500/30',
+  Low: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700',
+  Medium: 'bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300 border-sky-100 dark:border-sky-500/20',
+  High: 'bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300 border-orange-100 dark:border-orange-500/20',
+  Urgent: 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300 border-red-100 dark:border-red-500/20',
 };
 const projectStatusColors = {
-  Planning: 'bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-300',
-  Active: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300',
-  'On Hold': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300',
-  Completed: 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300',
+  Planning: 'bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300',
+  Active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300',
+  'On Hold': 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-300',
+  Completed: 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300',
 };
 
 // Task Detail Modal 
@@ -364,61 +364,66 @@ export default function AdminProjectDetails({ setTitle }) {
       </div>
 
       {/* ── Project Header Card ── */}
-      <div className="bg-white dark:bg-white/5 border border-zinc-100 dark:border-white/5 rounded-2xl shadow-sm mb-5 overflow-hidden">
-        <div className="bg-gradient-to-r from-[#2C5284] to-[#365f8d] px-6 py-5">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
+      <div className="bg-white dark:bg-white/5 border border-zinc-100 dark:border-white/5 rounded-[2rem] shadow-lg mb-8 overflow-hidden">
+        <div className="bg-[#2C5284] px-8 py-8">
+          <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 flex-wrap mb-1">
-                <h1 className="text-xl font-bold text-white truncate">{project.name}</h1>
-                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${projectStatusColors[project.status] || 'bg-zinc-100 text-zinc-700'}`}>
+              <div className="flex items-center gap-3 flex-wrap mb-2">
+                <h1 className="text-3xl font-bold text-white tracking-tight">{project.name}</h1>
+                <span className={`px-4 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest ${projectStatusColors[project.status] || 'bg-zinc-100 text-zinc-700'}`}>
                   {project.status}
                 </span>
-                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${priorityColors[project.priority] || priorityColors.Medium}`}>
+                <span className={`px-4 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest ${priorityColors[project.priority] || priorityColors.Medium}`}>
                   {project.priority} Priority
                 </span>
               </div>
               {project.description && (
-                <p className="text-blue-100 text-sm mt-1 max-w-2xl leading-relaxed">{project.description}</p>
+                <p className="text-blue-100 text-base mt-2 max-w-3xl leading-relaxed opacity-90">{project.description}</p>
               )}
             </div>
           </div>
 
-          {/* Progress Bar */}
-          <div className="mt-4">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-blue-200 text-xs font-semibold">Overall Progress</span>
-              <span className="text-white text-xs font-bold">{completionPct}%</span>
+          {/* Progress Bar Section */}
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-white text-sm font-bold tracking-wide">Overall Progress</span>
+              <span className="text-white text-sm font-black tracking-tighter">{completionPct}%</span>
             </div>
-            <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+            <div className="h-2.5 bg-white/20 rounded-full overflow-hidden">
               <div
-                className="h-full bg-white rounded-full transition-all duration-700"
+                className="h-full bg-white rounded-full transition-all duration-1000 ease-out"
                 style={{ width: `${completionPct}%` }}
               />
             </div>
           </div>
         </div>
 
-        {/* Meta Row */}
-        <div className="px-6 py-4 flex flex-wrap gap-6 border-t border-zinc-100 dark:border-white/5">
-          <div className="flex items-center gap-2">
-            <FaCalendarAlt size={13} className={isProjectOverdue ? 'text-red-500' : 'text-[#2C5284] dark:text-blue-400'} />
+        {/* Meta Row (White Bottom) */}
+        <div className="px-8 py-6 flex flex-wrap items-center gap-10 bg-white dark:bg-zinc-900/50">
+          {/* Deadline */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-white/5 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
+              <FaCalendarAlt size={16} className={isProjectOverdue ? 'text-red-500' : ''} />
+            </div>
             <div>
-              <p className="text-[10px] text-zinc-400 font-bold uppercase">Deadline</p>
-              <p className={`text-sm font-semibold ${isProjectOverdue ? 'text-red-500' : 'text-zinc-800 dark:text-zinc-200'}`}>
+              <p className="text-[10px] text-zinc-400 font-black uppercase tracking-widest">Deadline</p>
+              <p className={`text-sm font-bold ${isProjectOverdue ? 'text-red-500' : 'text-zinc-800 dark:text-zinc-200'}`}>
                 {new Date(project.deadline).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' })}
-                {isProjectOverdue && <span className="ml-1.5 text-[10px] text-red-500">(Overdue)</span>}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <FaUsers size={13} className="text-[#2C5284] dark:text-blue-400" />
+          {/* Team */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-white/5 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
+              <FaUsers size={18} />
+            </div>
             <div>
-              <p className="text-[10px] text-zinc-400 font-bold uppercase">Team</p>
-              <div className="flex items-center -space-x-1.5 mt-0.5">
+              <p className="text-[10px] text-zinc-400 font-black uppercase tracking-widest">Team</p>
+              <div className="flex items-center -space-x-2 mt-1">
                 {projectMembers.slice(0, 5).map(m => (
                   <div key={m._id || m}
-                    className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 text-[#2C5284] flex-shrink-0 flex items-center justify-center font-bold text-[9px] overflow-hidden border-2 border-white dark:border-zinc-900"
+                    className="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900/30 text-[#2C5284] flex-shrink-0 flex items-center justify-center font-bold text-[10px] overflow-hidden border-2 border-white dark:border-zinc-800 shadow-sm"
                     title={m.name}>
                     {m.profileImage ? (
                       <img src={m.profileImage.startsWith('http') ? m.profileImage : `http://localhost:3000/uploads/profile/${m.profileImage}`} alt={m.name} className="w-full h-full object-cover" />
@@ -426,26 +431,26 @@ export default function AdminProjectDetails({ setTitle }) {
                   </div>
                 ))}
                 {projectMembers.length > 5 && (
-                  <div className="w-6 h-6 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-500 flex items-center justify-center text-[9px] font-bold border-2 border-white dark:border-zinc-900">
+                  <div className="w-7 h-7 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-500 flex items-center justify-center text-[10px] font-bold border-2 border-white dark:border-zinc-800">
                     +{projectMembers.length - 5}
                   </div>
                 )}
-                {projectMembers.length === 0 && <span className="text-xs text-zinc-400">No members</span>}
+                {projectMembers.length === 0 && <span className="text-xs text-zinc-400">None</span>}
               </div>
             </div>
           </div>
 
-          {/* Mini Stats */}
-          <div className="flex items-center gap-4 ml-auto flex-wrap">
+          {/* Task Stats (Right Aligned) */}
+          <div className="flex items-center gap-8 ml-auto">
             {[
-              { label: 'Total', value: taskStats.total, color: 'text-[#2C5284] dark:text-blue-300' },
-              { label: 'Pending', value: taskStats.pending, color: 'text-[#2C5284] dark:text-blue-300', bg: 'bg-[#2C5284]/10 dark:bg-[#2C5284]/10' },
-              { label: 'In Progress', value: taskStats.inProgress, color: 'text-[#2C5284] dark:text-blue-300' },
-              { label: 'Done', value: taskStats.completed, color: 'text-[#2C5284] dark:text-blue-300' },
+              { label: 'Total', value: taskStats.total },
+              { label: 'Pending', value: taskStats.pending },
+              { label: 'In Progress', value: taskStats.inProgress },
+              { label: 'Done', value: taskStats.completed },
             ].map(s => (
               <div key={s.label} className="text-center">
-                <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
-                <p className="text-[10px] text-zinc-400 font-semibold uppercase">{s.label}</p>
+                <p className="text-2xl font-black text-[#2C5284] dark:text-[#365f8d] leading-none mb-1">{s.value}</p>
+                <p className="text-[10px] text-zinc-400 font-black uppercase tracking-widest">{s.label}</p>
               </div>
             ))}
           </div>

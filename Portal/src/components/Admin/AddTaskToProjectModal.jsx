@@ -8,6 +8,9 @@ import { apiCreateProjectTask } from '../../api/projectAPI';
  * Description: A modal designed for adding tasks specifically within the context of a project.
  * Why: To enable precise task allocation among project members, maintaining project-centric organization.
  */
+const PRIORITY_OPTIONS = ['Low', 'Medium', 'High', 'Urgent'];
+const STATUS_OPTIONS = ['Pending', 'In Progress', 'Completed'];
+
 export default function AddTaskToProjectModal({ projectId, members, onClose, onAdded }) {
   const [loading, setLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -176,7 +179,7 @@ export default function AddTaskToProjectModal({ projectId, members, onClose, onA
                 onChange={handle}
                 className="w-full px-3 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284]/40 outline-none text-sm cursor-pointer"
               >
-                {PRIORITY_OPTIONS.map(p => <option key={p}>{p}</option>)}
+                {PRIORITY_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
           </div>
@@ -192,7 +195,7 @@ export default function AddTaskToProjectModal({ projectId, members, onClose, onA
               onChange={handle}
               className="w-full px-3 py-2.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl focus:ring-2 focus:ring-[#2C5284]/40 outline-none text-sm cursor-pointer"
             >
-              {['Pending', 'In Progress', 'Completed'].map(s => <option key={s}>{s}</option>)}
+              {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
           </div>
 

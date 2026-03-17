@@ -27,7 +27,9 @@ router.get('/', verifyToken, verifyAdmin, async (req, res) => {
       .populate('createdBy', 'name email')
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit);
+      .limit(parseInt(limit));
+    
+    console.log(`Fetched ${projects.length} projects for page ${page}`);
 
     const result = projects.map(p => {
       const obj = p.toObject();

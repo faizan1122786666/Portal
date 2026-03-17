@@ -15,7 +15,7 @@ const connectDB = async () => {
             serverSelectionTimeoutMS: 5000,
             family: 4 
         });
-        console.log('Database Connected');
+        console.log('Database Connected successfully');
 
     } catch (err) {
         console.error('--- DATABASE CONNECTION ERROR ---');

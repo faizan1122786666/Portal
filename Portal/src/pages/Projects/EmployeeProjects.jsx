@@ -25,21 +25,21 @@ import Skeleton from '../../components/common/Skeleton';
 import Pagination from '../../components/common/Pagination';
 
 const priorityColors = {
-  Low: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700',
-  Medium: 'bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300 border-sky-200 dark:border-sky-500/30',
-  High: 'bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300 border-orange-200 dark:border-orange-500/30',
-  Urgent: 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300 border-red-200 dark:border-red-500/30',
+  Low: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700',
+  Medium: 'bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300 border-sky-100 dark:border-sky-500/20',
+  High: 'bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300 border-orange-100 dark:border-orange-500/20',
+  Urgent: 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300 border-red-100 dark:border-red-500/20',
 };
 const statusColors = {
-  Pending: 'bg-[#2C5284]/10 text-[#2C5284] border-[#2C5284]/20',
-  'In Progress': 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300 border-blue-200 dark:border-blue-500/30',
-  Completed: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30',
+  Pending: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700',
+  'In Progress': 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300 border-blue-100 dark:border-blue-500/20',
+  Completed: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300 border-emerald-100 dark:border-emerald-500/20',
 };
 const projectStatusConfig = {
-  Planning: { bg: 'bg-purple-100 dark:bg-purple-500/20', color: 'text-purple-700 dark:text-purple-300', dot: 'bg-purple-500' },
-  Active: { bg: 'bg-emerald-100 dark:bg-emerald-500/20', color: 'text-emerald-700 dark:text-emerald-300', dot: 'bg-emerald-500' },
-  'On Hold': { bg: 'bg-yellow-100 dark:bg-yellow-500/20', color: 'text-yellow-700 dark:text-yellow-300', dot: 'bg-yellow-500' },
-  Completed: { bg: 'bg-blue-100 dark:bg-blue-500/20', color: 'text-blue-700 dark:text-blue-300', dot: 'bg-blue-500' },
+  Planning: { bg: 'bg-purple-100', color: 'text-purple-700', dot: 'bg-purple-500' },
+  Active: { bg: 'bg-emerald-100', color: 'text-emerald-700', dot: 'bg-emerald-500' },
+  'On Hold': { bg: 'bg-yellow-100', color: 'text-yellow-700', dot: 'bg-yellow-500' },
+  Completed: { bg: 'bg-blue-100', color: 'text-blue-700', dot: 'bg-blue-500' },
 };
 
 // ── Task Status Update Modal ───────────────────────────────────────────────────
@@ -205,73 +205,93 @@ function ProjectDetailView({ project, onBack }) {
         My Projects
       </button>
 
-      {/* ── Project Header ── */}
-      <div className="bg-white dark:bg-white/5 border border-zinc-100 dark:border-white/5 rounded-2xl shadow-sm mb-6 overflow-hidden">
-        <div className="bg-gradient-to-br from-[#2C5284] via-[#365f8d] to-[#1e3a5f] px-8 py-8 relative">
-          {/* Decorative background element */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none" />
-
-          <div className="relative z-10">
-            <div className="flex items-start justify-between gap-4 flex-wrap">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3 flex-wrap mb-2">
-                  <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-white font-bold text-lg shadow-inner ring-1 ring-white/20 uppercase">
-                    {project.name.substring(0, 2)}
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold text-white tracking-tight">{project.name}</h1>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold ${cfg.bg} ${cfg.color} ring-1 ring-inset ring-current/20`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot} animate-pulse`} />{project.status}
-                      </span>
-                      <span className={`px-3 py-1 rounded-full text-[10px] font-bold border flex items-center gap-1 ${priorityColors[project.priority] || priorityColors.Medium}`}>
-                        <span className="w-1 h-1 rounded-full bg-current opacity-70" />
-                        {project.priority} Priority
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                {project.description && (
-                  <p className="text-blue-100/80 text-sm leading-relaxed max-w-2xl mt-4 line-clamp-2">{project.description}</p>
-                )}
+      {/* ── Project Header Card ── */}
+      <div className="bg-white dark:bg-white/5 border border-zinc-100 dark:border-white/5 rounded-[2rem] shadow-lg mb-8 overflow-hidden">
+        <div className="bg-[#2C5284] px-8 py-8">
+          <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 flex-wrap mb-2">
+                <h1 className="text-3xl font-bold text-white tracking-tight">{project.name}</h1>
+                <span className={`px-4 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest ${cfg.bg} ${cfg.color}`}>
+                  {project.status}
+                </span>
+                <span className={`px-4 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest ${priorityColors[project.priority] || priorityColors.Medium}`}>
+                  {project.priority} Priority
+                </span>
               </div>
+              {project.description && (
+                <p className="text-blue-100 text-base mt-2 max-w-3xl leading-relaxed opacity-90">{project.description}</p>
+              )}
+            </div>
+          </div>
 
-              <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl ring-1 ring-white/20 shadow-xl min-w-[200px]">
-                <div className="flex justify-between text-xs text-white font-bold mb-2">
-                  <span className="opacity-80 uppercase tracking-wider">Overall Progress</span>
-                  <span>{pct}%</span>
-                </div>
-                <div className="h-2.5 bg-black/20 rounded-full overflow-hidden mb-3">
-                  <div className="h-full bg-white rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(255,255,255,0.5)]" style={{ width: `${pct}%` }} />
-                </div>
-                <p className="text-[10px] text-blue-100 font-semibold text-center uppercase tracking-widest opacity-70">
-                  {taskStats.completed} of {taskStats.total} tasks completed
-                </p>
-              </div>
+          {/* Progress Bar Section */}
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-white text-sm font-bold tracking-wide">Overall Progress</span>
+              <span className="text-white text-sm font-black tracking-tighter">{pct}%</span>
+            </div>
+            <div className="h-2.5 bg-white/20 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-white rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                style={{ width: `${pct}%` }}
+              />
             </div>
           </div>
         </div>
 
-        <div className="px-8 py-5 flex flex-wrap gap-8 items-center border-t border-zinc-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5">
-          <div className={`flex flex-col gap-0.5 ${isProjectOverdue ? 'text-red-500' : 'text-zinc-600 dark:text-zinc-300'}`}>
-            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Final Deadline</span>
-            <div className="flex items-center gap-2 text-sm font-bold">
-              <FaCalendarAlt size={14} className="opacity-70" />
-              {new Date(project.deadline).toLocaleDateString(undefined, { day: '2-digit', month: 'long', year: 'numeric' })}
-              {isProjectOverdue && <span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full ml-1">Overdue</span>}
+        {/* Meta Row (White Bottom) */}
+        <div className="px-8 py-6 flex flex-wrap items-center gap-10 bg-white dark:bg-zinc-900/50">
+          {/* Deadline */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-white/5 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
+              <FaCalendarAlt size={16} className={isProjectOverdue ? 'text-red-500' : ''} />
+            </div>
+            <div>
+              <p className="text-[10px] text-zinc-400 font-black uppercase tracking-widest">Deadline</p>
+              <p className={`text-sm font-bold ${isProjectOverdue ? 'text-red-500' : 'text-zinc-800 dark:text-zinc-200'}`}>
+                {new Date(project.deadline).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' })}
+              </p>
             </div>
           </div>
 
+          {/* Team */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-white/5 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
+              <FaUsers size={18} />
+            </div>
+            <div>
+              <p className="text-[10px] text-zinc-400 font-black uppercase tracking-widest">Team</p>
+              <div className="flex items-center -space-x-2 mt-1">
+                {(project.members || []).slice(0, 5).map(m => (
+                  <div key={m._id || m}
+                    className="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900/30 text-[#2C5284] flex-shrink-0 flex items-center justify-center font-bold text-[10px] overflow-hidden border-2 border-white dark:border-zinc-800 shadow-sm"
+                    title={m.name}>
+                    {m.profileImage ? (
+                      <img src={m.profileImage.startsWith('http') ? m.profileImage : `http://localhost:3000/uploads/profile/${m.profileImage}`} alt={m.name} className="w-full h-full object-cover" />
+                    ) : m.name?.charAt(0).toUpperCase() || '?'}
+                  </div>
+                ))}
+                {(project.members || []).length > 5 && (
+                  <div className="w-7 h-7 rounded-full bg-zinc-100 dark:bg-zinc-700 text-zinc-500 flex items-center justify-center text-[10px] font-bold border-2 border-white dark:border-zinc-800">
+                    +{(project.members || []).length - 5}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Task Stats (Right Aligned) */}
           <div className="flex items-center gap-8 ml-auto">
             {[
-              { label: 'Total Tasks', value: taskStats.total, color: 'text-zinc-700 dark:text-zinc-200', bg: 'bg-zinc-100 dark:bg-white/10' },
-              { label: 'Pending', value: taskStats.pending, color: 'text-[#2C5284]', bg: 'bg-[#2C5284]/10 dark:bg-[#2C5284]/10' },
-              { label: 'In Progress', value: taskStats.inProgress, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-500/10' },
-              { label: 'Completed', value: taskStats.completed, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-500/10' },
+              { label: 'Total', value: taskStats.total },
+              { label: 'Pending', value: taskStats.pending },
+              { label: 'In Progress', value: taskStats.inProgress },
+              { label: 'Done', value: taskStats.completed },
             ].map(s => (
-              <div key={s.label} className="text-right">
-                <span className="text-xl font-black block leading-tight" style={{ color: s.color.split(' ')[0] }}>{s.value}</span>
-                <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">{s.label}</span>
+              <div key={s.label} className="text-center">
+                <p className="text-2xl font-black text-[#2C5284] dark:text-[#365f8d] leading-none mb-1">{s.value}</p>
+                <p className="text-[10px] text-zinc-400 font-black uppercase tracking-widest">{s.label}</p>
               </div>
             ))}
           </div>
