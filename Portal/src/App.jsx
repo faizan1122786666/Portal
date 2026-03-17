@@ -38,9 +38,18 @@ function App() {
     setUser(userData)
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('user')
-    setUser(null)
+  const handleLogout = async () => {
+    try {
+      await fetch('http://localhost:3000/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      })
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      localStorage.removeItem('user')
+      setUser(null)
+    }
   }
 
   const handleNameUpdate = (newName) => {
@@ -63,6 +72,18 @@ function App() {
       localStorage.setItem('darkMode', 'false')
     }
   }, [darkMode])
+
+  // Handle unauthorized access (token expired)
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      handleLogout();
+    };
+
+    window.addEventListener('unauthorized-access', handleUnauthorized);
+    return () => {
+      window.removeEventListener('unauthorized-access', handleUnauthorized);
+    };
+  }, []);
 
   return (
     <AuthContextProvider value={{ user, handleLogin, handleLogout }}>

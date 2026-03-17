@@ -17,6 +17,10 @@ async function apiFetch(url, options = {}) {
     ...options,
   });
 
+  if (res.status === 401) {
+    window.dispatchEvent(new CustomEvent('unauthorized-access'));
+  }
+
   const data = await res.json();
 
   if (!res.ok) {
@@ -32,8 +36,8 @@ async function apiFetch(url, options = {}) {
  * Function: apiGetEmployees
  * Description: Retrieves list of all users from the backend.
  */
-export async function apiGetEmployees() {
-  return apiFetch(`${BASE}/employees`);
+export async function apiGetEmployees(page = 1) {
+  return apiFetch(`${BASE}/employees?page=${page}`);
 }
 
 /**

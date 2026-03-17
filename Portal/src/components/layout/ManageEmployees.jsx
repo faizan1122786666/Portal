@@ -20,6 +20,7 @@ import {
   apiUpdateEmployee, 
   apiDeleteEmployee 
 } from '../../api/employeeAPI'
+import Pagination from '../common/Pagination';
 
 // ── Configuration Constants ──────────────────────────────────────────────────
 const DEPARTMENTS = [
@@ -356,13 +357,15 @@ function ManageEmployees({ setTitle }) {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
   const itemsPerPage = 8
 
-  const fetchEmployees = async () => {
+  const fetchEmployees = async (page) => {
     setLoading(true)
     try {
-      const res = await apiGetEmployees()
+      const res = await apiGetEmployees(page)
       setEmployees(res.employees || [])
+      setTotalPages(res.pagination.totalPages)
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to fetch employees')
     } finally {
@@ -372,8 +375,13 @@ function ManageEmployees({ setTitle }) {
 
   useEffect(() => {
     setTitle('Manage Employees')
-    fetchEmployees()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setTitle])
+
+  useEffect(() => {
+    fetchEmployees(currentPage)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage])
 
   const handleSubmit = async (form) => {
     try {
@@ -444,8 +452,14 @@ function ManageEmployees({ setTitle }) {
     return matchSearch && matchDept && matchRole && matchShift
   })
 
-  const totalPages = Math.ceil(filtered.length / itemsPerPage)
   const paginated = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+
+  useEffect(() => {
+    const newTotalPages = Math.ceil(filtered.length / itemsPerPage);
+    if (newTotalPages !== totalPages) {
+      setTotalPages(newTotalPages);
+    }
+  }, [filtered, itemsPerPage, totalPages]);
 
   const stats = {
     total: employees.length,
@@ -837,41 +851,12 @@ function ManageEmployees({ setTitle }) {
           </div>
 
           {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-white/5 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Showing <span className="font-semibold text-gray-900 dark:text-gray-100">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
-                <span className="font-semibold text-gray-900 dark:text-gray-100">{Math.min(currentPage * itemsPerPage, filtered.length)}</span> of{' '}
-                <span className="font-semibold text-gray-900 dark:text-gray-100">{filtered.length}</span> entries
-              </p>
-              <div className="flex items-center gap-2">
-                <button 
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
-                  disabled={currentPage === 1}
-                  className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-                >
-                  <FaChevronLeft size={14} className="text-gray-600 dark:text-gray-400" />
-                </button>
-                <div className="flex items-center gap-1">
-                  {[...Array(totalPages)].map((_, i) => (
-                    <button 
-                      key={i + 1} 
-                      onClick={() => setCurrentPage(i + 1)}
-                      className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${currentPage === i + 1 ? 'bg-[#2C5284] text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5'
-                        }`}>
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
-                <button 
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
-                  disabled={currentPage === totalPages}
-                  className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-                >
-                  <FaChevronRight size={14} className="text-gray-600 dark:text-gray-400" />
-                </button>
-              </div>
-            </div>
+          {employees.length > 5 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           )}
         </>
       )}

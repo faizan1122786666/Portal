@@ -162,37 +162,43 @@ function AttendanceDetailModal({ record, onClose }) {
 }
 
 // ── Main Component ────────────────────────────────────────────────────────────
+import Pagination from '../../components/common/Pagination';
+
 function UserAttendance({ setTitle }) {
   const [records, setRecords] = useState([])
   const [selectedRecord, setSelectedRecord] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
   const [selectedDate, setSelectedDate] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const itemsPerPage = 8
 
   const fetchRecords = useCallback(async () => {
     setLoading(true)
     setError('')
     try {
-      const filters = {}
+      const filters = { page: currentPage, limit: 10 }
       if (selectedDate) filters.date = selectedDate
       const data = await apiGetMyAttendance(filters)
       setRecords(data.records || [])
+      setTotalPages(data.pagination?.totalPages || 1)
     } catch {
       setError('Failed to load attendance records.')
     } finally {
       setLoading(false)
     }
-  }, [selectedDate])
+  }, [selectedDate, currentPage])
 
   useEffect(() => { setTitle('My Attendance') }, [setTitle])
-  useEffect(() => { fetchRecords(); setCurrentPage(1) }, [fetchRecords])
+  useEffect(() => { fetchRecords() }, [fetchRecords])
 
   const [allRecords, setAllRecords] = useState([])
   useEffect(() => {
-    apiGetMyAttendance({}).then(data => setAllRecords(data.records || [])).catch(() => {})
+    // This is for summary stats - we need all records for this. 
+    // If the list is huge, we should have a summary API instead.
+    // For now, let's keep it or fetch a larger limit.
+    apiGetMyAttendance({ limit: 1000 }).then(data => setAllRecords(data.records || [])).catch(() => {})
   }, [])
 
   const summary = {
@@ -201,43 +207,11 @@ function UserAttendance({ setTitle }) {
     leave:   allRecords.filter(r => r.status === 'Leave').length,
   }
 
-  const totalPages = Math.ceil(records.length / itemsPerPage)
-  const paginatedRecords = records.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-
   const getStatusColor = (status) => {
     if (status === 'Present') return 'bg-green-100 text-green-800'
     if (status === 'Absent')  return 'bg-red-100 text-red-800'
     return 'bg-yellow-100 text-yellow-800'
   }
-
-  const PaginationBar = () => {
-    if (totalPages <= 1) return null;
-    return (
-      <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-white/5 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/10">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Showing <span className="font-semibold text-gray-900 dark:text-gray-100">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{Math.min(currentPage * itemsPerPage, records.length)}</span> of{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{records.length}</span> entries
-        </p>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}
-            className="p-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50 dark:border-white/10 dark:hover:bg-white/5 transition-colors">
-            <FaChevronLeft size={14} className="text-gray-600 dark:text-gray-400" />
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-            <button key={page} onClick={() => setCurrentPage(page)}
-              className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${currentPage === page ? 'bg-[#2C5284] text-white' : 'text-gray-600 hover:bg-gray-50 border border-gray-200 dark:text-gray-300 dark:border-white/10 dark:hover:bg-white/5'}`}>
-              {page}
-            </button>
-          ))}
-          <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}
-            className="p-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50 dark:border-white/10 transition-colors">
-            <FaChevronRight size={14} className="text-gray-600 dark:text-gray-400" />
-          </button>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
@@ -319,7 +293,7 @@ function UserAttendance({ setTitle }) {
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/5">
-                {paginatedRecords.map((record) => {
+                {records.map((record) => {
                   const sessions = record.sessions || []
                   const firstCheckIn = getFirstCheckIn(sessions)
                   const lastCheckOut = getLastCheckOut(sessions)
@@ -364,16 +338,22 @@ function UserAttendance({ setTitle }) {
                     </tr>
                   )
                 })}
-                {paginatedRecords.length === 0 && (
+                {records.length === 0 && (
                   <tr><td colSpan={7} className="px-6 py-10 text-center text-gray-400 italic">No records found.</td></tr>
                 )}
               </tbody>
             </table>
-            <PaginationBar />
+            {records.length > 5 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
 
           <div className="lg:hidden space-y-3">
-            {paginatedRecords.map((record) => {
+            {records.map((record) => {
               const sessions = record.sessions || []
               const firstCheckIn = getFirstCheckIn(sessions)
               const lastCheckOut = getLastCheckOut(sessions)
@@ -413,10 +393,16 @@ function UserAttendance({ setTitle }) {
                 </div>
               )
             })}
-            {paginatedRecords.length === 0 && (
+            {records.length === 0 && (
               <div className="bg-white rounded-xl p-10 text-center text-gray-400 italic border border-gray-100">No records found.</div>
             )}
-            <PaginationBar />
+            {records.length > 5 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
         </>
       )}

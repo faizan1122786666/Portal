@@ -122,7 +122,7 @@ async function applyLeave(req, res) {
 async function getMyLeaves(req, res) {
   try {
     const employeeId = req.user.id;
-    const { status, month } = req.query;
+    const { status, month, page = 1, limit = 10 } = req.query;
 
     const filter = { employeeId };
     if (status && ['Pending', 'Approved', 'Rejected'].includes(status)) {
@@ -132,18 +132,26 @@ async function getMyLeaves(req, res) {
       filter.startDate = { $regex: `^${month}` };
     }
 
+    const skip = (page - 1) * limit;
+
+    const totalLeaves = await leaveModel.countDocuments(filter);
+    const totalPages = Math.ceil(totalLeaves / limit);
+
     const leaves = await leaveModel
       .find(filter)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
-    const summary = {
-      total: leaves.length,
-      pending: leaves.filter(l => l.status === 'Pending').length,
-      approved: leaves.filter(l => l.status === 'Approved').length,
-      rejected: leaves.filter(l => l.status === 'Rejected').length,
-    };
-
-    return res.status(200).json({ message: 'Leave records fetched', leaves, summary });
+    return res.status(200).json({
+      message: 'Leave records fetched',
+      leaves,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalLeaves
+      }
+    });
 
   } catch (error) {
     console.error('GetMyLeaves error:', error);
@@ -273,7 +281,7 @@ async function deleteMyLeave(req, res) {
  */
 async function getAllLeaves(req, res) {
   try {
-    const { status, employeeId, month } = req.query;
+    const { status, employeeId, month, page = 1, limit = 10 } = req.query;
 
     const filter = {};
     if (status && ['Pending', 'Approved', 'Rejected'].includes(status)) {
@@ -286,22 +294,30 @@ async function getAllLeaves(req, res) {
       filter.startDate = { $regex: `^${month}` };
     }
 
+    const skip = (page - 1) * limit;
+
+    const totalLeaves = await leaveModel.countDocuments(filter);
+    const totalPages = Math.ceil(totalLeaves / limit);
+
     const rawLeaves = await leaveModel
       .find(filter)
       .populate('employeeId', '-password')   // include employee name, email, dept
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     // Filter out orphaned leaves whose employee has been deleted
     const leaves = rawLeaves.filter(l => l.employeeId != null);
 
-    const summary = {
-      total: leaves.length,
-      pending: leaves.filter(l => l.status === 'Pending').length,
-      approved: leaves.filter(l => l.status === 'Approved').length,
-      rejected: leaves.filter(l => l.status === 'Rejected').length,
-    };
-
-    return res.status(200).json({ message: 'All leave records fetched', leaves, summary });
+    return res.status(200).json({
+      message: 'All leave records fetched',
+      leaves,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalLeaves
+      }
+    });
 
   } catch (error) {
     console.error('GetAllLeaves error:', error);

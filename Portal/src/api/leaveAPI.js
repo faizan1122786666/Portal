@@ -13,6 +13,10 @@ async function apiFetch(url, options = {}) {
     ...options,
   });
 
+  if (res.status === 401) {
+    window.dispatchEvent(new CustomEvent('unauthorized-access'));
+  }
+
   const data = await res.json();
 
   if (!res.ok) {

@@ -4,6 +4,21 @@ import { toast } from 'react-toastify';
 import { FaTimes, FaChevronDown } from 'react-icons/fa';
 import { apiCreateTask } from '../../api/taskAPI';
 
+const adminApi = axios.create({
+  baseURL: 'http://localhost:3000/api/admin',
+  withCredentials: true,
+});
+
+adminApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      window.dispatchEvent(new CustomEvent('unauthorized-access'));
+    }
+    return Promise.reject(error);
+  }
+);
+
 /**
  * Component: AddTaskModal
  * Description: A modal for administrators to assign standalone tasks to employees.

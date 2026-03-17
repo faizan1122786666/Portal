@@ -343,22 +343,32 @@ async function getTodayStatus(req, res) {
 async function getMyAttendance(req, res) {
   try {
     const employeeId = req.user.id;
-    const { month, date } = req.query;
+    const { month, date, page = 1, limit = 10 } = req.query;
 
     let filter = { employeeId };
     if (date) filter.date = date;
     else if (month) filter.date = { $regex: `^${month}` };
 
-    const records = await attendanceModel.find(filter).sort({ date: -1 });
+    const skip = (page - 1) * limit;
 
-    const summary = {
-      present: records.filter(r => r.status === 'Present').length,
-      absent: records.filter(r => r.status === 'Absent').length,
-      leave: records.filter(r => r.status === 'Leave').length,
-      total: records.length
-    };
+    const totalRecords = await attendanceModel.countDocuments(filter);
+    const totalPages = Math.ceil(totalRecords / limit);
 
-    return res.status(200).json({ message: 'Attendance records fetched', records, summary });
+    const records = await attendanceModel
+      .find(filter)
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    return res.status(200).json({
+      message: 'My attendance records fetched',
+      records,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalRecords
+      }
+    });
 
   } catch (error) {
     console.error('GetMyAttendance error:', error);
@@ -377,17 +387,24 @@ async function getMyAttendance(req, res) {
  */
 async function getAllAttendance(req, res) {
   try {
-    const { date, employeeId, month } = req.query;
+    const { date, employeeId, month, page = 1, limit = 10 } = req.query;
 
     let filter = {};
     if (employeeId) filter.employeeId = employeeId;
     if (date) filter.date = date;
     else if (month) filter.date = { $regex: `^${month}` };
 
+    const skip = (page - 1) * limit;
+
+    const totalRecords = await attendanceModel.countDocuments(filter);
+    const totalPages = Math.ceil(totalRecords / limit);
+
     const records = await attendanceModel
       .find(filter)
       .populate('employeeId', '-password')
-      .sort({ date: -1 });
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limit);
 
     // Filter out records whose employee has been deleted
     const activeRecords = records.filter(r => r.employeeId !== null);
@@ -395,7 +412,12 @@ async function getAllAttendance(req, res) {
     return res.status(200).json({
       message: 'All attendance records fetched',
       count: activeRecords.length,
-      records: activeRecords
+      records: activeRecords,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalRecords
+      }
     });
 
   } catch (error) {

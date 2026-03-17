@@ -21,6 +21,7 @@ import {
   apiGetEmployeeAttendance,
 } from '../../api/attendanceAPI'
 import Loader from '../../components/common/Loader'
+import Pagination from '../../components/common/Pagination';
 
 // ── React Select custom styles ────────────────────────────────────────────────
 const selectStyles = {
@@ -188,6 +189,14 @@ function EmployeeHistoryModal({ employee, onClose }) {
               <h2 className="text-lg font-bold text-white">{emp.email}</h2>
               <p className="text-blue-200 text-sm">{emp.department || emp.role || 'Employee'} • Attendance History</p>
             </div>
+
+            {records.length > 5 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
           <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors text-white">
             <FaTimes size={20} />
@@ -482,7 +491,8 @@ function AttendanceDetailModal({ record, onClose }) {
                       <span className="text-gray-400">→</span>
                       {s.checkOut ? <span>{s.checkOut}</span> : <span className="text-green-600 italic">ongoing</span>}
                     </div>
-                    <span className="text-gray-700 dark:text-gray-300 font-medium w-16 text-right shrink-0">{s.workHours || '...'}</span>
+                    <span className="text-gray-700 dark:text-gray-300 font-medium w-16 text-right shrink-0">{s.workHours || '...'}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -636,48 +646,38 @@ function AdminAttendance({ setTitle }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedDate, setSelectedDate] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const itemsPerPage = 8
 
   useEffect(() => { setTitle('Attendance Management') }, [setTitle])
-
-  const fetchSummary = useCallback(async () => {
-    try { const data = await apiGetTodaySummary(); setTodayStats(data) }
-    catch { console.error('Failed to fetch summary') }
-  }, [])
 
   const fetchRecords = useCallback(async () => {
     setLoading(true); setError('')
     try {
-      const filters = {}
-      if (selectedDate) filters.date = selectedDate
-      const data = await apiGetAllAttendance(filters)
-      setRecords(data.records || [])
-    } catch {
-      setError('Failed to load attendance records.')
+      const [recordsData, employeesData, summaryData] = await Promise.all([
+        apiGetAllAttendance({ page: currentPage, limit: 10, searchTerm, date: selectedDate }),
+        apiGetEmployees(),
+        apiGetTodaySummary(),
+      ])
+      setRecords(recordsData.records || [])
+      setTotalPages(recordsData.pagination?.totalPages || 1)
+      setEmployees(employeesData.employees || [])
+      setTodayStats(summaryData)
+    } catch (e) {
+      setError('Failed to fetch records. Please try again.')
+      console.error(e)
     } finally {
       setLoading(false)
     }
-  }, [selectedDate])
+  }, [currentPage, searchTerm, selectedDate])
 
-  const fetchEmployees = useCallback(async () => {
-    try { const data = await apiGetEmployees(); setEmployees(data.employees || []) }
-    catch { console.error('Failed to fetch employees') }
-  }, [])
+  useEffect(() => {
+    fetchRecords()
+  }, [fetchRecords])
 
-  useEffect(() => { fetchSummary() }, [fetchSummary])
-  useEffect(() => { fetchRecords(); setCurrentPage(1) }, [fetchRecords])
-  useEffect(() => { fetchEmployees() }, [fetchEmployees])
-
-  const filteredRecords = records.filter(r => {
-    const emp = r.employeeId || {}
-    const text = `${emp.email || ''} ${emp.department || ''}`.toLowerCase()
-    return text.includes(searchTerm.toLowerCase())
-  })
-
-  const totalPages = Math.ceil(filteredRecords.length / itemsPerPage)
-  const paginatedRecords = filteredRecords.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+  // Server-side search is handled in fetchRecords, so we can use records directly.
+  const filteredRecords = records; // This will be removed in subsequent steps, for now we change the JSX
 
   const getFirstIn = (sessions = []) => sessions[0]?.checkIn || '------'
   const getLastOut = (sessions = []) => [...sessions].reverse().find(s => s.checkOut)?.checkOut || '------'
@@ -791,7 +791,7 @@ function AdminAttendance({ setTitle }) {
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/5">
-                {paginatedRecords.map((record) => {
+                {records.map((record) => {
                   const emp = record.employeeId || {}
                   return (
                     <tr key={record._id} onClick={() => handleRowClick(record)}
@@ -836,7 +836,7 @@ function AdminAttendance({ setTitle }) {
                     </tr>
                   )
                 })}
-                {paginatedRecords.length === 0 && (
+                {records.length === 0 && (
                   <tr><td colSpan={8} className="px-6 py-10 text-center text-gray-500">No records found.</td></tr>
                 )}
               </tbody>
@@ -845,7 +845,7 @@ function AdminAttendance({ setTitle }) {
 
           {/* Mobile Cards */}
           <div className="lg:hidden space-y-4">
-            {paginatedRecords.map((record) => {
+            {records.map((record) => {
               const emp = record.employeeId || {}
               return (
                 <div key={record._id} className="bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/10">
@@ -885,27 +885,18 @@ function AdminAttendance({ setTitle }) {
                 </div>
               )
             })}
-            {paginatedRecords.length === 0 && (
+            {records.length === 0 && (
               <div className="bg-white rounded-xl p-10 text-center text-gray-400 italic border border-gray-100">No records found.</div>
             )}
           </div>
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="mt-8 flex items-center justify-between bg-white dark:bg-white/5 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/10">
-              <p className="text-sm text-gray-600">Showing {paginatedRecords.length} of {filteredRecords.length} entries</p>
-              <div className="flex items-center gap-2">
-                <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}
-                  className="p-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50 dark:border-white/10 dark:hover:bg-white/5"><FaChevronLeft size={14} className="text-gray-600 dark:text-gray-400" /></button>
-                {[...Array(totalPages)].map((_, i) => (
-                  <button key={i + 1} onClick={() => setCurrentPage(i + 1)}
-                    className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${currentPage === i + 1 ? 'bg-[#2C5284] text-white' : 'text-gray-600 hover:bg-gray-50 border border-gray-200 dark:text-gray-300 dark:border-white/10 dark:hover:bg-white/5'
-                      }`}>{i + 1}</button>
-                ))}
-                <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}
-                  className="p-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50"><FaChevronRight size={14} /></button>
-              </div>
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           )}
         </>
       )}
@@ -934,6 +925,7 @@ function AdminAttendance({ setTitle }) {
           onSuccess={handleMarkSuccess}
         />
       )}
+
     </div>
   )
 }

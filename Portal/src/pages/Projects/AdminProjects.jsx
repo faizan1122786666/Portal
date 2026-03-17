@@ -36,8 +36,9 @@ const projectStatusConfig = {
   Completed: { color: 'text-blue-700 dark:text-blue-300',      bg: 'bg-blue-100 dark:bg-blue-500/20',      dot: 'bg-blue-500' },
 };
 
+import Pagination from '../../components/common/Pagination';
+
 export default function AdminProjects({ setTitle }) {
-  const ITEMS_PER_PAGE = 8;
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,18 +46,29 @@ export default function AdminProjects({ setTitle }) {
   const [editProject, setEditProject] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+
+  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalProjects, setTotalProjects] = useState(0);
 
   useEffect(() => {
     setTitle?.('Projects');
-    fetchProjects();
-  }, []);
+  }, [setTitle]);
 
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const res = await apiGetAllProjects();
+      const params = { 
+        page: currentPage, 
+        limit: 5, 
+        searchTerm, 
+        status: statusFilter === 'All' ? '' : statusFilter 
+      };
+      const res = await apiGetAllProjects(params);
       setProjects(res.projects || []);
+      setTotalPages(res.pagination?.totalPages || 1);
+      setTotalProjects(res.pagination?.totalProjects || 0);
     } catch {
       toast.error('Failed to load projects');
     } finally {
@@ -64,36 +76,28 @@ export default function AdminProjects({ setTitle }) {
     }
   };
 
+  useEffect(() => {
+    const debounceFetch = setTimeout(() => {
+      fetchProjects();
+    }, 300); // Debounce to avoid rapid API calls while typing
+    return () => clearTimeout(debounceFetch);
+  }, [currentPage, searchTerm, statusFilter]);
+
   const handleDelete = async (e, id) => {
     e.stopPropagation();
     if (!window.confirm('Delete this project and all its tasks?')) return;
     try {
       await apiDeleteProject(id);
       toast.success('Project deleted');
-      setProjects(prev => prev.filter(p => p._id !== id));
+      fetchProjects();
     } catch {
       toast.error('Failed to delete project');
     }
   };
 
-  const filteredProjects = projects.filter(p => {
-    const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (p.description && p.description.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchStatus = statusFilter === 'All' || p.status === statusFilter;
-    return matchSearch && matchStatus;
-  });
-
-  const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE);
-  const paginatedProjects = filteredProjects.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
-
-  useEffect(() => { setCurrentPage(1); }, [searchTerm, statusFilter]);
-
   const stats = {
-    total: projects.length,
-    active: projects.filter(p => p.status === 'Active').length,
+    total: totalProjects,
+    active: projects.filter(p => p.status === 'Active').length, // Note: This is only for the current page
     onHold: projects.filter(p => p.status === 'On Hold').length,
     completed: projects.filter(p => p.status === 'Completed').length,
   };
@@ -105,35 +109,6 @@ export default function AdminProjects({ setTitle }) {
     { sub: 'Completed',      value: stats.completed, icon: <RxCrossCircled size={20} className="text-white" /> },
   ];
 
-  const PaginationBar = () => {
-    if (totalPages <= 1) return null;
-    return (
-      <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-white/5 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Showing <span className="font-semibold text-gray-900 dark:text-gray-100">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{Math.min(currentPage * ITEMS_PER_PAGE, filteredProjects.length)}</span> of{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{filteredProjects.length}</span> entries
-        </p>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}
-            className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-            <FaChevronLeft size={14} className="text-gray-600 dark:text-gray-400" />
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-            <button key={page} onClick={() => setCurrentPage(page)}
-              className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors border
-                ${page === currentPage ? 'bg-[#2C5284] text-white border-[#2C5284]' : 'border-gray-300 dark:border-white/10 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5'}`}>
-              {page}
-            </button>
-          ))}
-          <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}
-            className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-            <FaChevronRight size={14} className="text-gray-600 dark:text-gray-400" />
-          </button>
-        </div>
-      </div>
-    );
-  };
 
 
   return (
@@ -189,7 +164,7 @@ export default function AdminProjects({ setTitle }) {
               type="text"
               placeholder="Search projects..."
               value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              onChange={e => { setSearchTerm(e.target.value); setCurrentPage(1); }}
               className="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
             />
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2C5284]">
@@ -203,7 +178,7 @@ export default function AdminProjects({ setTitle }) {
           <div className="w-44">
             <Select
               value={{ value: statusFilter, label: statusFilter }}
-              onChange={(opt) => setStatusFilter(opt.value)}
+              onChange={(opt) => { setStatusFilter(opt.value); setCurrentPage(1); }}
               options={['All', 'Planning', 'Active', 'On Hold', 'Completed'].map(s => ({ value: s, label: s }))}
               placeholder="Filter Status"
               isSearchable={false}
@@ -243,8 +218,8 @@ export default function AdminProjects({ setTitle }) {
 
       {/* ── Project Cards Grid ── */}
       {loading ? (
-        <TableSkeleton rows={5} cols={6} />
-      ) : filteredProjects.length === 0 ? (
+        <TableSkeleton rows={6} cols={7} />
+      ) : projects.length === 0 ? (
         <div className="bg-white dark:bg-zinc-800/30 border-2 border-dashed border-zinc-200 dark:border-zinc-700/50 rounded-2xl p-14 text-center">
           <FaLayerGroup size={32} className="text-zinc-300 dark:text-zinc-600 mx-auto mb-3" />
           <p className="text-sm font-bold text-zinc-400 uppercase tracking-wider">
@@ -259,7 +234,6 @@ export default function AdminProjects({ setTitle }) {
         </div>
       ) : (
         <>
-          {/* Desktop Table View */}
           <div className="hidden lg:block bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-white/5">
@@ -275,7 +249,7 @@ export default function AdminProjects({ setTitle }) {
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/5">
-                  {paginatedProjects.map(project => {
+                  {projects.map(project => {
                     const cfg = projectStatusConfig[project.status] || projectStatusConfig.Planning;
                     const isOverdue = new Date(project.deadline) < new Date() && project.status !== 'Completed';
                     const completedTasks = project.taskCount?.completed || 0;
@@ -379,11 +353,18 @@ export default function AdminProjects({ setTitle }) {
                 </tbody>
               </table>
             </div>
+            {totalProjects > 5 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
 
           {/* Mobile Cards View */}
           <div className="lg:hidden space-y-4">
-            {paginatedProjects.map(project => {
+            {projects.map(project => {
               const cfg = projectStatusConfig[project.status] || projectStatusConfig.Planning;
               const isOverdue = new Date(project.deadline) < new Date() && project.status !== 'Completed';
               const completedTasks = project.taskCount?.completed || 0;
@@ -445,7 +426,13 @@ export default function AdminProjects({ setTitle }) {
                 </div>
               );
             })}
-            <PaginationBar />
+            {totalProjects > 5 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
         </>
       )}

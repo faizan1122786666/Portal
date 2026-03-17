@@ -17,8 +17,28 @@ const VALID_SHIFTS = ['Morning', 'Evening', ''];
  */
 async function getEmployees(req, res) {
     try {
-        const employees = await userModel.find().select('-password');
-        return res.status(200).json({ message: 'Employees fetched successfully', employees });
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const totalEmployees = await userModel.countDocuments();
+        const totalPages = Math.ceil(totalEmployees / limit);
+
+        const employees = await userModel.find()
+            .select('-password')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        return res.status(200).json({
+            message: 'Employees fetched successfully',
+            employees,
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalEmployees
+            }
+        });
     } catch (error) {
         return res.status(500).json({ message: 'Internal Server Error' });
     }

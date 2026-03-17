@@ -9,61 +9,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 /**
- * Function: registerUser
- * Why: To allow new employees or admins to register in the system.
- */
-async function registerUser(req, res) {
-    try {
-        const { email, password, role = "employee", name = '', shift = '' } = req.body;
-
-        if (name && name.length > 14) {
-            return res.status(400).json({ message: 'Name cannot exceed 14 characters' });
-        }
-
-        const isUserAlreadyExist = await userModel.findOne({ email });
-
-        if (isUserAlreadyExist) {
-            return res.status(400).json({
-                message: "User already exist"
-            });
-        }
-
-        const hash = await bcrypt.hash(password, 10);
-
-        const user = await userModel.create({
-            email,
-            password: hash,
-            role,
-            name,
-            shift
-        });
-
-        const token = jwt.sign({
-            id: user._id,
-            role: user.role
-        }, process.env.JWT_SECRET_KEY);
-
-        res.cookie("token", token);
-
-        return res.status(201).json({
-            message: "User registered successfully",
-            user: {
-                id: user._id,
-                email: user.email,
-                role: user.role,
-                name: user.name,
-                shift: user.shift,
-                designation: user.designation || '',
-                profileImage: user.profileImage || ''
-            }
-        });
-    } catch (error) {
-        console.error('REGISTER ERROR:', error);
-        return res.status(500).json({ message: 'Internal Server Error' });
-    }
-}
-
-/**
  * Function: LoginUser
  * Description: Validates credentials and issues a JWT cookie for authenticated sessions.
  * Why: To authenticate users and establish a secure session via HTTP-only cookies.
@@ -116,6 +61,21 @@ async function LoginUser(req, res) {
         });
     } catch (error) {
         console.error('LOGIN ERROR:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+/**
+ * Function: LogoutUser
+ * Description: Clears the authentication token cookie.
+ * Why: To securely end a user's session and prevent further access.
+ */
+async function LogoutUser(req, res) {
+    try {
+        res.clearCookie("token");
+        return res.status(200).json({ message: "User Logout Successfully" });
+    } catch (error) {
+        console.error('LOGOUT ERROR:', error);
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }
@@ -242,4 +202,4 @@ async function uploadProfileImage(req, res) {
     }
 }
 
-module.exports = { registerUser, LoginUser, ChangePassword, updateProfile, uploadProfileImage };
+module.exports = { LoginUser, LogoutUser, ChangePassword, updateProfile, uploadProfileImage };

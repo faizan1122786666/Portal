@@ -15,6 +15,16 @@ const adminApi = axios.create({
   withCredentials: true,
 });
 
+adminApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      window.dispatchEvent(new CustomEvent('unauthorized-access'));
+    }
+    return Promise.reject(error);
+  }
+);
+
 const STATUS_OPTIONS = ['Planning', 'Active', 'On Hold', 'Completed'];
 const PRIORITY_OPTIONS = ['Low', 'Medium', 'High', 'Urgent'];
 

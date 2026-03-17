@@ -11,7 +11,7 @@ const attendanceController = require('../controllers/attendance.controller');
 const leaveController = require('../controllers/leave.controller');
 const { verifyAdmin } = require('../middleware/auth.middleware');
 
-// ── Employee CRUD ─────────────────────────────────────────────────────────────
+// Employee CRUD
 // GET    /api/admin/employees
 router.get('/employees', verifyAdmin, adminController.getEmployees);
 // POST   /api/admin/employees
@@ -21,7 +21,7 @@ router.put('/employees/:id', verifyAdmin, adminController.updateEmployee);
 // DELETE /api/admin/employees/:id
 router.delete('/employees/:id', verifyAdmin, adminController.deleteEmployee);
 
-// ── Attendance (specific routes BEFORE param routes) ─────────────────────────
+// Attendance (specific routes BEFORE param routes
 // GET  /api/admin/attendance/today-summary
 router.get('/attendance/today-summary', verifyAdmin, attendanceController.getTodaySummary);
 // GET  /api/admin/attendance/employee/:id
@@ -35,7 +35,7 @@ router.put('/attendance/:id', verifyAdmin, attendanceController.updateAttendance
 // DELETE /api/admin/attendance/:id
 router.delete('/attendance/:id', verifyAdmin, attendanceController.deleteAttendance);
 
-// ── Leave Management ──────────────────────────────────────────────────────────
+// Leave Management 
 // GET  /api/admin/leave/summary                → Stats: total/pending/approved/rejected
 router.get('/leave/summary', verifyAdmin, leaveController.getLeaveSummary);
 // GET  /api/admin/leave/employee/:id           → One employee's full leave history

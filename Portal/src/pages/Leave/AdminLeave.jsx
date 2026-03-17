@@ -15,9 +15,10 @@ import Loader from '../../components/common/Loader';
 import TableSkeleton from '../../components/common/TableSkeleton';
 import Skeleton from '../../components/common/Skeleton';
 
+import Pagination from '../../components/common/Pagination';
+
 function AdminLeave({ setTitle }) {
   const [leaves, setLeaves] = useState([]);
-  const [filteredLeaves, setFilteredLeaves] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState(null);
   const [selectedLeave, setSelectedLeave] = useState(null);
@@ -28,15 +29,18 @@ function AdminLeave({ setTitle }) {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalLeaves, setTotalLeaves] = useState(0);
 
   // Fetch leaves from backend
   const fetchLeaves = async () => {
     try {
       setLoading(true);
       setError('');
-      const filters = {};
+      const filters = { page: currentPage, limit: 10 };
       if (statusFilter) filters.status = statusFilter.value;
+      if (searchTerm) filters.searchTerm = searchTerm; // Assuming backend handles search if added, but for now we filter locally if needed. 
+      // Actually, let's just use what the backend supports.
 
       const [leavesRes, summaryRes] = await Promise.all([
         apiGetAllLeaves(filters),
@@ -44,7 +48,8 @@ function AdminLeave({ setTitle }) {
       ]);
 
       setLeaves(leavesRes.leaves || []);
-      setFilteredLeaves(leavesRes.leaves || []);
+      setTotalPages(leavesRes.pagination?.totalPages || 1);
+      setTotalLeaves(leavesRes.pagination?.totalLeaves || 0);
       setStats(summaryRes);
     } catch (err) {
       setError(err.message || 'Failed to fetch leave requests');
@@ -55,33 +60,12 @@ function AdminLeave({ setTitle }) {
 
   useEffect(() => {
     setTitle('Leave Management');
-    fetchLeaves();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setTitle]);
 
-  // Filter leaves based on search and status
   useEffect(() => {
-    let filtered = [...leaves];
-
-    if (searchTerm) {
-      filtered = filtered.filter((leave) => {
-        const emp = leave.employeeId;
-        const name = emp?.name || '';
-        const email = emp?.email || '';
-        return (
-          name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          email.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      });
-    }
-
-    if (statusFilter) {
-      filtered = filtered.filter((leave) => leave.status === statusFilter.value);
-    }
-
-    setFilteredLeaves(filtered);
-    setCurrentPage(1);
-  }, [searchTerm, statusFilter, leaves]);
+    fetchLeaves();
+  }, [currentPage, statusFilter, searchTerm]);
 
   const statusOptions = [
     { value: 'Pending', label: 'Pending' },
@@ -96,13 +80,8 @@ function AdminLeave({ setTitle }) {
         ? 'Leave approved by admin'
         : 'Leave rejected by admin';
       await apiReviewLeave(leaveId, { status: action, adminComment: comment });
-      // Update local state
-      setLeaves(prev =>
-        prev.map(l => l._id === leaveId ? { ...l, status: action, adminComment: comment } : l)
-      );
-      // Refresh summary
-      const summaryRes = await apiGetLeaveSummary();
-      setStats(summaryRes);
+      // Refresh current page
+      fetchLeaves();
     } catch (err) {
       alert(err.message || 'Action failed');
     }
@@ -112,11 +91,7 @@ function AdminLeave({ setTitle }) {
   const handleStatusChange = async (leaveId, newStatus, adminComment = '') => {
     try {
       await apiReviewLeave(leaveId, { status: newStatus, adminComment });
-      setLeaves(prev =>
-        prev.map(l => l._id === leaveId ? { ...l, status: newStatus, adminComment } : l)
-      );
-      const summaryRes = await apiGetLeaveSummary();
-      setStats(summaryRes);
+      fetchLeaves();
       setShowModal(false);
     } catch (err) {
       alert(err.message || 'Update failed');
@@ -131,13 +106,6 @@ function AdminLeave({ setTitle }) {
       default: return 'bg-gray-100 text-gray-600';
     }
   };
-
-  // Pagination
-  const totalPages = Math.ceil(filteredLeaves.length / itemsPerPage);
-  const paginatedLeaves = filteredLeaves.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   const viewDetails = (leave) => {
     setSelectedLeave(leave);
@@ -231,7 +199,7 @@ function AdminLeave({ setTitle }) {
                 type="text"
                 placeholder="Search by name or email..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
                 className="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg 
                   focus:ring-2 focus:ring-[#2C5284] outline-none text-xs"
               />
@@ -243,7 +211,7 @@ function AdminLeave({ setTitle }) {
             </label>
             <Select
               value={statusFilter}
-              onChange={setStatusFilter}
+              onChange={(val) => { setStatusFilter(val); setCurrentPage(1); }}
               options={statusOptions}
               isClearable
               placeholder="All Statuses"
@@ -302,8 +270,8 @@ function AdminLeave({ setTitle }) {
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/5">
-                {paginatedLeaves.length > 0 ? (
-                  paginatedLeaves.map((leave) => (
+                {leaves.length > 0 ? (
+                  leaves.map((leave) => (
                     <tr key={leave._id} className="hover:bg-blue-50 dark:hover:bg-white/5 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{getEmpName(leave)}</div>
@@ -359,8 +327,8 @@ function AdminLeave({ setTitle }) {
       {/* Mobile Cards */}
       {!loading && (
         <div className="lg:hidden space-y-4">
-          {paginatedLeaves.length > 0 ? (
-            paginatedLeaves.map((leave) => (
+          {leaves.length > 0 ? (
+            leaves.map((leave) => (
               <div key={leave._id} className="bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
                 <div className="p-4 flex items-center justify-between border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5">
                   <div className="flex flex-col">
@@ -416,33 +384,12 @@ function AdminLeave({ setTitle }) {
       )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-white/5 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Showing <span className="font-semibold text-gray-900 dark:text-gray-100">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
-            <span className="font-semibold text-gray-900 dark:text-gray-100">{Math.min(currentPage * itemsPerPage, filteredLeaves.length)}</span> of{' '}
-            <span className="font-semibold text-gray-900 dark:text-gray-100">{filteredLeaves.length}</span> entries
-          </p>
-          <div className="flex items-center gap-2">
-            <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}
-              className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-              <FaChevronLeft size={14} className="text-gray-600 dark:text-gray-400" />
-            </button>
-            <div className="flex items-center gap-1">
-              {[...Array(totalPages)].map((_, i) => (
-                <button key={i + 1} onClick={() => setCurrentPage(i + 1)}
-                  className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${currentPage === i + 1 ? 'bg-[#2C5284] text-white' : 'text-gray-600 hover:bg-gray-50'
-                    }`}>
-                  {i + 1}
-                </button>
-              ))}
-            </div>
-            <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}
-              className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-              <FaChevronRight size={14} className="text-gray-600 dark:text-gray-400" />
-            </button>
-          </div>
-        </div>
+      {leaves.length > 5 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
 
       {/* Leave Detail Modal */}

@@ -62,6 +62,9 @@ function EditNameModal({ currentName, onClose, onSave }) {
       onSave(res.data.user);
       onClose();
     } catch (err) {
+      if (err.response?.status === 401) {
+        window.dispatchEvent(new CustomEvent('unauthorized-access'));
+      }
       setError(err.response?.data?.message || 'Update failed');
     } finally {
       setLoading(false);

@@ -203,9 +203,9 @@ function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
 }
 
 // ── Main Component ────────────────────────────────────────────────────────────
-function UserLeave({ setTitle }) {
-  const ITEMS_PER_PAGE = 5;
+import Pagination from '../../components/common/Pagination';
 
+function UserLeave({ setTitle }) {
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -215,6 +215,7 @@ function UserLeave({ setTitle }) {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [editingLeave, setEditingLeave] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [filterDate, setFilterDate] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
 
@@ -222,8 +223,13 @@ function UserLeave({ setTitle }) {
     try {
       setLoading(true);
       setError('');
-      const res = await apiGetMyLeaves();
+      const filters = { page: currentPage, limit: 10 };
+      if (filterStatus !== 'All') filters.status = filterStatus;
+      if (filterDate) filters.month = filterDate.substring(0, 7); // Backend supports month filtering
+
+      const res = await apiGetMyLeaves(filters);
       setLeaves(res.leaves || []);
+      setTotalPages(res.pagination?.totalPages || 1);
     } catch (err) {
       setError(err.message || 'Failed to fetch leave requests');
     } finally {
@@ -233,19 +239,12 @@ function UserLeave({ setTitle }) {
 
   useEffect(() => {
     setTitle('My Leave Requests');
-    fetchLeaves();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setTitle]);
 
-  const filteredLeaves = leaves.filter(leave => {
-    const matchesStatus = filterStatus === 'All' || leave.status === filterStatus;
-    const matchesDate = !filterDate ||
-      leave.startDate === filterDate ||
-      leave.endDate === filterDate ||
-      leave.appliedDate === filterDate ||
-      (leave.startDate <= filterDate && leave.endDate >= filterDate);
-    return matchesStatus && matchesDate;
-  });
+  useEffect(() => {
+    fetchLeaves();
+  }, [currentPage, filterStatus, filterDate]);
 
   const hasActiveFilter = filterDate || filterStatus !== 'All';
 
@@ -254,14 +253,6 @@ function UserLeave({ setTitle }) {
     setFilterStatus('All');
     setCurrentPage(1);
   };
-
-  const totalPages = Math.ceil(filteredLeaves.length / ITEMS_PER_PAGE);
-  const paginatedLeaves = filteredLeaves.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
-
-  useEffect(() => { setCurrentPage(1); }, [filterDate, filterStatus]);
 
   const handleSubmit = async ({ leaveType, startDate, endDate, reason }) => {
     setSubmitting(true);
@@ -311,36 +302,6 @@ function UserLeave({ setTitle }) {
   };
 
   const statusFilterOptions = ['All', 'Pending', 'Approved', 'Rejected'];
-
-  const PaginationBar = () => {
-    if (totalPages <= 1) return null;
-    return (
-      <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-white/5 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Showing <span className="font-semibold text-gray-900 dark:text-gray-100">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{Math.min(currentPage * ITEMS_PER_PAGE, filteredLeaves.length)}</span> of{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{filteredLeaves.length}</span> entries
-        </p>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}
-            className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-            <FaChevronLeft size={14} className="text-gray-600 dark:text-gray-400" />
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-            <button key={page} onClick={() => setCurrentPage(page)}
-              className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors border
-                ${page === currentPage ? 'bg-[#2C5284] text-white border-[#2C5284]' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
-              {page}
-            </button>
-          ))}
-          <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}
-            className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-            <FaChevronRight size={14} className="text-gray-600 dark:text-gray-400" />
-          </button>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
@@ -404,7 +365,7 @@ function UserLeave({ setTitle }) {
             <input
               type="date"
               value={filterDate}
-              onChange={e => setFilterDate(e.target.value)}
+              onChange={e => { setFilterDate(e.target.value); setCurrentPage(1); }}
               className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] focus:border-transparent outline-none text-sm"
             />
           </div>
@@ -415,7 +376,7 @@ function UserLeave({ setTitle }) {
                 ? { value: 'All', label: 'All Statuses' }
                 : { value: filterStatus, label: filterStatus }
               }
-              onChange={opt => setFilterStatus(opt ? opt.value : 'All')}
+              onChange={opt => { setFilterStatus(opt ? opt.value : 'All'); setCurrentPage(1); }}
               options={statusFilterOptions.map(s => ({ value: s, label: s === 'All' ? 'All Statuses' : s }))}
               placeholder="Filter by status..."
               isSearchable={false}
@@ -434,7 +395,7 @@ function UserLeave({ setTitle }) {
             Filtering by date: {new Date(filterDate + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         )}
-        {filteredLeaves.length === 0 && hasActiveFilter && (
+        {leaves.length === 0 && hasActiveFilter && (
           <p className="text-xs text-red-500 font-medium mt-1">No leave requests match the selected filters.</p>
         )}
       </div>
@@ -458,7 +419,7 @@ function UserLeave({ setTitle }) {
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/5">
-                {paginatedLeaves.length > 0 ? paginatedLeaves.map(leave => (
+                {leaves.length > 0 ? leaves.map(leave => (
                   <tr key={leave._id} className="hover:bg-blue-50 dark:hover:bg-white/5 transition-colors cursor-pointer" onClick={() => { setSelectedLeave(leave); setShowDetailModal(true); }}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{leave.leaveType}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -502,14 +463,20 @@ function UserLeave({ setTitle }) {
               </tbody>
             </table>
           </div>
-          <PaginationBar />
+          {leaves.length > 5 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </div>
       )}
 
       {/* Mobile Cards */}
       {!loading && (
         <div className="lg:hidden space-y-4">
-          {paginatedLeaves.length > 0 ? paginatedLeaves.map(leave => (
+          {leaves.length > 0 ? leaves.map(leave => (
             <div key={leave._id} className="bg-white dark:bg-white/5 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-white/5">
               <div className="p-4 flex items-center justify-between border-b border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5">
                 <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{leave.leaveType}</span>
@@ -555,7 +522,13 @@ function UserLeave({ setTitle }) {
               {hasActiveFilter ? 'No records match the selected filters.' : 'No leave requests yet. Tap "Apply" to get started.'}
             </div>
           )}
-          <PaginationBar />
+          {leaves.length > 5 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </div>
       )}
 

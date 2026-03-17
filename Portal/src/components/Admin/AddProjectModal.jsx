@@ -5,6 +5,24 @@ import { FaTimes } from 'react-icons/fa';
 import Select from 'react-select';
 import { apiCreateProject } from '../../api/projectAPI';
 
+const adminApi = axios.create({
+  baseURL: 'http://localhost:3000/api/admin',
+  withCredentials: true,
+});
+
+adminApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      window.dispatchEvent(new CustomEvent('unauthorized-access'));
+    }
+    return Promise.reject(error);
+  }
+);
+
+const STATUS_OPTIONS = ['Planning', 'Active', 'On Hold', 'Completed'];
+const PRIORITY_OPTIONS = ['Low', 'Medium', 'High', 'Urgent'];
+
 /**
  * Component: AddProjectModal
  * Description: A modal component for administrators to create new projects.

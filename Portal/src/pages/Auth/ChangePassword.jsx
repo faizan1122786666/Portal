@@ -55,6 +55,9 @@ const ChangePassword = ({ onClose }) => {
         if (onClose) onClose()
       }, 1500)
     } catch (err) {
+      if (err.response?.status === 401) {
+        window.dispatchEvent(new CustomEvent('unauthorized-access'));
+      }
       toast.error(err.response?.data?.message || 'Failed to change password')
     } finally {
       setLoading(false)

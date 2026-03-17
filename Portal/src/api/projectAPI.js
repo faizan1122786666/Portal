@@ -10,15 +10,27 @@ const api = axios.create({
   withCredentials: true,
 });
 
+// Add a response interceptor to handle unauthorized access
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      window.dispatchEvent(new CustomEvent('unauthorized-access'));
+    }
+    return Promise.reject(error);
+  }
+);
+
 // ── Projects ──────────────────────────────────────────────────────────────────
 
 /**
  * Function: apiGetAllProjects
  * Description: Fetches all projects available in the system.
  * Why: To display a list of all projects for admins or managers.
+ * @param {Object} params - optional: { page, limit }
  */
-export const apiGetAllProjects = async () => {
-  const res = await api.get('/projects');
+export const apiGetAllProjects = async (params = {}) => {
+  const res = await api.get('/projects', { params });
   return res.data;
 };
 
@@ -26,9 +38,10 @@ export const apiGetAllProjects = async () => {
  * Function: apiGetMyProjects
  * Description: Retrieves projects assigned to or created by the logged-in employee.
  * Why: To show employees only the projects relevant to them.
+ * @param {Object} params - optional: { page, limit }
  */
-export const apiGetMyProjects = async () => {
-  const res = await api.get('/projects/my');
+export const apiGetMyProjects = async (params = {}) => {
+  const res = await api.get('/projects/my', { params });
   return res.data;
 };
 

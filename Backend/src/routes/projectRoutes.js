@@ -16,10 +16,18 @@ const { verifyToken, verifyAdmin } = require('../middleware/auth.middleware');
 // GET  /api/projects          → All projects (admin only)
 router.get('/', verifyToken, verifyAdmin, async (req, res) => {
   try {
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    const totalProjects = await Project.countDocuments();
+    const totalPages = Math.ceil(totalProjects / limit);
+
     const projects = await Project.find()
       .populate('members', 'name email designation profileImage role')
       .populate('createdBy', 'name email')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     const result = projects.map(p => {
       const obj = p.toObject();
@@ -32,7 +40,14 @@ router.get('/', verifyToken, verifyAdmin, async (req, res) => {
       return obj;
     });
 
-    res.json({ projects: result });
+    res.json({
+      projects: result,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalProjects
+      }
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -42,12 +57,18 @@ router.get('/', verifyToken, verifyAdmin, async (req, res) => {
 router.get('/my', verifyToken, async (req, res) => {
   try {
     const userId = req.user.id;
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
 
-    const projects = await Project.find({
-      'tasks.assignedTo': userId
-    })
+    const filter = { 'tasks.assignedTo': userId };
+    const totalProjects = await Project.countDocuments(filter);
+    const totalPages = Math.ceil(totalProjects / limit);
+
+    const projects = await Project.find(filter)
       .populate('members', 'name email designation profileImage')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     const result = projects.map(p => {
       const obj = p.toObject();
@@ -63,7 +84,14 @@ router.get('/my', verifyToken, async (req, res) => {
       return obj;
     });
 
-    res.json({ projects: result });
+    res.json({
+      projects: result,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalProjects
+      }
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

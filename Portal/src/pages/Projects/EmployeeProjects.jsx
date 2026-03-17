@@ -22,6 +22,7 @@ import {
 import Loader from '../../components/common/Loader';
 import TableSkeleton from '../../components/common/TableSkeleton';
 import Skeleton from '../../components/common/Skeleton';
+import Pagination from '../../components/common/Pagination';
 
 const priorityColors = {
   Low: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700',
@@ -437,24 +438,39 @@ function ProjectDetailView({ project, onBack }) {
 
 // ── Main Employee Projects Page ───────────────────────────────────────────────
 export default function EmployeeProjects({ setTitle }) {
-  const ITEMS_PER_PAGE = 8;
+  const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeProject, setActiveProject] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+
+  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalProjects, setTotalProjects] = useState(0);
 
   useEffect(() => {
     setTitle?.('My Projects');
-    fetchProjects();
-  }, []);
+    const debounceFetch = setTimeout(() => {
+      fetchProjects();
+    }, 300);
+    return () => clearTimeout(debounceFetch);
+  }, [currentPage, searchTerm, statusFilter]);
 
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const res = await apiGetMyProjects();
+      const params = {
+        page: currentPage,
+        limit: 10,
+        searchTerm,
+        status: statusFilter === 'All' ? '' : statusFilter
+      };
+      const res = await apiGetMyProjects(params);
       setProjects(res.projects || []);
+      setTotalPages(res.pagination?.totalPages || 1);
+      setTotalProjects(res.pagination?.totalProjects || 0);
     } catch {
       toast.error('Failed to load projects');
     } finally {
@@ -462,35 +478,20 @@ export default function EmployeeProjects({ setTitle }) {
     }
   };
 
-  const filteredProjects = projects.filter(p => {
-    const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (p.description && p.description.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchStatus = statusFilter === 'All' || p.status === statusFilter;
-    return matchSearch && matchStatus;
-  });
-
-  const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE);
-  const paginatedProjects = filteredProjects.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
-
-  useEffect(() => { setCurrentPage(1); }, [searchTerm, statusFilter]);
-
   const stats = {
-    total: projects.length,
+    total: totalProjects,
     active: projects.filter(p => p.status === 'Active').length,
     inProgress: projects.filter(p => p.status === 'On Hold').length,
     completed: projects.filter(p => p.status === 'Completed').length,
   };
 
   // If a project is selected, show its detail view
-  if (activeProject) {
+  if (selectedProject) {
     return (
       <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
         <ProjectDetailView
-          project={activeProject}
-          onBack={() => setActiveProject(null)}
+          project={selectedProject}
+          onBack={() => setSelectedProject(null)}
         />
       </div>
     );
@@ -502,36 +503,6 @@ export default function EmployeeProjects({ setTitle }) {
     { sub: 'On Hold', value: stats.inProgress, icon: <FaLayerGroup size={18} className="text-white" /> },
     { sub: 'Completed', value: stats.completed, icon: <RxCrossCircled size={20} className="text-white" /> },
   ];
-
-  const PaginationBar = () => {
-    if (totalPages <= 1) return null;
-    return (
-      <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-white/5 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Showing <span className="font-semibold text-gray-900 dark:text-gray-100">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{Math.min(currentPage * ITEMS_PER_PAGE, filteredProjects.length)}</span> of{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">{filteredProjects.length}</span> entries
-        </p>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}
-            className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-            <FaChevronLeft size={14} className="text-gray-600 dark:text-gray-400" />
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-            <button key={page} onClick={() => setCurrentPage(page)}
-              className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors border
-                ${page === currentPage ? 'bg-[#2C5284] text-white border-[#2C5284]' : 'border-gray-300 dark:border-white/10 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5'}`}>
-              {page}
-            </button>
-          ))}
-          <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}
-            className="p-2 rounded-lg border border-gray-200 dark:border-white/10 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-            <FaChevronRight size={14} className="text-gray-600 dark:text-gray-400" />
-          </button>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-[#292c35]">
@@ -574,7 +545,7 @@ export default function EmployeeProjects({ setTitle }) {
         <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
           <div className="relative flex-1">
             <input type="text" placeholder="Search projects..." value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              onChange={e => { setSearchTerm(e.target.value); setCurrentPage(1); }}
               className="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-white/10 dark:bg-white/5 dark:text-white rounded-lg focus:ring-2 focus:ring-[#2C5284] outline-none text-sm" />
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2C5284]">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -585,7 +556,7 @@ export default function EmployeeProjects({ setTitle }) {
           <div className="w-44">
             <Select
               value={{ value: statusFilter, label: statusFilter }}
-              onChange={(opt) => setStatusFilter(opt.value)}
+              onChange={(opt) => { setStatusFilter(opt.value); setCurrentPage(1); }}
               options={['All', 'Planning', 'Active', 'On Hold', 'Completed'].map(s => ({ value: s, label: s }))}
               isSearchable={false}
               styles={{
@@ -612,8 +583,8 @@ export default function EmployeeProjects({ setTitle }) {
 
       {/* Project Cards */}
       {loading ? (
-        <TableSkeleton rows={5} cols={6} />
-      ) : filteredProjects.length === 0 ? (
+        <TableSkeleton rows={5} cols={5} />
+      ) : projects.length === 0 ? (
         <div className="bg-white dark:bg-zinc-800/30 border-2 border-dashed border-zinc-200 dark:border-zinc-700/50 rounded-2xl p-14 text-center">
           <FaLayerGroup size={32} className="text-zinc-300 dark:text-zinc-600 mx-auto mb-3" />
           <p className="text-sm font-bold text-zinc-400">
@@ -638,7 +609,7 @@ export default function EmployeeProjects({ setTitle }) {
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/5">
-                  {paginatedProjects.map(project => {
+                  {projects.map(project => {
                     const cfg = projectStatusConfig[project.status] || projectStatusConfig.Planning;
                     const isOverdue = new Date(project.deadline) < new Date() && project.status !== 'Completed';
                     const completedTasks = project.myTaskCount?.completed || 0;
@@ -721,7 +692,7 @@ export default function EmployeeProjects({ setTitle }) {
                           </div>
                         </td>
                         <td className="px-6 py-5 whitespace-nowrap text-right">
-                          <button onClick={() => setActiveProject(project)}
+                          <button onClick={() => setSelectedProject(project)}
                             className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2C5284] text-white hover:bg-[#1e3a5f] rounded-xl text-xs font-bold transition-all shadow-sm hover:shadow active:scale-95 cursor-pointer">
                             <AiOutlineEye size={14} />
                             Open Dashboard
@@ -733,11 +704,18 @@ export default function EmployeeProjects({ setTitle }) {
                 </tbody>
               </table>
             </div>
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
 
           {/* Mobile Cards */}
           <div className="lg:hidden space-y-4">
-            {paginatedProjects.map(project => {
+            {projects.map(project => {
               const cfg = projectStatusConfig[project.status] || projectStatusConfig.Planning;
               const isOverdue = new Date(project.deadline) < new Date() && project.status !== 'Completed';
               const completedTasks = project.myTaskCount?.completed || 0;
@@ -780,7 +758,7 @@ export default function EmployeeProjects({ setTitle }) {
                       </div>
                     </div>
                     <div className="pt-3 flex items-center justify-between border-t border-gray-50 dark:border-white/5">
-                      <button onClick={() => setActiveProject(project)}
+                      <button onClick={() => setSelectedProject(project)}
                         className="flex items-center gap-1.5 text-xs font-bold text-[#2C5284] dark:text-blue-300 uppercase tracking-wider w-full justify-center">
                         <AiOutlineEye size={14} /> View Details
                       </button>
@@ -789,7 +767,13 @@ export default function EmployeeProjects({ setTitle }) {
                 </div>
               );
             })}
-            <PaginationBar />
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
         </>
       )}

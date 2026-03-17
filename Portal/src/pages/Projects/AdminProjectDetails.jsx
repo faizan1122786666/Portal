@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaTimes, FaPlus, FaTrashAlt, FaChevronDown, FaPaperclip, FaPaperPlane } from 'react-icons/fa';
+import { FaTimes, FaPlus, FaTrashAlt, FaChevronDown, FaPaperclip, FaPaperPlane, FaArrowLeft, FaRegEdit, FaCalendarAlt, FaUsers, FaLayerGroup } from 'react-icons/fa';
 import Select from 'react-select';
 import { AiOutlineClockCircle, AiOutlineDelete, AiOutlineEye } from 'react-icons/ai';
 import {
@@ -240,6 +240,7 @@ export default function AdminProjectDetails({ setTitle }) {
   const [statusFilter, setStatusFilter] = useState('All');
 
   useEffect(() => {
+    console.log('projectId:', projectId);
     fetchProject();
     fetchTasks();
   }, [projectId]);
@@ -248,6 +249,7 @@ export default function AdminProjectDetails({ setTitle }) {
     try {
       setLoading(true);
       const res = await apiGetProjectById(projectId);
+      console.log('API response:', res);
       setProject(res.project);
       setTitle?.(res.project?.name || 'Project');
     } catch {
