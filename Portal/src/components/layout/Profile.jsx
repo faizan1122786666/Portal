@@ -175,14 +175,14 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-50/50 dark:bg-transparent">
 
-      {/* ── Page Title ── */}
+      
       <h1 className="text-2xl sm:text-3xl font-bold text-[#2C5284] dark:text-blue-300 mb-6">My Profile</h1>
 
       <div className="max-w-2xl mx-auto space-y-5">
 
-        {/* ── Avatar Card ── */}
+       
         <div className="bg-white dark:bg-white/5 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 p-6 flex flex-col sm:flex-row items-center gap-5">
-          {/* Avatar with upload trigger */}
+          
           <div className="relative group">
             <div className="w-24 h-24 rounded-full bg-[#2C5284] dark:bg-white/10 flex items-center justify-center flex-shrink-0 shadow-md overflow-hidden border-4 border-white dark:border-white/10">
               {(userProfileImage || user?.profileImage) ? (
@@ -212,7 +212,7 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
             </label>
           </div>
 
-          {[/* Name + role */]}
+          
           <div className="flex-1 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">
@@ -241,7 +241,7 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
           </div>
         </div>
 
-        {/* ── Details Card ── */}
+       
         <div className="bg-white dark:bg-white/5 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 p-5">
           <h3 className="text-base font-bold text-gray-700 dark:text-blue-200 mb-1">Profile Details</h3>
           <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">Information managed by your administrator</p>
@@ -298,7 +298,7 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
           />
         </div>
 
-        {/* ── Account Actions Card ── */}
+        
         <div className="bg-white dark:bg-white/5 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 p-5">
           <h3 className="text-base font-bold text-gray-700 dark:text-blue-200 mb-4">Account Settings</h3>
           <div className="space-y-3">
@@ -330,7 +330,6 @@ function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpd
           </div>
         </div>
 
-        {/* ── Read-only notice ── */}
         
       </div>
 
