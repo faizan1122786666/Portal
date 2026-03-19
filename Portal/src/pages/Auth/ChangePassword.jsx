@@ -45,10 +45,10 @@ const ChangePassword = ({ onClose }) => {
     try {
       const response = await axios.post(
         'http://localhost:3000/api/auth/change-password',
-        { 
+        {
           email: formData.email,
-          oldPassword: formData.oldPassword, 
-          newPassword: formData.newPassword 
+          oldPassword: formData.oldPassword,
+          newPassword: formData.newPassword
         },
         { withCredentials: true }
       )
@@ -70,8 +70,8 @@ const ChangePassword = ({ onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-[#2C5284] bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg sm:rounded-xl shadow-xl w-full max-w-xs sm:max-w-sm p-6 sm:p-8 m-4">
+    <div className="fixed inset-0 bg-[#2C5284]  dark:bg-gray-950  bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg sm:rounded-xl dark:border-gray-700 dark:bg-gray-800  shadow-xl w-full max-w-xs sm:max-w-sm p-6 sm:p-8 m-4">
 
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -150,7 +150,7 @@ const ChangePassword = ({ onClose }) => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-               className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 outline-none text-gray-900 dark:text-white text-xs sm:text-sm rounded-lg block w-full px-3 py-2.5 sm:py-2.5 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[#2C5282] dark:focus:ring-blue-500 transition-colors"
+              className="bg-gray-50 dark:bg-white/5 border border-gray-300 dark:border-white/10 outline-none text-gray-900 dark:text-white text-xs sm:text-sm rounded-lg block w-full px-3 py-2.5 sm:py-2.5 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[#2C5282] dark:focus:ring-blue-500/50 transition-colors"
               placeholder="Confirm your new password"
             />
           </div>
@@ -161,7 +161,7 @@ const ChangePassword = ({ onClose }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-2.5 border border-gray-300 outline-none rounded-base hover:bg-gray-200 transition-colors font-medium text-xs sm:text-sm cursor-pointer
+                className="flex-1 px-4 py-2.5 border border-gray-300 outline-none rounded-base hover:bg-gray-200 text-xs sm:text-sm cursor-pointer
                 dark:focus:ring-blue-800 font-medium rounded-lg text-xs sm:text-sm px-4 py-2.5 sm:py-2.5 focus:outline-none transition-colors duration-200"
               >
                 Cancel
@@ -170,7 +170,7 @@ const ChangePassword = ({ onClose }) => {
             <button
               type="submit"
               disabled={loading}
-              className={`flex-1 px-4 py-2.5 cursor-pointer text-white bg-[#2C5282] dark:bg-blue-600 hover:bg-[#1e3a5f] dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-xs sm:text-sm px-4 py-2.5 sm:py-2.5 focus:outline-none transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`flex-1 cursor-pointer text-white bg-[#2C5282] dark:bg-blue-600 hover:bg-[#1e3a5f] dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-xs sm:text-sm px-4 py-2.5 sm:py-2.5 focus:outline-none transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {loading ? 'Changing...' : 'Change Password'}
             </button>
