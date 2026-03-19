@@ -73,7 +73,7 @@ function EditNameModal({ currentName, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-sm border border-transparent dark:border-white/10">
+      <div className="bg-white dark:bg-[#292c35] rounded-2xl shadow-2xl w-full max-w-sm  dark:border-white/10">
         <div className="bg-[#2C5284] dark:bg-white/10 p-5 rounded-t-2xl flex items-center justify-between">
           <h2 className="text-lg font-bold text-white">Edit Display Name</h2>
           <button onClick={onClose} className="text-white hover:bg-white/10 rounded-full p-1.5 transition-colors">

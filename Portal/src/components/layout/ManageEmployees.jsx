@@ -357,15 +357,14 @@ function ManageEmployees({ setTitle }) {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
   const itemsPerPage = 8
 
-  const fetchEmployees = async (page) => {
+  const fetchEmployees = async () => {
     setLoading(true)
     try {
-      const res = await apiGetEmployees(page)
+      // Fetch a large number to handle filtering and pagination client-side for better UX
+      const res = await apiGetEmployees(1, 1000) 
       setEmployees(res.employees || [])
-      setTotalPages(res.pagination.totalPages)
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to fetch employees')
     } finally {
@@ -379,9 +378,9 @@ function ManageEmployees({ setTitle }) {
   }, [setTitle])
 
   useEffect(() => {
-    fetchEmployees(currentPage)
+    fetchEmployees()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage])
+  }, [])
 
   const handleSubmit = async (form) => {
     try {
@@ -452,14 +451,13 @@ function ManageEmployees({ setTitle }) {
     return matchSearch && matchDept && matchRole && matchShift
   })
 
-  const paginated = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-
+  // Reset to page 1 when filtering
   useEffect(() => {
-    const newTotalPages = Math.ceil(filtered.length / itemsPerPage);
-    if (newTotalPages !== totalPages) {
-      setTotalPages(newTotalPages);
-    }
-  }, [filtered, itemsPerPage, totalPages]);
+    setCurrentPage(1);
+  }, [search, filterDept, filterRole, filterShift]);
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginated = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
   const stats = {
     total: employees.length,
@@ -851,7 +849,7 @@ function ManageEmployees({ setTitle }) {
           </div>
 
           {/* Pagination Controls */}
-          {employees.length > 5 && (
+          {totalPages > 1 && (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

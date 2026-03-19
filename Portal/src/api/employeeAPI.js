@@ -36,8 +36,8 @@ async function apiFetch(url, options = {}) {
  * Function: apiGetEmployees
  * Description: Retrieves list of all users from the backend.
  */
-export async function apiGetEmployees(page = 1) {
-  return apiFetch(`${BASE}/employees?page=${page}`);
+export async function apiGetEmployees(page = 1, limit = 10) {
+  return apiFetch(`${BASE}/employees?page=${page}&limit=${limit}`);
 }
 
 /**

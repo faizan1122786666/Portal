@@ -47,7 +47,8 @@ export default function EditProjectModal({ project, onClose, onUpdated }) {
 
   const fetchEmployees = async () => {
     try {
-      const res = await adminApi.get('/employees');
+      // Fetch a large number to ensure all employees are available for selection
+      const res = await adminApi.get('/employees?limit=1000');
       setEmployees((res.data.employees || []).filter(e => e.role === 'employee'));
     } catch {
       toast.error('Failed to load employees.');
