@@ -483,7 +483,7 @@ export default function EmployeeProjects({ setTitle }) {
       setLoading(true);
       const params = {
         page: currentPage,
-        limit: 10,
+        limit: 5,
         searchTerm,
         status: statusFilter === 'All' ? '' : statusFilter
       };
@@ -724,7 +724,7 @@ export default function EmployeeProjects({ setTitle }) {
                 </tbody>
               </table>
             </div>
-            {totalPages > 1 && (
+            {totalProjects > 5 && (
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -787,7 +787,7 @@ export default function EmployeeProjects({ setTitle }) {
                 </div>
               );
             })}
-            {totalPages > 1 && (
+            {totalProjects > 5 && (
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

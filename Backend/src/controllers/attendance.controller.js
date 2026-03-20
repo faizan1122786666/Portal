@@ -343,7 +343,9 @@ async function getTodayStatus(req, res) {
 async function getMyAttendance(req, res) {
   try {
     const employeeId = req.user.id;
-    const { month, date, page = 1, limit = 10 } = req.query;
+    let { month, date, page = 1, limit = 10 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
 
     let filter = { employeeId };
     if (date) filter.date = date;
@@ -364,7 +366,7 @@ async function getMyAttendance(req, res) {
       message: 'My attendance records fetched',
       records,
       pagination: {
-        currentPage: parseInt(page),
+        currentPage: page,
         totalPages,
         totalRecords
       }
@@ -387,10 +389,30 @@ async function getMyAttendance(req, res) {
  */
 async function getAllAttendance(req, res) {
   try {
-    const { date, employeeId, month, page = 1, limit = 10 } = req.query;
+    let { date, employeeId, month, page = 1, limit = 10 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
 
-    let filter = {};
-    if (employeeId) filter.employeeId = employeeId;
+    // Get all active employee IDs
+    const activeEmployees = await userModel.find({ role: 'employee' }, '_id');
+    const activeIds = activeEmployees.map(e => e._id);
+
+    let filter = { employeeId: { $in: activeIds } };
+    if (employeeId) {
+      // If a specific employee is requested, check if they are active
+      if (activeIds.some(id => id.toString() === employeeId)) {
+        filter.employeeId = employeeId;
+      } else {
+        // Requested employee is not active or doesn't exist
+        return res.status(200).json({
+          message: 'All attendance records fetched',
+          count: 0,
+          records: [],
+          pagination: { currentPage: page, totalPages: 0, totalRecords: 0 }
+        });
+      }
+    }
+
     if (date) filter.date = date;
     else if (month) filter.date = { $regex: `^${month}` };
 
@@ -406,13 +428,10 @@ async function getAllAttendance(req, res) {
       .skip(skip)
       .limit(limit);
 
-    // Filter out records whose employee has been deleted
-    const activeRecords = records.filter(r => r.employeeId !== null);
-
     return res.status(200).json({
       message: 'All attendance records fetched',
-      count: activeRecords.length,
-      records: activeRecords,
+      count: records.length,
+      records,
       pagination: {
         currentPage: page,
         totalPages,

@@ -37,7 +37,7 @@ function AdminLeave({ setTitle }) {
     try {
       setLoading(true);
       setError('');
-      const filters = { page: currentPage, limit: 10 };
+      const filters = { page: currentPage, limit: 5 };
       if (statusFilter) filters.status = statusFilter.value;
       if (searchTerm) filters.searchTerm = searchTerm; // Assuming backend handles search if added, but for now we filter locally if needed. 
       // Actually, let's just use what the backend supports.
@@ -320,6 +320,13 @@ function AdminLeave({ setTitle }) {
                 )}
               </tbody>
             </table>
+            {totalLeaves > 5 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
         </div>
       )}
@@ -380,16 +387,14 @@ function AdminLeave({ setTitle }) {
               No leave requests found.
             </div>
           )}
+          {totalLeaves > 5 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </div>
-      )}
-
-      {/* Pagination */}
-      {leaves.length > 5 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
       )}
 
       {/* Leave Detail Modal */}

@@ -122,17 +122,20 @@ function EmployeeHistoryModal({ employee, onClose }) {
   const [selectedDay, setSelectedDay] = useState(null)
   const [selectedRecord, setSelectedRecord] = useState(null)
 
+  // Local Pagination
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 5
+
   const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`
 
   const fetchMonthRecords = useCallback(async () => {
     setLoading(true)
     setSelectedDay(null)
     setSelectedRecord(null)
+    setCurrentPage(1) // Reset to first page on month change
     try {
       const data = await apiGetEmployeeAttendance(employee._id, { month: monthStr })
-      // setRecords(data.records || [])
       setRecords((data.records || []).filter(r => r.employeeId !== null))
-
     } catch {
       setRecords([])
     } finally {
@@ -145,6 +148,10 @@ function EmployeeHistoryModal({ employee, onClose }) {
   // Build a map: date string → record
   const recordMap = {}
   records.forEach(r => { recordMap[r.date] = r })
+
+  // Pagination Logic
+  const totalPages = Math.ceil(records.length / itemsPerPage)
+  const paginatedRecords = records.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
   // Calendar grid
   const daysInMonth = new Date(year, month + 1, 0).getDate()
@@ -399,44 +406,55 @@ function EmployeeHistoryModal({ employee, onClose }) {
                     No records for this month.
                   </div>
                 ) : (
-                  <div className="space-y-2 max-h-[52vh] overflow-y-auto pr-1">
-                    {records.map(r => (
-                      <button
-                        key={r._id}
+                  <div className="space-y-3 max-h-[52vh] overflow-y-auto pr-1">
+                    {paginatedRecords.length > 0 ? paginatedRecords.map(r => (
+                      <div key={r._id}
                         onClick={() => {
                           const day = parseInt(r.date.split('-')[2])
                           setSelectedDay(day)
                           setSelectedRecord(r)
                         }}
-                        className="w-full flex items-center justify-between bg-gray-50 hover:bg-blue-50 rounded-lg px-4 py-3 text-left transition-colors group"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${r.status === 'Present' ? 'bg-green-500' :
-                            r.status === 'Leave' ? 'bg-yellow-400' : 'bg-red-400'
-                            }`} />
+                        className="bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5 p-4 rounded-xl flex items-center justify-between hover:border-[#2C5284] dark:hover:border-blue-500 transition-all cursor-pointer group shadow-sm">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-lg bg-white dark:bg-white/10 flex flex-col items-center justify-center border border-gray-100 dark:border-white/10 shadow-sm">
+                            <span className="text-[10px] font-bold text-gray-400 uppercase leading-none">{new Date(r.date).toLocaleDateString('en-US', { month: 'short' })}</span>
+                            <span className="text-sm font-black text-[#2C5284] dark:text-blue-300 leading-none mt-0.5">{new Date(r.date).getDate()}</span>
+                          </div>
                           <div>
-                            <p className="text-sm font-semibold text-gray-800">{r.date}</p>
-                            <p className="text-xs text-gray-400">
-                              {r.sessions?.[0]?.checkIn || '--'}
-                              {r.sessions?.[0]?.checkIn ? ' → ' : ''}
-                              {[...(r.sessions || [])].reverse().find(s => s.checkOut)?.checkOut || (r.sessions?.[0]?.checkIn ? 'ongoing' : '')}
+                            <p className="text-sm font-bold text-gray-800 dark:text-gray-200">
+                              {new Date(r.date).toLocaleDateString('en-US', { weekday: 'long' })}
                             </p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md ${r.status === 'Present' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-red-700'}`}>
+                                {r.status}
+                              </span>
+                              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">
+                                {r.sessions?.[0]?.checkIn || '--'} — {[...(r.sessions || [])].reverse().find(s => s.checkOut)?.checkOut || (r.sessions?.[0]?.checkIn ? 'ongoing' : '--')}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                          {r.totalWorkHours && (
-                            <span className="text-xs font-semibold text-[#2C5284]">{r.totalWorkHours}</span>
-                          )}
-                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${r.status === 'Present' ? 'bg-green-100 text-green-700' :
-                            r.status === 'Leave' ? 'bg-yellow-100 text-yellow-700' :
-                              'bg-red-100 text-red-700'
-                            }`}>
-                            {r.status}
-                          </span>
-                          <FaChevronRight size={10} className="text-gray-300 group-hover:text-[#2C5284] transition-colors" />
+                        <div className="text-right">
+                          <p className="text-sm font-black text-[#2C5284] dark:text-blue-300 leading-none">{r.totalWorkHours || '0h 0m'}</p>
+                          <p className="text-[10px] text-gray-400 font-bold uppercase mt-1">Work Hours</p>
                         </div>
-                      </button>
-                    ))}
+                      </div>
+                    )) : (
+                      <div className="bg-gray-50 dark:bg-white/5 border border-dashed border-gray-200 dark:border-white/10 p-10 rounded-2xl text-center">
+                        <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">No records for this period</p>
+                      </div>
+                    )}
+
+                    {/* Local Pagination Controls */}
+                    {records.length > 5 && (
+                      <div className="mt-4">
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          onPageChange={setCurrentPage}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -647,6 +665,7 @@ function AdminAttendance({ setTitle }) {
   const [selectedDate, setSelectedDate] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [totalRecords, setTotalRecords] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -656,12 +675,13 @@ function AdminAttendance({ setTitle }) {
     setLoading(true); setError('')
     try {
       const [recordsData, employeesData, summaryData] = await Promise.all([
-        apiGetAllAttendance({ page: currentPage, limit: 10, searchTerm, date: selectedDate }),
+        apiGetAllAttendance({ page: currentPage, limit: 5, searchTerm, date: selectedDate }),
         apiGetEmployees(),
         apiGetTodaySummary(),
       ])
       setRecords(recordsData.records || [])
       setTotalPages(recordsData.pagination?.totalPages || 1)
+      setTotalRecords(recordsData.pagination?.totalRecords || 0)
       setEmployees(employeesData.employees || [])
       setTodayStats(summaryData)
     } catch (e) {
@@ -841,6 +861,13 @@ function AdminAttendance({ setTitle }) {
                 )}
               </tbody>
             </table>
+            {totalRecords > 5 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
 
           {/* Mobile Cards */}
@@ -888,16 +915,14 @@ function AdminAttendance({ setTitle }) {
             {records.length === 0 && (
               <div className="bg-white rounded-xl p-10 text-center text-gray-400 italic border border-gray-100">No records found.</div>
             )}
+            {totalRecords > 5 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          )}
         </>
       )}
 

@@ -357,7 +357,7 @@ function ManageEmployees({ setTitle }) {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 8
+  const itemsPerPage = 5
 
   const fetchEmployees = async () => {
     setLoading(true)
@@ -684,7 +684,7 @@ function ManageEmployees({ setTitle }) {
       </p>
 
       {loading ? (
-        <TableSkeleton rows={8} cols={7} />
+        <TableSkeleton rows={10} cols={7} />
       ) : (
         <>
           {/* Desktop Table */}
@@ -781,6 +781,13 @@ function ManageEmployees({ setTitle }) {
                 )}
               </tbody>
             </table>
+            {filtered.length > 5 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
 
           {/* Mobile Cards */}
@@ -846,16 +853,14 @@ function ManageEmployees({ setTitle }) {
                 No employees found.
               </div>
             )}
+            {filtered.length > 5 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
           </div>
-
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          )}
         </>
       )}
 

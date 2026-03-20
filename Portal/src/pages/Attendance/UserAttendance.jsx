@@ -170,6 +170,7 @@ function UserAttendance({ setTitle }) {
   const [showModal, setShowModal] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [totalRecords, setTotalRecords] = useState(0)
   const [selectedDate, setSelectedDate] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -178,11 +179,12 @@ function UserAttendance({ setTitle }) {
     setLoading(true)
     setError('')
     try {
-      const filters = { page: currentPage, limit: 10 }
+      const filters = { page: currentPage, limit: 5 }
       if (selectedDate) filters.date = selectedDate
       const data = await apiGetMyAttendance(filters)
       setRecords(data.records || [])
       setTotalPages(data.pagination?.totalPages || 1)
+      setTotalRecords(data.pagination?.totalRecords || 0)
     } catch {
       setError('Failed to load attendance records.')
     } finally {
@@ -343,7 +345,7 @@ function UserAttendance({ setTitle }) {
                 )}
               </tbody>
             </table>
-            {records.length > 5 && (
+            {totalRecords > 5 && (
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -396,7 +398,7 @@ function UserAttendance({ setTitle }) {
             {records.length === 0 && (
               <div className="bg-white rounded-xl p-10 text-center text-gray-400 italic border border-gray-100">No records found.</div>
             )}
-            {records.length > 5 && (
+            {totalRecords > 5 && (
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

@@ -122,7 +122,9 @@ async function applyLeave(req, res) {
 async function getMyLeaves(req, res) {
   try {
     const employeeId = req.user.id;
-    const { status, month, page = 1, limit = 10 } = req.query;
+    let { status, month, page = 1, limit = 10 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
 
     const filter = { employeeId };
     if (status && ['Pending', 'Approved', 'Rejected'].includes(status)) {
@@ -147,7 +149,7 @@ async function getMyLeaves(req, res) {
       message: 'Leave records fetched',
       leaves,
       pagination: {
-        currentPage: parseInt(page),
+        currentPage: page,
         totalPages,
         totalLeaves
       }
@@ -281,14 +283,30 @@ async function deleteMyLeave(req, res) {
  */
 async function getAllLeaves(req, res) {
   try {
-    const { status, employeeId, month, page = 1, limit = 10 } = req.query;
+    let { status, employeeId, month, page = 1, limit = 10 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
 
-    const filter = {};
+    // Get all active employee IDs
+    const activeEmployees = await userModel.find({ role: 'employee' }, '_id');
+    const activeIds = activeEmployees.map(e => e._id);
+
+    const filter = { employeeId: { $in: activeIds } };
     if (status && ['Pending', 'Approved', 'Rejected'].includes(status)) {
       filter.status = status;
     }
     if (employeeId) {
-      filter.employeeId = employeeId;
+      // If a specific employee is requested, check if they are active
+      if (activeIds.some(id => id.toString() === employeeId)) {
+        filter.employeeId = employeeId;
+      } else {
+        // Requested employee is not active or doesn't exist
+        return res.status(200).json({
+          message: 'All leave records fetched',
+          leaves: [],
+          pagination: { currentPage: page, totalPages: 0, totalLeaves: 0 }
+        });
+      }
     }
     if (month) {
       filter.startDate = { $regex: `^${month}` };
@@ -299,21 +317,18 @@ async function getAllLeaves(req, res) {
     const totalLeaves = await leaveModel.countDocuments(filter);
     const totalPages = Math.ceil(totalLeaves / limit);
 
-    const rawLeaves = await leaveModel
+    const leaves = await leaveModel
       .find(filter)
       .populate('employeeId', '-password')   // include employee name, email, dept
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-    // Filter out orphaned leaves whose employee has been deleted
-    const leaves = rawLeaves.filter(l => l.employeeId != null);
-
     return res.status(200).json({
       message: 'All leave records fetched',
       leaves,
       pagination: {
-        currentPage: parseInt(page),
+        currentPage: page,
         totalPages,
         totalLeaves
       }

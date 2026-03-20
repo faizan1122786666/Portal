@@ -216,6 +216,7 @@ function UserLeave({ setTitle }) {
   const [editingLeave, setEditingLeave] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalLeaves, setTotalLeaves] = useState(0);
   const [filterDate, setFilterDate] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
 
@@ -223,13 +224,14 @@ function UserLeave({ setTitle }) {
     try {
       setLoading(true);
       setError('');
-      const filters = { page: currentPage, limit: 10 };
+      const filters = { page: currentPage, limit: 5 };
       if (filterStatus !== 'All') filters.status = filterStatus;
       if (filterDate) filters.month = filterDate.substring(0, 7); // Backend supports month filtering
 
       const res = await apiGetMyLeaves(filters);
       setLeaves(res.leaves || []);
       setTotalPages(res.pagination?.totalPages || 1);
+      setTotalLeaves(res.pagination?.totalLeaves || 0);
     } catch (err) {
       setError(err.message || 'Failed to fetch leave requests');
     } finally {
@@ -463,7 +465,7 @@ function UserLeave({ setTitle }) {
               </tbody>
             </table>
           </div>
-          {leaves.length > 5 && (
+          {totalLeaves > 5 && (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
@@ -522,7 +524,7 @@ function UserLeave({ setTitle }) {
               {hasActiveFilter ? 'No records match the selected filters.' : 'No leave requests yet. Tap "Apply" to get started.'}
             </div>
           )}
-          {leaves.length > 5 && (
+          {totalLeaves > 5 && (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
