@@ -1,8 +1,3 @@
-/**
- * Component: App
- * Description: The main application entry point that handles global routing, authentication context, and layout management (Sidebar, Header).
- * Why: To orchestrate the entire frontend application, managing user sessions, theme preferences, and navigational structure.
- */
 import { useEffect, useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'

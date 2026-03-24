@@ -9,9 +9,7 @@ const router = express.Router();
 const Project = require('../models/Project');
 const { verifyToken, verifyAdmin } = require('../middleware/auth.middleware');
 
-// ═══════════════════════════════════════════════════════════════════
-//  PROJECT ROUTES
-// ═══════════════════════════════════════════════════════════════════
+
 
 // GET  /api/projects          → All projects (admin only)
 router.get('/', verifyToken, verifyAdmin, async (req, res) => {
@@ -177,9 +175,7 @@ router.delete('/:id', verifyToken, verifyAdmin, async (req, res) => {
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════
-//  TASK ROUTES (nested under /api/projects/:projectId/tasks)
-// ═══════════════════════════════════════════════════════════════════
+
 
 // GET  /api/projects/:projectId/tasks  → Employees see only their tasks; admins see all
 router.get('/:projectId/tasks', verifyToken, async (req, res) => {

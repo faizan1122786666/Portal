@@ -9,9 +9,7 @@ const router  = express.Router();
 const leaveController = require('../controllers/leave.controller');
 const { verifyToken, verifyAdmin } = require('../middleware/auth.middleware');
 
-// ═══════════════════════════════════════════════════════════════════════════════
-//  EMPLOYEE ROUTES  →  /api/leave/...
-// ═══════════════════════════════════════════════════════════════════════════════
+
 
 // POST   /api/leave/apply         → Submit a new leave request
 router.post('/apply', verifyToken, leaveController.applyLeave);
