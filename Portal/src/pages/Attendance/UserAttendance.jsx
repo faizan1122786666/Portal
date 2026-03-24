@@ -14,7 +14,7 @@ import Loader from '../../components/common/Loader'
 import TableSkeleton from '../../components/common/TableSkeleton'
 import Skeleton from '../../components/common/Skeleton'
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// Helpers 
 function getFirstCheckIn(sessions = []) {
   return sessions[0]?.checkIn || null
 }
@@ -27,7 +27,7 @@ function getShiftIcon(shift) {
   return null
 }
 
-// ── Circular Progress ─────────────────────────────────────────────────────────
+// Circular Progress
 function CircularProgress({ workHours = "0h 0m" }) {
   const parts = workHours?.split('h') || ["0", "0"];
   const hours = parseInt(parts[0]) || 0;
@@ -58,7 +58,7 @@ function CircularProgress({ workHours = "0h 0m" }) {
   );
 }
 
-// ── Detail Modal ──────────────────────────────────────────────────────────────
+// Detail Modal 
 function AttendanceDetailModal({ record, onClose }) {
   const sessions = record.sessions || []
   const firstCheckIn = getFirstCheckIn(sessions)
@@ -161,7 +161,7 @@ function AttendanceDetailModal({ record, onClose }) {
   )
 }
 
-// ── Main Component ────────────────────────────────────────────────────────────
+// Main Component 
 import Pagination from '../../components/common/Pagination';
 
 function UserAttendance({ setTitle }) {

@@ -60,7 +60,7 @@ function AdminLeave({ setTitle }) {
 
   useEffect(() => {
     setTitle('Leave Management');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [setTitle]);
 
   useEffect(() => {

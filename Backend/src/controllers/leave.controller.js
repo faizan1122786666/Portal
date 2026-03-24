@@ -272,15 +272,6 @@ async function deleteMyLeave(req, res) {
 }
 
 
-// ═══════════════════════════════════════════════════════════════════════════════
-//  ADMIN CONTROLLERS
-// ═══════════════════════════════════════════════════════════════════════════════
-
-/**
- * Function: getAllLeaves
- * Description: Fetches all leave requests for admin review, with optional filtering by status, employee, or month.
- * Why: To give admins full visibility into company-wide leave patterns and pending requests.
- */
 async function getAllLeaves(req, res) {
   try {
     let { status, employeeId, month, page = 1, limit = 10 } = req.query;

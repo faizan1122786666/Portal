@@ -25,7 +25,6 @@ export default function Header({ title, handleSlidebar, isAdmin, darkMode, toggl
         </div>
       </div>
 
-      {/* Dark Mode Toggle — only for admin */}
       <button
         onClick={toggleDarkMode}
         title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}

@@ -145,6 +145,25 @@
 :is(.dark) .react-select__placeholder {
   color: #9ca3af !important;
 }
+/* Global React Toastify Styling */
+.Toastify__toast {
+  background-color: #2C5284 !important;
+  color: #ffffff !important;
+}
+.Toastify__close-button {
+  color: #ffffff !important;
+  opacity: 0.7 !important;
+}
+.Toastify__close-button:hover {
+  opacity: 1 !important;
+}
+.Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+.Toastify__toast-icon svg {
+  fill: #ffffff !important;
+}
+
 /* Custom React Toastify Mobile Styling */
 @media (max-width: 768px) {
   .Toastify__toast-container {

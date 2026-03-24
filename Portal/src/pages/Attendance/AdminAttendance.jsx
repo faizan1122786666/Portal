@@ -23,7 +23,7 @@ import {
 import Loader from '../../components/common/Loader'
 import Pagination from '../../components/common/Pagination';
 
-// ── React Select custom styles ────────────────────────────────────────────────
+// React Select custom styles 
 const selectStyles = {
   control: (base, state) => ({
     ...base,
@@ -59,7 +59,7 @@ const statusOptions = [
   { value: 'Leave', label: 'Leave' },
 ]
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// Helpers 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
@@ -73,9 +73,7 @@ function getTodayYMD() {
   return { yyyy, mm, dd, full: `${yyyy}-${mm}-${dd}` }
 }
 
-// ── Circular Progress ─────────────────────────────────────────────────────────
-
-
+// Circular Progress
 
 function CircularProgress({ workHours = "0h 0m" }) {
   const parts = workHours?.split('h') || ["0", "0"];
@@ -112,7 +110,7 @@ function CircularProgress({ workHours = "0h 0m" }) {
 
 // LEGACY: Previous CircularProgress implementation
 
-// ── Employee History Modal ────────────────────────────────────────────────────
+// Employee History Modal
 function EmployeeHistoryModal({ employee, onClose }) {
   const today = getTodayYMD()
   const [year, setYear] = useState(parseInt(today.yyyy))
@@ -145,7 +143,6 @@ function EmployeeHistoryModal({ employee, onClose }) {
 
   useEffect(() => { fetchMonthRecords() }, [fetchMonthRecords])
 
-  // Build a map: date string → record
   const recordMap = {}
   records.forEach(r => { recordMap[r.date] = r })
 
@@ -467,7 +464,7 @@ function EmployeeHistoryModal({ employee, onClose }) {
   )
 }
 
-// ── Single Record Detail Modal ────────────────────────────────────────────────
+// Single Record Detail Modal
 function AttendanceDetailModal({ record, onClose }) {
   const emp = record.employeeId || {}
   const sessions = record.sessions || []
@@ -546,7 +543,7 @@ function AttendanceDetailModal({ record, onClose }) {
   )
 }
 
-// ── Mark Attendance Modal ─────────────────────────────────────────────────────
+//  Mark Attendance Modal 
 function MarkAttendanceModal({ employees, onClose, onSuccess }) {
   const [selectedEmployee, setSelectedEmployee] = useState(null)
   const [selectedStatus, setSelectedStatus] = useState(null)
@@ -652,7 +649,7 @@ function MarkAttendanceModal({ employees, onClose, onSuccess }) {
   )
 }
 
-// ── Main Component ────────────────────────────────────────────────────────────
+// Main Component
 function AdminAttendance({ setTitle }) {
   const [records, setRecords] = useState([])
   const [employees, setEmployees] = useState([])
@@ -660,7 +657,7 @@ function AdminAttendance({ setTitle }) {
   const [selectedRecord, setSelectedRecord] = useState(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
   const [showMarkModal, setShowMarkModal] = useState(false)
-  const [historyEmployee, setHistoryEmployee] = useState(null) // for EmployeeHistoryModal
+  const [historyEmployee, setHistoryEmployee] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedDate, setSelectedDate] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
@@ -697,7 +694,7 @@ function AdminAttendance({ setTitle }) {
   }, [fetchRecords])
 
   // Server-side search is handled in fetchRecords, so we can use records directly.
-  const filteredRecords = records; // This will be removed in subsequent steps, for now we change the JSX
+  const filteredRecords = records; 
 
   const getFirstIn = (sessions = []) => sessions[0]?.checkIn || '------'
   const getLastOut = (sessions = []) => [...sessions].reverse().find(s => s.checkOut)?.checkOut || '------'

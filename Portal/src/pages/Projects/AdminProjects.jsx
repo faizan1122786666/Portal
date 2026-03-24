@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
   FaPlus, FaRegEdit, FaLayerGroup, FaCalendarAlt,
-  FaUsers, FaTrashAlt, FaChevronRight, FaChevronLeft,
+   FaTrashAlt,
 } from 'react-icons/fa';
 import { AiOutlineClockCircle } from 'react-icons/ai';
 import { RxCrossCircled } from 'react-icons/rx';
@@ -22,7 +22,7 @@ import { AiOutlineEye } from 'react-icons/ai';
 import TableSkeleton from '../../components/common/TableSkeleton';
 import Skeleton from '../../components/common/Skeleton';
 
-// ── Colour maps ────────────────────────────────────────────────────────────────
+// Colour maps 
 const priorityColors = {
   Low:    'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700',
   Medium: 'bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300 border-sky-200 dark:border-sky-500/30',

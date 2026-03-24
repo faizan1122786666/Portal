@@ -700,7 +700,7 @@ function ManageEmployees({ setTitle }) {
               <tbody className="divide-y divide-gray-100 dark:divide-white/5 bg-white dark:bg-[#292c35]">
                 {paginated.length > 0 ? paginated.map(emp => (
                   <tr key={emp._id} className="hover:bg-blue-50/20 transition-colors">
-                    {/* Employee */}
+                  
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-[#2C5284] flex items-center justify-center flex-shrink-0 overflow-hidden border-2 border-white shadow-sm">

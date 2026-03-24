@@ -25,7 +25,7 @@ import Loader from '../../components/common/Loader'
 
 ChartJS.register(ArcElement, LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend)
 
-// ── Build weekly days (starting Monday) ──────────────────────────────────────
+// Build weekly days (starting Monday) 
 function getWeeklyDays() {
   const days = []
   const today = new Date()
@@ -46,7 +46,7 @@ function getWeeklyDays() {
   return days
 }
 
-// ── Main Component ────────────────────────────────────────────────────────────
+// Main Component 
 function AdminDashboard({ setTitle }) {
   const [statsLoading, setStatsLoading] = useState(true)
   const [chartLoading, setChartLoading] = useState(true)
@@ -121,7 +121,7 @@ function AdminDashboard({ setTitle }) {
     }],
   }
 
-  // eslint-disable-next-line no-undef
+  
   const dark = typeof darkMode !== 'undefined' ? darkMode : document.documentElement.classList.contains('dark')
 
   const chartOptions = {

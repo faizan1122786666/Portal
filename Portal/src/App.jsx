@@ -29,7 +29,6 @@ function App() {
 
   useEffect(() => {
     const stored = localStorage.getItem('user')
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (stored) setUser(JSON.parse(stored))
   }, [])
 

@@ -42,7 +42,7 @@ const projectStatusConfig = {
   Completed: { bg: 'bg-blue-100', color: 'text-blue-700', dot: 'bg-blue-500' },
 };
 
-// ── Task Status Update Modal ───────────────────────────────────────────────────
+// Task Status Update Modal
 function TaskUpdateModal({ task, projectId, onClose, onUpdated }) {
   const [status, setStatus] = useState(task.status);
   const [saving, setSaving] = useState(false);
@@ -149,7 +149,7 @@ function TaskUpdateModal({ task, projectId, onClose, onUpdated }) {
   );
 }
 
-// ── Project Detail View (inline) ──────────────────────────────────────────────
+// Project Detail View (inline) 
 function ProjectDetailView({ project, onBack }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -456,7 +456,7 @@ function ProjectDetailView({ project, onBack }) {
   );
 }
 
-// ── Main Employee Projects Page ───────────────────────────────────────────────
+// Main Employee Projects Page
 export default function EmployeeProjects({ setTitle }) {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);

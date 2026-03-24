@@ -26,7 +26,7 @@ import Loader from '../../components/common/Loader';
 
 ChartJS.register(ArcElement, LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
-// ── Build weekly days (starting Monday) ──────────────────────────────────────
+// Build weekly days (starting Monday) 
 function getWeeklyDays() {
   const days = [];
   const today = new Date();
@@ -132,7 +132,7 @@ function UserDashboard({ setTitle }) {
     fetchSummary();
   }, [fetchTodayStatus, fetchSummary]);
 
-  // ── Clock In ──────────────────────────────────────────────────────────────
+  // Clock In 
   const handleClockIn = async () => {
     if (!hasValidShift) {
       setActionMsg('No shift assigned to your account. Please contact your admin.');
@@ -154,7 +154,7 @@ function UserDashboard({ setTitle }) {
     }
   };
 
-  // ── Clock Out ─────────────────────────────────────────────────────────────
+  // Clock Out
   const handleClockOut = async () => {
     setLoading(true);
     setActionMsg('');
@@ -183,7 +183,7 @@ function UserDashboard({ setTitle }) {
     : sessions.length > 0 ? `Done — Total: ${totalHours || '0h 0m'}`
     : 'Not yet checked in';
 
-  // ── Chart Data (same style as AdminDashboard) ─────────────────────────────
+  // Chart Data (same style as AdminDashboard)
   const presentDays  = summary.present;
   const absentDays   = summary.absent;
   const leaveDays    = summary.leave;
@@ -228,7 +228,6 @@ function UserDashboard({ setTitle }) {
     }],
   };
 
-  // eslint-disable-next-line no-undef
   const dark = typeof darkMode !== 'undefined' ? darkMode : document.documentElement.classList.contains('dark');
 
   const chartOptions = {
@@ -276,32 +275,6 @@ function UserDashboard({ setTitle }) {
         ))}
       </div>
 
-      {/* ── Attendance Rate Banner — compact (same as AdminDashboard) ── */}
-      {/* {!statsLoading && totalDays > 1 && (
-        <div className="bg-white dark:bg-white/5 rounded-xl shadow p-4 flex items-center justify-between border-l-4 border-[#2C5294] dark:border-[#365F8D] transition-colors duration-300">
-          <div>
-            <p className="text-xs text-[#2C5284] dark:text-gray-300 font-medium">This Month's Attendance Rate</p>
-            <h2 className="text-xl font-bold text-[#365F8D] dark:text-white">{attendanceRate}%</h2>
-            <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">
-              {presentDays} present out of {totalDays} working days
-            </p>
-          </div>
-          <div className="flex-1 mx-6">
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-              <div
-                className="h-3 rounded-full bg-[#365F8D] dark:bg-blue-500 transition-all duration-700"
-                style={{ width: `${attendanceRate}%` }}
-              />
-            </div>
-          </div>
-          <div className="text-right flex-shrink-0">
-            <p className="text-[10px] text-gray-500 dark:text-gray-400">Absent</p>
-            <p className="font-bold text-sm text-[#365F8D] dark:text-white">{absentDays}</p>
-            <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">On Leave</p>
-            <p className="font-bold text-sm text-[#365F8D] dark:text-white">{leaveDays}</p>
-          </div>
-        </div>
-      )} */}
 
       {/* ── Clock In/Out Card — compact, full width ── */}
       <div className="bg-white dark:bg-white/5 p-5 rounded-xl border-l-4 border-[#2C5284] dark:border-[#365F8D] shadow hover:shadow-xl transition-all duration-300">

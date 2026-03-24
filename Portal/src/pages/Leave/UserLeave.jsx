@@ -61,7 +61,7 @@ const selectStyles = {
   }),
 };
 
-// ── Apply / Edit Leave Modal ──────────────────────────────────────────────────
+//  Apply / Edit Leave Modal 
 function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
   const [leaveType, setLeaveType] = useState(
     editingLeave ? leaveTypeOptions.find(t => t.value === editingLeave.leaveType) : null
@@ -202,7 +202,7 @@ function ApplyLeaveModal({ onClose, onSubmit, editingLeave, submitting }) {
   );
 }
 
-// ── Main Component ────────────────────────────────────────────────────────────
+//  Main Component
 import Pagination from '../../components/common/Pagination';
 
 function UserLeave({ setTitle }) {

@@ -118,7 +118,7 @@ function EditNameModal({ currentName, onClose, onSave }) {
   );
 }
 
-// ── Main Profile Component ────────────────────────────────────────────────────
+// Main Profile Component
 function UserProfile({ setTitle, userDesignation, userProfileImage, onProfileUpdate }) {
   const { user } = useAuthContext();
   const [showEditName, setShowEditName] = useState(false);

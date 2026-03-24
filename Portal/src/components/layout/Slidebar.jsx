@@ -102,7 +102,7 @@ export default function Slidebar({
           transition-all duration-300 ease-in-out z-50 flex flex-col
           ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static border-r border-transparent dark:border-gray-800/20`}
       >
-        {/* ── Header ── */}
+        {/* Header */}
         <div className="h-16 flex items-center px-5 border-b border-[#1e3a5f] dark:border-gray-800/40 bg-[#2C5282] dark:bg-[#292c35] transition-colors duration-300">
           <HiUserGroup size={26} className="text-white flex-shrink-0" />
           <h1 className="font-bold text-lg ml-3 flex-1 tracking-tight">Employee Portal</h1>
@@ -114,7 +114,7 @@ export default function Slidebar({
           </button>
         </div>
 
-        {/* ── Navigation ── */}
+        {/* Navigation */}
         <nav className="mt-3 flex-1 overflow-y-auto space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -139,7 +139,7 @@ export default function Slidebar({
           })}
         </nav>
 
-        {/* ── User Profile Section ── */}
+        {/* User Profile Section */}
         <div className="border-t border-[#1e3a5f] dark:border-gray-800/40 p-4 space-y-1">
           <button
             onClick={handleProfileClick}

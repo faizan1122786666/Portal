@@ -5,14 +5,12 @@
  */
 import { useContext, createContext } from 'react'
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext({
   user: null,
   handleLogin: () => {},
   handleLogout: () => {}
 })
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuthContext = () => {
   return useContext(AuthContext)
 }

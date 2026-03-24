@@ -6,7 +6,6 @@
 
 const mongoose = require('mongoose');
 
-// ── Task Sub-schema ───────────────────────────────────────────────────────────
 const taskSchema = new mongoose.Schema(
   {
     title: {
@@ -44,7 +43,6 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ── Project Schema ────────────────────────────────────────────────────────────
 const projectSchema = new mongoose.Schema(
   {
     name: {
@@ -87,7 +85,6 @@ const projectSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ── Virtual: task count summary ───────────────────────────────────────────────
 projectSchema.virtual('taskCount').get(function () {
   const tasks = this.tasks || [];
   return {
